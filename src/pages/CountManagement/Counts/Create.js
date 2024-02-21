@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
@@ -12,7 +12,7 @@ import Select from "react-select";
 const CreateCount = () => {
 
 
-    
+
     const [selectedCultureType, setSelectedCultureType] = useState(false);
     const [selectedCountArea, setSelectedCountArea] = useState(null);
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -38,21 +38,21 @@ const CreateCount = () => {
 
 
     const categories = [
-        {value: "01", label: "Seed"},
-        {value: "02", label: "Feed"},
-        {value: "03", label: "Chemical"},
-        {value: "04", label: "Aerators"},
-        {value: "05", label: "Test Kit"},
-        {value: "06", label: "Other"},
+        { value: "01", label: "Seed" },
+        { value: "02", label: "Feed" },
+        { value: "03", label: "Chemical" },
+        { value: "04", label: "Aerators" },
+        { value: "05", label: "Test Kit" },
+        { value: "06", label: "Other" },
     ];
 
     const CountArea = [
-        {value: "01", label: "ONGOLE"},
-        {value: "02", label: "VIZAG"},
-        {value: "03", label: "ANDHRAPRDESH"},
+        { value: "01", label: "ONGOLE" },
+        { value: "02", label: "VIZAG" },
+        { value: "03", label: "ANDHRAPRDESH" },
     ];
-    
-    const CountPercent = [20,30,40,50,60,70,80,90,100];
+
+    const CountPercent = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
     document.title = "Create Count | Aquall Admin";
     return (
@@ -91,24 +91,29 @@ const CreateCount = () => {
 
                                             <Row className="gy-4 mt-3">
 
-{
-  CountPercent.map((count) => (
-<Col xxl={4} md={4} className='mt-3'>
+                                                {
+                                                    CountPercent.map((count) => (
+                                                        <Col xxl={6} md={6} className='mt-3'>
 
-  
-    <div className="form-check">
-                <Input className="form-check-input" type="checkbox" value="" id="flexCheckCheckedRightDisabled" />
-                <Label className="form-check-label" for="flexCheckCheckedRightDisabled">
-                    {count} Count
-                </Label>
-            </div>
-            <Input name='count' className='form-control' />
-</Col>
-  ))
-}
+                                                            <Row className="gy-4 mb-3 border-bottom">
+                                                                <Col xxl={6} md={6} className='mt-3 mb-3 '>
+
+                                                                    <Input name='count' className='form-control' placeholder={`'Count${count}`} />
+                                                                </Col>
+
+                                                                <Col xxl={6} md={6} className='mt-3 mb-3'>
+
+                                                                    <Input name='count' className='form-control' placeholder='Percent' />
+                                                                </Col>
+
+                                                            </Row>
+                                                        </Col>
+
+                                                    ))
+                                                }
+                                            </Row>
 
 
-</Row>
                                         </div>
 
                                     </CardBody>

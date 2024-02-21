@@ -141,7 +141,7 @@ import DashboardEcommerce from "../pages/DashboardEcommerce";
 // //pages
 // import Starter from '../pages/Pages/Starter/Starter';
 // import SimplePage from '../pages/Pages/Profile/SimplePage/SimplePage';
-// import Settings from '../pages/Pages/Profile/Settings/Settings';
+ import Settings from '../pages/Pages/Profile/Settings/Settings';
 // import Team from '../pages/Pages/Team/Team';
 // import Timeline from '../pages/Pages/Timeline/Timeline';
 // import Faqs from '../pages/Pages/Faqs/Faqs';
@@ -602,7 +602,7 @@ const authProtectedRoutes = [
 //   //Pages
 //   { path: "/pages-starter", component: <Starter /> },
 //   { path: "/pages-profile", component: <SimplePage /> },
-//   { path: "/pages-profile-settings", component: <Settings /> },
+  { path: "/profile", component: <Settings /> },
 //   { path: "/pages-team", component: <Team /> },
 //   { path: "/pages-timeline", component: <Timeline /> },
 //   { path: "/pages-faqs", component: <Faqs /> },
@@ -614,7 +614,7 @@ const authProtectedRoutes = [
 //   { path: "/pages-terms-condition", component: <TermsCondition /> },
 
 //   //User Profile
-  { path: "/profile", component: <UserProfile /> },
+  // { path: "/profile", component: <UserProfile /> },
 
 //   // this route should be at the end of all other routes
 //   // eslint-disable-next-line react/display-name

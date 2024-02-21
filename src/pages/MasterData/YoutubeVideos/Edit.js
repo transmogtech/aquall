@@ -33,19 +33,19 @@ const EditYoutubeVideo = (props) => {
                                     <CardBody className="card-body">
                                         <div className="live-preview">
                                             <Row className="gy-4">
-                                            <Col xxl={3} md={6}>
-                                                <div>
-                                                    <Label htmlFor="basiInput" className="form-label">Title</Label>
-                                                    <Input type="text" className="form-control" id="name" placeholder="Name" />
-                                                </div>
-                                            </Col>
+                                                <Col xxl={3} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">Title</Label>
+                                                        <Input type="text" className="form-control" id="name" placeholder="Name" />
+                                                    </div>
+                                                </Col>
 
-                                            <Col xxl={3} md={6}>
-                                                <div>
-                                                    <Label htmlFor="basiInput" className="form-label">Youtube URL</Label>
-                                                    <Input type="text" className="form-control" id="title" />
-                                                </div>
-                                            </Col>
+                                                <Col xxl={3} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">Youtube URL</Label>
+                                                        <Input type="text" className="form-control" id="title" />
+                                                    </div>
+                                                </Col>
 
                                             </Row>
 
