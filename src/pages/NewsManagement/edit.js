@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import UiContent from "../../Components/Common/UiContent";
 
 //import Components
@@ -6,6 +6,7 @@ import BreadCrumb from '../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../Components/Common/PreviewCardHeader';
 import { Link } from 'react-router-dom';
+import Select from "react-select";
 
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -21,6 +22,17 @@ const EditNews = (props) => {
         //return redirect('/news-management');
     }
 
+    const [selectedLanguage, setSelectedLanguage] = useState(null);
+
+    
+    function handleSelectLanugage(selectedLanguage) {
+        setSelectedLanguage(selectedLanguage);
+    }
+
+  const Languages  = [
+    { value: '01', label: 'English' },
+    { value: '02', label: 'Telugu' }
+  ];
     document.title = "Edit News | Aquall Admin";
     return (
         <React.Fragment>
@@ -55,13 +67,9 @@ const EditNews = (props) => {
                                                 </Col>
                                                 <Col xxl={6} md={6}>
                                                     <label className="form-label">Language: </label>
-                                                    <div className="hstack gap-2 flex-wrap">
-                                                        <input type="radio" className="btn-check" name="options-outlined" id="success-outlined" checked />
-                                                        <label className="btn btn-outline-success material-shadow" htmlFor="success-outlined">English</label>
+                                              <Select value={selectedLanguage}  onChange={() => {  handleSelectLanugage(); }}  options={Languages}  />
 
-                                                        <input type="radio" className="btn-check" name="options-outlined" id="danger-outlined" />
-                                                        <label className="btn btn-outline-danger material-shadow" htmlFor="danger-outlined">Telugu</label>
-                                                    </div>
+                                        
 
                                                 </Col>
 
@@ -70,6 +78,13 @@ const EditNews = (props) => {
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
                                                         <Input type="file" className="form-control" id="inputGroupFile02" />
 
+                                                    </div>
+                                                </Col>
+                                                <Col lg={6} >
+                                                    <div>
+                                                    <Label htmlFor="basiInput" className="form-label">Youtube Video URL</Label>
+                                                        <Input type="text" className="form-control" id="inputGroupFile02" />
+                                                      
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>

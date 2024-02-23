@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import UiContent from "../../Components/Common/UiContent";
 
 //import Components
@@ -6,13 +6,30 @@ import BreadCrumb from '../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../Components/Common/PreviewCardHeader';
 import {  Link } from 'react-router-dom';
+import Select from "react-select";
 
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import ChangeStatus from './ChangeStatus';
 
 const CreateNews = () => {
 
   const handleSubmit = () => {
     //return redirect('/news-management');
   }
+
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
+
+    
+    function handleSelectLanugage(selectedLanguage) {
+        setSelectedLanguage(selectedLanguage);
+    }
+
+  const Languages  = [
+    { value: '01', label: 'English' },
+    { value: '02', label: 'Telugu' }
+  ];
+
 
     document.title = "Create News | Aquall Admin";
     return (
@@ -48,13 +65,7 @@ const CreateNews = () => {
                                             </Col>
                                             <Col xxl={6} md={6}>
                                               <label className="form-label">Language: </label>
-                                          <div class="hstack gap-2 flex-wrap">
-                                              <input type="radio" class="btn-check" name="options-outlined" id="success-outlined" checked />
-                                              <label class="btn btn-outline-success material-shadow" for="success-outlined">English</label>
-
-                                              <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" />
-                                              <label class="btn btn-outline-danger material-shadow" for="danger-outlined">Telugu</label>
-                                          </div>
+                                              <Select value={selectedLanguage}  onChange={() => {  handleSelectLanugage(); }}  options={Languages}  />
 
                                             </Col>
 
@@ -65,10 +76,27 @@ const CreateNews = () => {
                                                       
                                                     </div>
                                                 </Col>
+                                                <Col lg={6} >
+                                                    <div>
+                                                    <Label htmlFor="basiInput" className="form-label">Youtube Video URL</Label>
+                                                        <Input type="text" className="form-control" id="inputGroupFile02" />
+                                                      
+                                                    </div>
+                                                </Col>
                                             <Col xxl={12} md={12}>
                                                 <div>
                                                     <Label htmlFor="description" className="form-label">Description</Label>
-                                                    <textarea className="form-control" placeholder="Description" id="description" rows="3"></textarea>
+                                                    <CKEditor
+                                                            editor={ClassicEditor}
+                                                            data="<p>Hello from CKEditor 5!</p>"
+                                                            onReady={(editor) => {
+                                                                // You can store the "editor" and use when it is needed.
+
+                                                            }}
+                                                            onChange={(editor) => {
+                                                                editor.getData();
+                                                            }}
+                                                        />
                                                 </div>
                                             </Col>
 

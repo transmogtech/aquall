@@ -334,7 +334,7 @@ const authProtectedRoutes = [
 
 
   // news management paths
-  { path: "/news-management", component: <States /> },
+  { path: "/news-management", component: <News /> },
   { path: "/create-news", component: <CreateNews /> },
   { path: "/edit/news/:id", component: <EditNews /> },
 

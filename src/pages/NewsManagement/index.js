@@ -18,8 +18,6 @@ const ReactTable = () => {
                   <div className='float-end'>
                      
                       <Link to="/create-news" color="success" className="btn btn-success" id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Link>
-                      <Button className="btn btn-soft-danger"
-                      ><i className="ri-delete-bin-2-line"></i></Button>
                   </div>
                 </CardHeader>
                 <CardBody>
