@@ -311,6 +311,7 @@ import CountPercentages from "../pages/CountManagement/CountPercents/index.js";
 import Counts from "../pages/CountManagement/Counts/index.js";
 import CreateCount from "../pages/CountManagement/Counts/Create.js";
 import EditCount from "../pages/CountManagement/Counts/Edit.js";
+import CompanyRequests from "../pages/RequestManagement/CompanyRequests/index.js";
 
 
 const authProtectedRoutes = [
@@ -406,6 +407,7 @@ const authProtectedRoutes = [
   { path: "/users", component: <EcommerceCustomers /> },
   { path: "/user-roles", component: <UserRoles /> },
   { path: "/product-requests", component: <ProductRequests /> },
+  { path: "/company-requests", component: <CompanyRequests /> },
   { path: "/technician-requests", component: <TechnicianRequests /> },
   { path: "/lab-requests", component: <LabRequests /> },
   { path: "/count-areas", component: <CountAreas /> },

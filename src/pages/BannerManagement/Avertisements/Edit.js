@@ -65,7 +65,7 @@ const EditAdvertisement = (props) => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL</Label>
-                                                        <Input type="text" className="form-control" id="title" placeholder="URL Slug" defaultValue="lorem-ipsum" />
+                                                        <Input type="text" className="form-control" id="title" placeholder="URL" defaultValue="lorem-ipsum" />
                                                     </div>
                                                 </Col>
 

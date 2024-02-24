@@ -93,17 +93,18 @@ const CreateCount = () => {
 
                                                 {
                                                     CountPercent.map((count) => (
+                                                        
                                                         <Col xxl={6} md={6} className='mt-3'>
-
-                                                            <Row className="gy-4 mb-3 border-bottom">
+                                                            <h6 className=''>Count {count}</h6>
+                                                            <Row className="gy-4 mt-3 border-top">
                                                                 <Col xxl={6} md={6} className='mt-3 mb-3 '>
 
-                                                                    <Input name='count' className='form-control' placeholder={`'Count${count}`} />
+                                                                    <Input name='count' className='form-control' placeholder={`Count${count}`} />
                                                                 </Col>
 
                                                                 <Col xxl={6} md={6} className='mt-3 mb-3'>
 
-                                                                    <Input name='count' className='form-control' placeholder='Percent' />
+                                                                    <Input name='count' className='form-control' placeholder={`Volume${count}`} />
                                                                 </Col>
 
                                                             </Row>

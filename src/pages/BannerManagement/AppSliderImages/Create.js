@@ -89,12 +89,7 @@ const CreateAppSliderImage = () => {
                                                         <Select value={selectedCompany} onChange={() => { handleSelectCompany(); }} options={company} />
                                                     </div>
                                                 </Col>
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Product</Label>
-                                                        <Select value={selectedProduct} onChange={() => { handleSelectProduct(); }} options={product} />
-                                                    </div>
-                                                </Col>
+                                             
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
@@ -107,6 +102,22 @@ const CreateAppSliderImage = () => {
                                                         <Label htmlFor="basiInput" className="form-label">Discount %</Label>
                                                         <Input type="number" className="form-control" id="title" placeholder="Discount" />
                                                     </div>
+                                                </Col>
+                                                <Col xxl={3} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">URL</Label>
+                                                        <Input type="text" className="form-control" id="title" placeholder="URL" />
+                                                    </div>
+                                                </Col>
+                                               
+                                                <Col md={12}>
+                                                <h6 className="form-label">Products</h6>
+                                                    {product.map((prod) => (
+                                                        <div className="form-check-inline">
+                                                            <Input type='checkbox' className='form-check-input' value={prod.value} /> {prod.label}
+                                                        </div>
+                                                    ))}
+
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                 <Label htmlFor="basiInput" className="form-label">Show</Label>

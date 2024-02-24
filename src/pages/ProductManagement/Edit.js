@@ -160,7 +160,12 @@ const EditProduct = () => {
                                                         <Input type="number" className="form-control" id="title" />
                                                     </div>
                                                 </Col>
-
+                                                <Col xxl={3} md={6}>
+                                                    <div>
+                                                    { showHideFields == '03' ? <Label htmlFor="basiInput" className="form-label">Bonus</Label>: <Label htmlFor="basiInput" className="form-label">Discount %</Label>}
+                                                        <Input type="number" className="form-control" id="title" />
+                                                    </div>
+                                                </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Description</Label>
@@ -169,26 +174,6 @@ const EditProduct = () => {
                                                 </Col>
                                             </Row>
 
-                                            <Row>
-
-
-                                                <Col xxl={3} md={3} className='mt-5'>
-                                                    <div className='form-check form-switch '>
-
-                                                        <Input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onChange={() => { handleCartOptionChange(); }} checked={cartFields} />
-                                                        <Label className="form-check-label" htmlFor="flexSwitchCheckDefault">Assign to Aqua Mart
-                                                        </Label>
-                                                    </div>
-                                                </Col>
-                                                {cartFields === true && <Col xxl={9} md={9} id='discountDiv'>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Disount %</Label>
-                                                        <Input type="number" className="form-control" id="title" />
-                                                    </div>
-                                                </Col>}
-
-
-                                            </Row>
 
                                             <Row>
                                                 <Col xxl={3} md={3} className='mt-5'>

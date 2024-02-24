@@ -42,7 +42,7 @@ const CreateAppClasifiedImage = () => {
                                             <Col xxl={3} md={6}>
                                                 <div>
                                                     <Label htmlFor="basiInput" className="form-label">URL</Label>
-                                                    <Input type="text" className="form-control" id="title" placeholder="URL Slug" />
+                                                    <Input type="text" className="form-control" id="title" placeholder="URL" />
                                                 </div>
                                             </Col>
 

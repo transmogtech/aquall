@@ -383,12 +383,7 @@ isSeeds
       },
       stateVariables: isProducts,
       subItems: [
-        {
-          id: "products",
-          label: "Products",
-          link: "/products",
-          parentId: "products",
-        },
+       
         {
           id: "salt-percentage",
           label: "Salt Percentage",
@@ -418,7 +413,13 @@ isSeeds
           label: "Chemical Categories",
           link: "/chemical-categories",
           parentId: "products",
-        }
+        },
+        {
+          id: "products",
+          label: "Products",
+          link: "/products",
+          parentId: "products",
+        },
       ],
     },
     {
@@ -464,6 +465,12 @@ isSeeds
           label: "Lab Requests",
           link: "/lab-requests",
           parentId: "requests",
+        },
+        {
+          id: "company-requests",
+          label: "Company Requests",
+          link: "/company-requests",
+          parentId: "requests",
         }
       ],
     },
@@ -486,12 +493,12 @@ isSeeds
           link: "/count-areas",
           parentId: "counts",
         },
-        {
-          id: "count-percents",
-          label: "Counter Percentages",
-          link: "/count-percents",
-          parentId: "counts",
-        },
+        // {
+        //   id: "count-percents",
+        //   label: "Counter Percentages",
+        //   link: "/count-percents",
+        //   parentId: "counts",
+        // },
         {
           id: "counts",
           label: "Counts",

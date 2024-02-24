@@ -76,7 +76,7 @@ const CreateAppBannerImage = () => {
                                         <div className="live-preview">
                                             <Row className="gy-4">
 
-                                            <Col xxl={3} md={6}>
+                                                <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Category</Label>
                                                         <Select value={selectedCategory} onChange={() => { handleSelectCategory(); }} options={categories} />
@@ -89,29 +89,38 @@ const CreateAppBannerImage = () => {
                                                         <Select value={selectedCompany} onChange={() => { handleSelectCompany(); }} options={company} />
                                                     </div>
                                                 </Col>
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Product</Label>
-                                                        <Select value={selectedProduct} onChange={() => { handleSelectProduct(); }} options={product} />
-                                                    </div>
-                                                </Col>
+
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                        <Input type="file" className="form-control" id="title" placeholder="URL Slug" />
+                                                        <Input type="file" className="form-control" id="title" placeholder="URL" />
                                                     </div>
                                                 </Col>
-
                                                 <Col xxl={3} md={6}>
-                                                <Label htmlFor="basiInput" className="form-label">Show</Label>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">URL</Label>
+                                                        <Input type="text" className="form-control" id="title" placeholder="URL" />
+                                                    </div>
+                                                </Col>
+                                               
+                                                <Col md={12}>
+                                                <h4 className="form-label">Products</h4>
+                                                    {product.map((prod) => (
+                                                        <div className="form-check-inline">
+                                                            <Input type='checkbox' className='form-check-input' value={prod.value} /> {prod.label}
+                                                        </div>
+                                                    ))}
+
+                                                </Col>
+                                                <Col xxl={3} md={6}>
+                                                    <Label htmlFor="basiInput" className="form-label">Show</Label>
                                                     <div className='className="form-check form-switch mb-2"'>
-                                                       
+
                                                         <Input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" defaultChecked />
                                                         <Label className="form-check-label" htmlFor="flexSwitchCheckDefault">Yes</Label>
                                                     </div>
                                                 </Col>
-                                               
 
                                             </Row>
 
