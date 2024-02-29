@@ -15,7 +15,7 @@ const CreateCount = () => {
 
     const [selectedCultureType, setSelectedCultureType] = useState(false);
     const [selectedCountArea, setSelectedCountArea] = useState(null);
-    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
 
     function handleSelectCultureType(selectedCultureType) {
@@ -27,8 +27,8 @@ const CreateCount = () => {
         setSelectedCountArea(selectedCountArea);
     }
 
-    function handleSelectProduct(selectedProduct) {
-        setSelectedProduct(selectedProduct);
+    function handleSelectedCategory(selectedCategory) {
+        setSelectedCategory(selectedCategory);
     }
 
 
@@ -52,6 +52,12 @@ const CreateCount = () => {
         { value: "03", label: "ANDHRAPRDESH" },
     ];
 
+    
+    const cats = [
+        { value: "01", label: "Shrimp" },
+        { value: "02", label: "Fish" },
+    ];
+
     const CountPercent = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
     document.title = "Create Count | Aquall Admin";
@@ -72,7 +78,12 @@ const CreateCount = () => {
                                         <div className="live-preview">
                                             <Row className="gy-4">
 
-
+                                                <Col xxl={3} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">Category</Label>
+                                                        <Select value={selectedCategory} onChange={() => { handleSelectedCategory(); }} options={cats} />
+                                                    </div>
+                                                </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Culture Type</Label>

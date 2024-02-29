@@ -15,7 +15,7 @@ const EditCount = () => {
     
     const [selectedCultureType, setSelectedCultureType] = useState(false);
     const [selectedCountArea, setSelectedCountArea] = useState(null);
-    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
 
     function handleSelectCultureType(selectedCultureType) {
@@ -27,8 +27,8 @@ const EditCount = () => {
         setSelectedCountArea(selectedCountArea);
     }
 
-    function handleSelectProduct(selectedProduct) {
-        setSelectedProduct(selectedProduct);
+    function handleSelectedCategory(selectedCategory) {
+        setSelectedCategory(selectedCategory);
     }
 
 
@@ -51,6 +51,13 @@ const EditCount = () => {
         {value: "02", label: "VIZAG"},
         {value: "03", label: "ANDHRAPRDESH"},
     ];
+
+    
+    const cats = [
+        { value: "01", label: "Shrimp" },
+        { value: "02", label: "Fish" },
+    ];
+
     
     const CountPercent = [20,30,40,50,60,70,80,90,100];
 
@@ -72,6 +79,12 @@ const EditCount = () => {
                                         <div className="live-preview">
                                             <Row className="gy-4">
 
+                                            <Col xxl={3} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">Category</Label>
+                                                        <Select value={selectedCategory} onChange={() => { handleSelectedCategory(); }} options={cats} />
+                                                    </div>
+                                                </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>

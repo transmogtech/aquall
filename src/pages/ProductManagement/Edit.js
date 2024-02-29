@@ -162,7 +162,7 @@ const EditProduct = () => {
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
-                                                    { showHideFields == '03' ? <Label htmlFor="basiInput" className="form-label">Bonus</Label>: <Label htmlFor="basiInput" className="form-label">Discount %</Label>}
+                                                    { showHideFields == '01' ? <Label htmlFor="basiInput" className="form-label">Bonus</Label>: <Label htmlFor="basiInput" className="form-label">Discount %</Label>}
                                                         <Input type="number" className="form-control" id="title" />
                                                     </div>
                                                 </Col>
