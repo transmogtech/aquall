@@ -1,10 +1,11 @@
 import React from 'react'
 import { Card, CardBody, CardHeader, Col, Container, Row, Button } from 'reactstrap'
-import {  SearchTable } from './ReactTable'
+import   SearchTable  from './ReactTable'
 import { Link } from 'react-router-dom';
+import Alert from '../../Components/Common/Alert';
 
 const ReactTable = () => {
-  document.title = "React Tables | Velzon - React Admin & Dashboard Template";
+  document.title = "News Management | Aquall Admin";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -21,6 +22,8 @@ const ReactTable = () => {
                   </div>
                 </CardHeader>
                 <CardBody>
+                <Alert />
+
                   <SearchTable />
                 </CardBody>
               </Card>

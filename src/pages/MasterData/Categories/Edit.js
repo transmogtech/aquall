@@ -1,51 +1,65 @@
-import React from 'react';
+import React, {useState}  from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
-import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
+import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { Link } from 'react-router-dom';
+import { updateCategory } from '../../../actions/category';
+import { useNavigate, useParams } from "react-router-dom";
+import PropTypes from 'prop-types';
+import { connect, useSelector } from 'react-redux';
 
 
 
-const EditCategory = (props) => {
+const EditCategory = ({updateCategory}) => {
+    let {id } = useParams();
 
-    // const id = props.match.params.id;
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState();
+
+    const categories = useSelector(state => state.category.categories);
+    const category = categories.find(category => category._id === id);
+
+    const onChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
     const handleSubmit = () => {
-    }
+        updateCategory(id, formData);
 
-    document.title = "Edit News | Aquall Admin";
+        navigate('/categories');
+    }
+    document.title = "Edit Category | Aquall Admin";
     return (
         <React.Fragment>
             <UiContent />
             <div className="page-content">
 
                 <Container fluid>
-                    <BreadCrumb title="Edit News" pageTitle="News Management" />
+                    <BreadCrumb title="Edit Category" pageTitle="Category Management" />
                     <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                         <Row>
                             <Col lg={12}>
                                 <Card>
-                                    <PreviewCardHeader title="Edit News" />
+                                    <PreviewCardHeader title="Edit Category" />
 
                                     <CardBody className="card-body">
                                         <div className="live-preview">
                                             <Row className="gy-4">
 
 
-                                                <Col xxl={3} md={6}>
+                                            <Col xxl={3} md={6}>
                                                     <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                        <Input type="text" className="form-control" id="title" placeholder="Name" defaultValue="Lorem Ipsum" />
+                                                        <Label htmlFor="basiInput" className="form-label">Title</Label>
+                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="title" id="title" placeholder="Title" defaultValue={category.title} />
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
-                                                        <Input type="text" className="form-control" id="title" placeholder="URL Slug" defaultValue="lorem-ipsum" />
+                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="url" id="url" placeholder="URL Slug" defaultValue={category.url} />
                                                     </div>
                                                 </Col>
 
@@ -71,22 +85,22 @@ const EditCategory = (props) => {
 
                                             <Row className="gy-4">
 
-                                                <Col xxl={12} md={12}>
+                                            <Col xxl={12} md={12}>
                                                     <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Title</Label>
-                                                        <textarea className="form-control" placeholder="Meta Title" id="description" rows="3">Lorem Ipsum is simple dummy text</textarea>
+                                                        <Label htmlFor="metaTitle" className="form-label">Meta Title</Label>
+                                                        <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Title" id="metaTitle" name='metaTitle' rows="3" defaultValue={category.metaTitle}></textarea>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Description</Label>
-                                                        <textarea className="form-control" placeholder="Meta Description" id="description" rows="3">Lorem Ipsum is simple dummy text</textarea>
+                                                        <Label htmlFor="metaDescription" className="form-label">Meta Description</Label>
+                                                        <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Description" id="metaDescription" name='metaDescription' rows="3" defaultValue={category.metaDescription}></textarea>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Keywords</Label>
-                                                        <textarea className="form-control" placeholder="Meta Keywords" id="description" rows="3">Lorem Ipsum is simple dummy text</textarea>
+                                                        <Label htmlFor="metaKeywords" className="form-label">Meta Keywords</Label>
+                                                        <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Keywords" name="metaKeywords" id="metaKeywords" rows="3" defaultValue={category.metaKeywords}></textarea>
                                                     </div>
                                                 </Col>
 
@@ -98,8 +112,7 @@ const EditCategory = (props) => {
                                     </CardBody>
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
-
-                                            <Link to="/categories" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link>
+                                            <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -116,4 +129,9 @@ const EditCategory = (props) => {
     );
 }
 
-export default EditCategory;
+
+EditCategory.propTypes = {
+    updateCategory: PropTypes.func.isRequired,
+}
+
+export default connect(null, {updateCategory})(EditCategory);

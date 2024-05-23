@@ -1,50 +1,71 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
-import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
+import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { updateDistrict } from '../../../actions/district';
+import PropTypes from 'prop-types';
+import { connect, useSelector } from 'react-redux';
+import { getStates } from '../../../actions/state';
 import Select from "react-select";
 
 
+const EditDistrict = ({updateDistrict, getStates, state: { states }}) => {
 
-const EditDistrict = (props) => {
+   
+    let {id } = useParams();
 
-    // const id = props.match.params.id;
-
+    const districts = useSelector(state => state.district.districts);
+    const district = districts.find(district => district._id === id);
     const [selectedState, setSelectedState] = useState(null);
 
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState();
+
+    useEffect(() => {
+        getStates();
+      }, [getStates]);
+      
     
+    const onChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
     function handleSelectState(selectedState) {
-        setSelectedState(selectedState);
+
+        setFormData({...formData, stateId: selectedState.value });
+        console.log(selectedState.value);
+
+        setSelectedState(selectedState.value);
     }
+    const States  = [];
 
-    
-
-    const states  = [
-        { value: '01', label: 'Andhrapradesh' },
-        { value: '02', label: 'Telangana' },
-        { value: '03', label: 'Tamilnadu' }
-      ];
+    states.forEach(row => States.push({ value: row._id, label: row.title}));
+  
 
     const handleSubmit = () => {
+        updateDistrict(id, formData);
+
+        navigate('/districts');
     }
 
-    document.title = "Edit News | Aquall Admin";
+
+    document.title = "Edit District | Aquall Admin";
     return (
         <React.Fragment>
             <UiContent />
             <div className="page-content">
 
                 <Container fluid>
-                    <BreadCrumb title="Edit News" pageTitle="News Management" />
+                    <BreadCrumb title="Edit District" pageTitle="District Management" />
                     <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                         <Row>
                             <Col lg={12}>
                                 <Card>
-                                    <PreviewCardHeader title="Edit News" />
+                                    <PreviewCardHeader title="Edit District" />
 
                                     <CardBody className="card-body">
                                         <div className="live-preview">
@@ -53,21 +74,21 @@ const EditDistrict = (props) => {
                                             <Col xxl={3} md={6}>
                                                 <div>
                                                     <Label htmlFor="basiInput" className="form-label">State</Label>
-                                                    <Select value={selectedState}  onChange={() => {  handleSelectState(); }}  options={states}  />
+                                                    <Select value={selectedState}  onChange={handleSelectState}  options={States}  />
                                                 </div>
                                             </Col>
 
-                                                <Col xxl={3} md={6}>
+                                            <Col xxl={3} md={6}>
                                                     <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                        <Input type="text" className="form-control" id="title" placeholder="Name" defaultValue="Lorem Ipsum" />
+                                                        <Label htmlFor="basiInput" className="form-label">Title</Label>
+                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="title" id="title" placeholder="Title" defaultValue={district.title} />
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
-                                                        <Input type="text" className="form-control" id="title" placeholder="URL Slug" defaultValue="lorem-ipsum" />
+                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="url" id="url" placeholder="URL Slug" defaultValue={district.url} />
                                                     </div>
                                                 </Col>
 
@@ -93,22 +114,22 @@ const EditDistrict = (props) => {
 
                                             <Row className="gy-4">
 
-                                                <Col xxl={12} md={12}>
+                                            <Col xxl={12} md={12}>
                                                     <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Title</Label>
-                                                        <textarea className="form-control" placeholder="Meta Title" id="description" rows="3">Lorem Ipsum is simple dummy text</textarea>
+                                                        <Label htmlFor="metaTitle" className="form-label">Meta Title</Label>
+                                                        <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Title" id="metaTitle" name='metaTitle' rows="3" defaultValue={district.metaTitle}></textarea>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Description</Label>
-                                                        <textarea className="form-control" placeholder="Meta Description" id="description" rows="3">Lorem Ipsum is simple dummy text</textarea>
+                                                        <Label htmlFor="metaDescription" className="form-label">Meta Description</Label>
+                                                        <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Description" id="metaDescription" name='metaDescription' rows="3" defaultValue={district.metaDescription}></textarea>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Keywords</Label>
-                                                        <textarea className="form-control" placeholder="Meta Keywords" id="description" rows="3">Lorem Ipsum is simple dummy text</textarea>
+                                                        <Label htmlFor="metaKeywords" className="form-label">Meta Keywords</Label>
+                                                        <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Keywords" name="metaKeywords" id="metaKeywords" rows="3" defaultValue={district.metaKeywords}></textarea>
                                                     </div>
                                                 </Col>
 
@@ -121,7 +142,7 @@ const EditDistrict = (props) => {
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
 
-                                            <Link to="/districts" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link>
+                                        <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -138,4 +159,16 @@ const EditDistrict = (props) => {
     );
 }
 
-export default EditDistrict;
+EditDistrict.propTypes = {
+    updateDistrict: PropTypes.func.isRequired,
+    getStates: PropTypes.func.isRequired,
+    state: PropTypes.object.isRequired,
+}
+
+
+const mapStateToProps = state => ({
+    state: state.state,
+  });
+  
+
+export default connect(mapStateToProps, {updateDistrict, getStates})(EditDistrict);

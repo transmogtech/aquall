@@ -1,80 +1,181 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
-import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
+import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { Link } from 'react-router-dom';
 import Select from "react-select";
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { getPincodes, updatePincode } from '../../../actions/pincode';
+import PropTypes from 'prop-types';
+import { connect, useSelector } from 'react-redux';
+import { getStates } from '../../../actions/state';
+import { getDistricts } from '../../../actions/district';
+import { getAreas } from '../../../actions/area';
+
+const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPincodes }) => {
+    let { id } = useParams();
 
 
-const EditPincode = () => {
+
+    useEffect(() => {
+        getStates();
+        getDistricts();
+        getAreas();
+        getPincodes();
+    }, []);
 
 
-    const states = [
-        { value: '01', label: 'Andhrapradesh' },
-        { value: '02', label: 'Telangana' },
-        { value: '03', label: 'Tamilnadu' }
+
+    const pincodes = useSelector(state => state.pincode.pincodes);
+    const pincode = pincodes.find(pincode => pincode._id === id);
+
+
+    const districtsData = useSelector(state => state.district.districts);
+    const areaData = useSelector(state => state.area.areas);
+    const states = useSelector(state => state.state.states);
+
+
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState();
+    const [selectedState, setSelectedState] = useState(pincode.stateId.title);
+    const [options, setOptions] = useState([]);
+    const [areas, setAreas] = useState([]);
+    const [selectedDistrict, setSelectedDistrict] = useState(pincode.districtId.title);
+    const [selectedArea, setSelectedArea] = useState(pincode.areaId.title);
+    const Districts = [];
+    const Areas = [];
+    const States = [];
+
+
+
+    districtsData.forEach(district => {
+        if (district.stateId._id === pincode.stateId._id) {
+            options.push({ value: district._id, label: district.title });
+        }
+    });
+
+
+    areaData.forEach(area => {
+        if (area.districtId._id === pincode.districtId._id) {
+            areas.push({ value: area._id, label: area.title });
+        }
+    });
+    const categories = [
+        {
+            _id: '34e65467',
+            title: 'Feed',
+            charge: pincode.delivery[0].charge,
+            days: pincode.delivery[0].days
+        },
+        {
+            _id: '34e65437',
+            title: 'Seed',
+            charge: pincode.delivery[1].charge,
+            days: pincode.delivery[1].days
+        },
+        {
+            _id: '34e65462',
+            title: 'Chemical',
+            charge: pincode.delivery[2].charge,
+            days: pincode.delivery[2].days
+        },
+        {
+            _id: '34w65467',
+            title: 'Aerators',
+            charge: pincode.delivery[3].charge,
+            days: pincode.delivery[3].days
+        }
     ];
 
-
-    const districts = [
-        { value: '01', label: 'Srikakulam' },
-        { value: '02', label: 'Vizayanagaram' },
-        { value: '03', label: 'Vizag' },
-        { value: '04', label: 'Eastgodavari' },
-        { value: '05', label: 'Westgodavari' }
-    ];
+    const [delivery, setDelivery] = useState(categories);
 
 
-    const areas = [
-        { value: '01', label: 'GANGAPATNAM' },
-        { value: '02', label: 'MUTHUKUR' },
-        { value: '03', label: 'MUTTEMBAKA' },
-        { value: '04', label: 'KOTHAPATNAM' },
-        { value: '05', label: 'BRAHMADEVAM' }
-    ];
 
 
-    const categories = ['Default', 'Chemical', 'Aerators', 'Seed', 'Test kits', 'Others'];
-
-
-    const [selectedDistrict, setSelectedDistrict] = useState(false);
-    const [selectedState, setSelectedState] = useState(null);
-    const [selectedArea, setSelectedArea] = useState(null);
+    const onChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
 
     function handleSelectState(selectedState) {
-        setSelectedState(selectedState);
-    }
 
+        setFormData({ ...formData, stateId: selectedState.value });
+
+        setSelectedState(selectedState.label);
+
+
+        districtsData.forEach(district => {
+            if (district.stateId._id === selectedState.value) {
+                Districts.push({ value: district._id, label: district.title });
+            }
+        });
+
+        setOptions(Districts);
+
+
+    }
 
     function handleSelectDistrict(selectedDistrict) {
-        setSelectedDistrict(selectedDistrict);
+        setFormData({ ...formData, districtId: selectedDistrict.value });
+
+        setSelectedDistrict(selectedDistrict.label);
+
+
+        areaData.forEach(area => {
+            if (area.districtId._id === selectedDistrict.value) {
+                Areas.push({ value: area._id, label: area.title });
+            }
+        });
+
+        setAreas(Areas);
     }
+
 
     function handleSelectArea(selectedArea) {
-        setSelectedArea(selectedArea);
+        setFormData({ ...formData, areaId: selectedArea.value });
+
+        setSelectedArea(selectedArea.label);
     }
 
+
+
+    states.forEach(row => States.push({ value: row._id, label: row.title }));
+
+    const handleDeliveryChange = (e, index) => {
+
+        const values = [...delivery];
+        const updatedValue = e.target.name;
+        values[index][updatedValue] = e.target.value;
+        setDelivery(values);
+
+        setFormData({ ...formData, delivery: delivery });
+
+    };
 
     const handleSubmit = () => {
+
+
+        updatePincode(id, formData);
+
+        navigate('/pincodes');
     }
 
-    document.title = "Edit Pincode | Aquall Admin";
+    document.title = "Create Pincode | Aquall Admin";
     return (
         <React.Fragment>
             <UiContent />
             <div className="page-content">
 
                 <Container fluid>
-                    <BreadCrumb title="Edit Pincode" pageTitle="Pincode Management" />
+                    <BreadCrumb title="Create Pincode" pageTitle="Pincode Management" />
                     <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                         <Row>
                             <Col lg={12}>
                                 <Card>
-                                    <PreviewCardHeader title="Edit Pincode" />
+                                    <PreviewCardHeader title="Create Pincode" />
 
                                     <CardBody className="card-body">
                                         <div className="live-preview">
@@ -84,7 +185,7 @@ const EditPincode = () => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">State</Label>
-                                                        <Select value={selectedState} onChange={() => { handleSelectState(); }} options={states} />
+                                                        <Select value={{ label: selectedState }} onChange={handleSelectState} options={States} />
                                                     </div>
                                                 </Col>
 
@@ -92,27 +193,27 @@ const EditPincode = () => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">District</Label>
-                                                        <Select value={selectedDistrict} onChange={() => { handleSelectDistrict(); }} options={districts} />
+                                                        <Select value={{ label: selectedDistrict }} onChange={handleSelectDistrict} options={options} />
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Area</Label>
-                                                        <Select value={selectedArea} onChange={() => { handleSelectArea(); }} options={areas} />
+                                                        <Select value={{ label: selectedArea }} onChange={handleSelectArea} options={areas} />
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                        <Input type="text" className="form-control" id="name" placeholder="Name" />
+                                                        <Input type="text" className="form-control" name="title" onChange={e => onChange(e)} placeholder="Name" defaultValue={pincode.title} />
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
-                                                        <Input type="text" className="form-control" id="title" placeholder="URL Slug" />
+                                                        <Input type="text" className="form-control" name="url" onChange={e => onChange(e)} placeholder="URL Slug" defaultValue={pincode.url} />
                                                     </div>
                                                 </Col>
 
@@ -135,19 +236,21 @@ const EditPincode = () => {
                                     <CardBody className="card-body">
                                         <div className="live-preview">
 
-                                            {categories.map(category => (
-                                                <Row className="gy-4">                                                     <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Delivery Charges - {category}</Label>
-                                                        <Input type="text" className="form-control" id="name" placeholder="Delivery Charges" />
-                                                    </div>
-                                                </Col>
+                                            {categories.map((category, index) => (
+                                                <Row className="gy-4" key={index}>
+                                                    <Col xxl={3} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Delivery Charges - {category.title}</Label>
+                                                            <Input type="number" className="form-control" id="charge" name='charge' onChange={e => handleDeliveryChange(e, index)} placeholder="Delivery Charges" defaultValue={pincode.delivery[index].charge} />
+                                                        </div>
+                                                    </Col>
 
                                                     <Col xxl={3} md={6}>
                                                         <div>
-                                                            <Label htmlFor="basiInput" className="form-label">Delivery Days - {category}</Label>
-                                                            <Input type="text" className="form-control" id="title" placeholder="Delivery Days" />
+                                                            <Label htmlFor="basiInput" className="form-label">Delivery Days - {category.title}</Label>
+                                                            <Input type="number" className="form-control" name='days' id="days" onChange={e => handleDeliveryChange(e, index)} placeholder="Delivery Days" defaultValue={pincode.delivery[index].days} />
                                                         </div>
+
                                                     </Col>
                                                 </Row>
                                             ))}
@@ -174,23 +277,22 @@ const EditPincode = () => {
 
                                                 <Col xxl={12} md={12}>
                                                     <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Title</Label>
-                                                        <textarea className="form-control" placeholder="Meta Title" id="description" rows="3"></textarea>
+                                                        <Label htmlFor="metaTitle" className="form-label">Meta Title</Label>
+                                                        <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Title" id="metaTitle" name='metaTitle' rows="3" defaultValue={pincode.metaTitle}></textarea>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Description</Label>
-                                                        <textarea className="form-control" placeholder="Meta Description" id="description" rows="3"></textarea>
+                                                        <Label htmlFor="metaDescription" className="form-label">Meta Description</Label>
+                                                        <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Description" id="metaDescription" name='metaDescription' rows="3" defaultValue={pincode.metaDescription}></textarea>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Keywords</Label>
-                                                        <textarea className="form-control" placeholder="Meta Keywords" id="description" rows="3"></textarea>
+                                                        <Label htmlFor="metaKeywords" className="form-label">Meta Keywords</Label>
+                                                        <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Keywords" name="metaKeywords" id="metaKeywords" rows="3" defaultValue={pincode.metaKeywords}></textarea>
                                                     </div>
                                                 </Col>
-
 
                                             </Row>
 
@@ -198,9 +300,9 @@ const EditPincode = () => {
 
                                     </CardBody>
                                     <CardFooter>
-                                        <div class="d-flex align-items-start gap-3 mt-4">
+                                        <div className="d-flex align-items-start gap-3 mt-4">
 
-                                            <Link to="/pincodes" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link>
+                                            <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -218,4 +320,20 @@ const EditPincode = () => {
     );
 }
 
-export default EditPincode;
+
+EditPincode.propTypes = {
+    updatePincode: PropTypes.func.isRequired,
+    getStates: PropTypes.func.isRequired,
+    getDistricts: PropTypes.func.isRequired,
+    getAreas: PropTypes.func.isRequired,
+    getPincodes: PropTypes.func.isRequired,
+    state: PropTypes.object.isRequired,
+
+}
+
+const mapStateToProps = state => ({
+    state: state.state,
+});
+
+
+export default connect(mapStateToProps, { updatePincode, getStates, getDistricts, getAreas, getPincodes })(EditPincode);

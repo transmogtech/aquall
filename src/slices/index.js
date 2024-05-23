@@ -68,7 +68,25 @@ import JobReducer from "./jobs/reducer";
 
 // API Key
 import APIKeyReducer from "./apiKey/reducer";
-
+import alert from "./alert";
+import auth from "./auth";
+import news from "./news";
+import language from "./language";
+import state from "./state";
+import district from "./district";
+import area from "./area";
+import pincode from "./pincode";
+import category from "./category";
+import youtubeVideo from "./youtubeVideo";
+import footerLogo from "./footerLogo";
+import notification from "./notification";
+import hatecheriesPdf from "./hatecheriesPdf";
+import cultureType from "./cultureType";
+import hpSize from "./hpSize";
+import userRole from "./userRole";
+import user from "./user";
+import sliderImage from "./sliderImage";
+import bannerImage from "./bannerImage";
 const rootReducer = combineReducers({
     Layout: LayoutReducer,
     Login: LoginReducer,
@@ -96,6 +114,25 @@ const rootReducer = combineReducers({
     Todos: TodosReducer,
     Jobs: JobReducer,
     APIKey: APIKeyReducer,
+    alert,
+    auth,
+    news,
+    language,
+    state,
+    district,
+    area,
+    pincode,
+    category,
+    youtubeVideo,
+    footerLogo,
+    notification,
+    hatecheriesPdf,
+    cultureType,
+    hpSize,
+    userRole,
+    user,
+    sliderImage,
+    bannerImage
 });
 
 export default rootReducer;

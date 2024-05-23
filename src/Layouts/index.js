@@ -9,19 +9,6 @@ import Sidebar from './Sidebar';
 import Footer from './Footer';
 import RightSidebar from '../Components/Common/RightSidebar';
 
-//import actions
-import {
-    changeLayout,
-    changeSidebarTheme,
-    changeLayoutMode,
-    changeLayoutWidth,
-    changeLayoutPosition,
-    changeTopbarTheme,
-    changeLeftsidebarSizeType,
-    changeLeftsidebarViewType,
-    changeSidebarImageType,
-    changeSidebarVisibility
-} from "../slices/thunks";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
@@ -37,7 +24,7 @@ const Layout = (props) => {
         (layout) => ({
             layoutType: layout.layoutType,
             leftSidebarType: layout.leftSidebarType,
-            layoutModeType: layout.layoutModeType,
+            layoutModeType: layout.layoutModeTypes,
             layoutWidthType: layout.layoutWidthType,
             layoutPositionType: layout.layoutPositionType,
             topbarThemeType: layout.topbarThemeType,
@@ -80,16 +67,16 @@ const Layout = (props) => {
             sidebarVisibilitytype
         ) {
             window.dispatchEvent(new Event('resize'));
-            dispatch(changeLeftsidebarViewType(leftSidebarViewType));
-            dispatch(changeLeftsidebarSizeType(leftsidbarSizeType));
-            dispatch(changeSidebarTheme(leftSidebarType));
-            dispatch(changeLayoutMode(layoutModeType));
-            dispatch(changeLayoutWidth(layoutWidthType));
-            dispatch(changeLayoutPosition(layoutPositionType));
-            dispatch(changeTopbarTheme(topbarThemeType));
-            dispatch(changeLayout(layoutType));
-            dispatch(changeSidebarImageType(leftSidebarImageType));
-            dispatch(changeSidebarVisibility(sidebarVisibilitytype));
+            // dispatch(changeLeftsidebarViewType(leftSidebarViewType));
+            // dispatch(changeLeftsidebarSizeType(leftsidbarSizeType));
+            // dispatch(changeSidebarTheme(leftSidebarType));
+            // dispatch(changeLayoutMode(layoutModeType));
+            // dispatch(changeLayoutWidth(layoutWidthType));
+            // dispatch(changeLayoutPosition(layoutPositionType));
+            // dispatch(changeTopbarTheme(topbarThemeType));
+            // dispatch(changeLayout(layoutType));
+            // dispatch(changeSidebarImageType(leftSidebarImageType));
+            // dispatch(changeSidebarVisibility(sidebarVisibilitytype));
         }
     }, [layoutType,
         leftSidebarType,

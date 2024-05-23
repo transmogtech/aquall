@@ -9,7 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // action
-import { registerUser, apiError, resetRegisterFlag } from "../../slices/thunks";
+// import { registerUser, apiError, resetRegisterFlag } from "../../slices/thunks";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
@@ -44,7 +44,8 @@ const Register = () => {
                 .required("Please confirm your password"),
         }),
         onSubmit: (values) => {
-            dispatch(registerUser(values));
+            // dispatch(registerUser(values));
+
         }
     });
 
@@ -62,7 +63,7 @@ const Register = () => {
     } = useSelector(registerdatatype);
 
     useEffect(() => {
-        dispatch(apiError(""));
+        // dispatch(apiError(""));
     }, [dispatch]);
 
     useEffect(() => {
@@ -71,7 +72,7 @@ const Register = () => {
         }
 
         setTimeout(() => {
-            dispatch(resetRegisterFlag());
+            // dispatch(resetRegisterFlag());
         }, 3000);
 
     }, [dispatch, success, error, history]);

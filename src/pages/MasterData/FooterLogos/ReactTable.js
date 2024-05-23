@@ -1,66 +1,102 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import TableContainer from '../../../Components/Common/TableContainerReactTable';
 import { Link } from 'react-router-dom';
-import {  Button, Col, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import Select from "react-select";
+import { connect } from 'react-redux';
+import Loader from '../../../Components/Common/Loader';
+import PropTypes from 'prop-types';
+import ChangeStatus from '../../../Components/Common/ChangeStatus';
+import moment from 'moment/moment';
+
+import DeleteModal from "../../../Components/Common/DeleteModal";
+import { changeStatusFooterLogo, deleteFooterLogo, getFooterLogos } from '../../../actions/footerLogo';
+
+const DataTable = ({  changeStatusFooterLogo, deleteFooterLogo, getFooterLogos, footerLogo: { footerlogos, loading } }) => {
+
+  const [id, setId] = useState(null);
+  const searchTable = [];
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [statusModal, setStatusModal] = useState(false);
+  const [selectedSingle, setSelectedSingle] = useState(null);
+
+  useEffect(() => {
+    getFooterLogos();
+  }, []);
 
 
-const SearchTable = () => {
-  const searchTable =
-    [
-      { id: "01", company_name: "aquall", logo: "https://www.aquall.in/assets/images/logo1.png", priority: 0, action: "01" }
-    ];
-    
-    const [modal_grid, setmodal_grid] = useState(false);
-    const [selectedSingle, setSelectedSingle] = useState(null);
+  footerlogos.forEach(row => searchTable.push({ id: row._id, priority: row.priority, logo: row.logo, company: row.company, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
 
-    function tog_grid() {
-        setmodal_grid(!modal_grid);
-    }
 
-    
-    const [modal_center, setmodal_center] = useState(false);
-    function tog_center() {
-        setmodal_center(!modal_center);
-    }
 
-    function handleSelectSingle(selectedSingle) {
-      setSelectedSingle(selectedSingle);
+  function tog_grid(id) {
+    setStatusModal(true);
+    setId(id);
   }
+
+
+  function tog_center(id) {
+    setDeleteModal(true);
+    setId(id);
+  }
+
+  const handleDelete = () => {
+    deleteFooterLogo(id);
+    setDeleteModal(false);
+
+  }
+
+
+  function handleSelectSingle(selectedSingle) {
+    setSelectedSingle(selectedSingle.label);
+    console.log(selectedSingle);
+
+  }
+  const handleChageStatus = () => {
+    changeStatusFooterLogo(id, selectedSingle);
+    setStatusModal(false);
+  }
+
+  const statusOptions = [
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' }
+  ];
+
+
 
   const columns = useMemo(
     () => [
       {
-        header: "ID",
+        header: "Created On",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span>{cell.getValue()}</span>
           );
         },
-        accessorKey: "id",
+        accessorKey: "created",
         enableColumnFilter: false,
       },
-      
+
       {
-        header: "Company Name",
-        accessorKey: "company_name",
-        enableColumnFilter: false,
-      },
-      
-      {
-        header: "Logo",
+        header: "logo",
         accessorKey: "logo",
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-            <img src={cell.getValue()} width="50" />
-          );
-        },
+            <img className="rounded-circle header-profile-user" src={`http://localhost:3030/${cell.getValue()}`} alt="Header Avatar"></img>
+          )
+        }
       },
-      
       {
+        header: "company",
+        accessorKey: "company",
+        enableColumnFilter: false,
+      }, {
         header: "Priority",
         accessorKey: "priority",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Status",
+        accessorKey: "status",
         enableColumnFilter: false,
       },
       {
@@ -71,9 +107,9 @@ const SearchTable = () => {
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to={`/edit/footer-logo/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to={`/edit/footer-logo/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -82,87 +118,49 @@ const SearchTable = () => {
     []
   );
 
-const statusOptions = [
-  { value: 'Active', label: 'Active' },
-  { value: 'Inactive', label: 'Inactive' }
-];
 
   return (
     <React.Fragment >
-      <TableContainer
-        columns={(columns || [])}
-        data={(searchTable || [])}
-        isGlobalFilter={true}
-        customPageSize={5}
-        SearchPlaceholder='Search...'
+      {loading ? (
+        <Loader />
+      ) : (
+        <TableContainer
+          columns={(columns || [])}
+          data={(searchTable || [])}
+          isGlobalFilter={true}
+          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          SearchPlaceholder='Search...'
+        />
+      )}
+      <DeleteModal
+        show={deleteModal}
+        onCloseClick={() => setDeleteModal(false)}
+        onDeleteClick={handleDelete}
       />
 
-<Modal
-                isOpen={modal_grid}
-                toggle={() => {
-                    tog_grid();
-                }}
-            >
-                <ModalHeader className="modal-title" toggle={() => {
-                    tog_grid();
-                }}>
-                    Status
-
-                </ModalHeader>
-                <ModalBody>
-                    <form action="#">
-                        <div className="row g-3">
-                            <Col xxl={12}>
-                                <div>
-                                    <label htmlFor="firstName" className="form-label">Status</label>
-                                    <Select value={selectedSingle}  onChange={() => {  handleSelectSingle(); }}  options={statusOptions}  />
-                                </div>
-                            </Col>
-                
-                            <Col xxl={12}>
-                                <label htmlFor="passwordInput" className="form-label">Comment</label>
-                                <textarea className="form-control" placeholder="Enter Comment" id="comment" rows="3"></textarea>
-                            </Col>
-                            <Col lg={12}>
-                                <div className="hstack gap-2 justify-content-end">
-                                    <Button color="light" onClick={() => setmodal_grid(false)}>Close</Button>
-                                    <Button color="primary" onClick={() => setmodal_grid(false)} >Submit</Button>
-                                </div>
-                            </Col>
-                        </div>
-                    </form>
-                </ModalBody>
-            </Modal>
-
-
-            <Modal
-                isOpen={modal_center}
-                toggle={() => {
-                    tog_center();
-                }}
-                centered
-            >
-                <ModalHeader className="modal-title">
-                    Delete
-                </ModalHeader>
-                <ModalBody className="text-center p-5">
-                   <i className="mdi mdi-trash-can  mdi-48px mdi-spin text-danger"></i>
-                    <div className="mt-4">
-                        <h4 className="mb-3">Are you sure?</h4>
-                        <p className="text-muted mb-4"> You want to delete this record.</p>
-                        <div className="hstack gap-2 justify-content-center">
-                            <Button color="light" onClick={() => setmodal_center(false)}>Close</Button>
-                            <Link to="#" className="btn btn-danger">Delete</Link>
-                        </div>
-                    </div>
-                </ModalBody>
-            </Modal>
+      <ChangeStatus
+        show={statusModal}
+        onCloseClick={() => setStatusModal(false)}
+        onClick={handleChageStatus}
+        statusOptions={statusOptions}
+        selectedSingle={selectedSingle}
+        handleSelectSingle={handleSelectSingle}
+      />
     </React.Fragment >
 
-    
+
   );
 };
 
 
+DataTable.propTypes = {
+  getFooterLogos: PropTypes.func.isRequired,
+  footerLogo: PropTypes.object.isRequired,
+  deleteFooterLogo: PropTypes.func.isRequired,
+}
 
-export {  SearchTable };
+const mapStateToProps = state => ({
+  footerLogo: state.footerLogo,
+});
+
+export default connect(mapStateToProps, { getFooterLogos, deleteFooterLogo, changeStatusFooterLogo })(DataTable);

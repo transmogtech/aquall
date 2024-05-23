@@ -39,7 +39,7 @@ const FileManagerSlice = createSlice({
 
     builder.addCase(deleteFolder.fulfilled, (state, action) => {
       state.folders = state.folders.filter(
-        folder => folder.id !== action.payload
+        folder => (folder.id + "") !== (action.payload + "")
       );
     });
     builder.addCase(deleteFolder.rejected, (state, action) => {
@@ -62,10 +62,10 @@ const FileManagerSlice = createSlice({
     });
 
     builder.addCase(updateFile.fulfilled, (state, action) => {
-      state.files = state.files.map(file =>
-        file.id.toString() === action.payload.id.toString()
-          ? { ...file, ...action.payload }
-          : file
+      state.files = state.files.map(files =>
+        files.id.toString() === action.payload.id.toString()
+          ? { ...files, ...action.payload }
+          : files
       );
     });
 
@@ -75,7 +75,7 @@ const FileManagerSlice = createSlice({
 
     builder.addCase(deleteFile.fulfilled, (state, action) => {
       state.files = state.files.filter(
-        file => file.id !== action.payload
+        file => (file.id + "") !== (action.payload + "")
       );
     });
     builder.addCase(deleteFile.rejected, (state, action) => {

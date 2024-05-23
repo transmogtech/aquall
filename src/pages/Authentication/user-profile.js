@@ -24,7 +24,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import avatar from "../../assets/images/users/avatar-1.jpg";
 // actions
-import { editProfile, resetProfileFlag } from "../../slices/thunks";
+// import { editProfile, resetProfileFlag } from "../../slices/thunks";
 import { createSelector } from "reselect";
 
 const UserProfile = () => {
@@ -64,7 +64,7 @@ const UserProfile = () => {
       setidx(obj.data._id || "1");
 
       setTimeout(() => {
-        dispatch(resetProfileFlag());
+        // dispatch(resetProfileFlag());
       }, 3000);
     }
   }, [dispatch, user]);
@@ -83,7 +83,7 @@ const UserProfile = () => {
       first_name: Yup.string().required("Please Enter Your UserName"),
     }),
     onSubmit: (values) => {
-      dispatch(editProfile(values));
+      // dispatch(editProfile(values));
     }
   });
 

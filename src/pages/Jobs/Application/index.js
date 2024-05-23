@@ -23,7 +23,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import { useSelector, useDispatch } from "react-redux";
-import { getApplicationList } from "../../../slices/thunks";
+// import { getApplicationList } from "../../../slices/thunks";
 import TableContainer from "../../../Components/Common/TableContainer";
 import { Link } from "react-router-dom";
 import {
@@ -82,7 +82,7 @@ const Application = () => {
   const appList = useSelector(selectapplistData);
 
   useEffect(() => {
-    dispatch(getApplicationList());
+    // dispatch(getApplicationList());
   }, [dispatch]);
 
  

@@ -33,7 +33,7 @@ const TeamSlice = createSlice({
             state.error = action.payload.error || null;
         });
         builder.addCase(deleteTeamData.fulfilled, (state, action) => {
-            state.teamData = state.teamData.filter(team => team.id !== action.payload);
+            state.teamData = state.teamData.filter(team => (team.id + "") !== (action.payload + ""));
         });
         builder.addCase(deleteTeamData.rejected, (state, action) => {
             state.error = action.payload.error || null;

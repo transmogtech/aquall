@@ -1,10 +1,11 @@
 import React from 'react'
 import { Card, CardBody, CardHeader, Col, Container, Row, Button } from 'reactstrap'
-import {  SearchTable } from './ReactTable'
+import  DataTable  from './ReactTable'
 import { Link } from 'react-router-dom';
+import Alert from '../../../Components/Common/Alert';
 
 const FooterLogos = () => {
-  document.title = "React Tables | Velzon - React Admin & Dashboard Template";
+  document.title = "Footer Logo Management | Aquall Admin";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -18,12 +19,12 @@ const FooterLogos = () => {
                   <div className='float-end'>
                      
                       <Link to="/create-footer-logo" color="success" className="btn btn-success" id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Link>
-                      <Button className="btn btn-soft-danger"
-                      ><i className="ri-delete-bin-2-line"></i></Button>
+                   
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <SearchTable />
+                  <Alert /> 
+                  <DataTable />
                 </CardBody>
               </Card>
             </Col>

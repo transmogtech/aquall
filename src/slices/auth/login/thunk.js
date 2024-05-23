@@ -8,6 +8,7 @@ import {
 import { loginSuccess, logoutUserSuccess, apiError, reset_login_flag } from './reducer';
 
 export const loginUser = (user, history) => async (dispatch) => {
+
   try {
     let response;
     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
@@ -22,7 +23,7 @@ export const loginUser = (user, history) => async (dispatch) => {
         password: user.password
       });
 
-    } else if (process.env.REACT_APP_DEFAULTAUTH) {
+    } else if (process.env.REACT_APP_API_URL) {
       response = postFakeLogin({
         email: user.email,
         password: user.password,
@@ -93,7 +94,7 @@ export const socialLogin = (type, history) => async (dispatch) => {
   }
 };
 
-export const resetLoginFlag = () => async (dispatch) =>{
+export const resetLoginFlag = () => async (dispatch) => {
   try {
     const response = dispatch(reset_login_flag());
     return response;

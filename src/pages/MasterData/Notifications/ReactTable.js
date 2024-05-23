@@ -68,7 +68,7 @@ const SearchTable = () => {
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-           (cell.getValue() == 'active') ?  <span className="badge bg-success">{cell.getValue()}</span>:            <span class="badge bg-danger">{cell.getValue()}</span>
+           (cell.getValue() == 'active') ?  <span className="badge bg-success">{cell.getValue()}</span>:            <span className="badge bg-danger">{cell.getValue()}</span>
           );
         },
       },

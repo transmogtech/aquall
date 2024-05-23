@@ -16,9 +16,9 @@ import {
 
 export const initialState = {
   layoutType: layoutTypes.VERTICAL,
-  leftSidebarType: leftSidebarTypes.LIGHT,
+  leftSidebarType: leftSidebarTypes.DARK,
   layoutModeType: layoutModeTypes.LIGHTMODE,
-  layoutWidthType: layoutWidthTypes.FIXED,
+  layoutWidthType: layoutWidthTypes.FLUID,
   layoutPositionType: layoutPositionTypes.FIXED,
   topbarThemeType: topbarThemeTypes.LIGHT,
   leftsidbarSizeType: leftsidbarSizeTypes.DEFAULT,
@@ -81,6 +81,5 @@ export const {
   changePreLoaderAction,
   changeSidebarVisibilityAction
 } = LayoutSlice.actions;
-
 
 export default LayoutSlice.reducer;

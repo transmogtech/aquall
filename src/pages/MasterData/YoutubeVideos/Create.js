@@ -1,18 +1,28 @@
-import React from 'react';
+import React, { useState  } from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
-import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
+import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import {  Link } from 'react-router-dom';
+import { createYoutubeVideo } from '../../../actions/youtubeVideo';
+import { useNavigate } from "react-router-dom";
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
+const CreateYoutubeVideo = ({createYoutubeVideo}) => {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState();
 
-const CreateYoutubeVideo = () => {
+    const onChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
-  const handleSubmit = () => {
-  }
+    const handleSubmit = () => {
+        createYoutubeVideo(formData);
 
+        navigate('/youtube-videos');
+    }
     document.title = "Create Youtube Video | Aquall Admin";
     return (
         <React.Fragment>
@@ -32,17 +42,17 @@ const CreateYoutubeVideo = () => {
                                         <Row className="gy-4">
                                           
                                        
-                                        <Col xxl={3} md={6}>
+                                        <Col xxl={6} md={6}>
                                                 <div>
                                                     <Label htmlFor="basiInput" className="form-label">Title</Label>
-                                                    <Input type="text" className="form-control" id="name" placeholder="Name" />
+                                                    <Input type="text" onChange={e => onChange(e)}  className="form-control" name="title" placeholder="Name" />
                                                 </div>
                                             </Col>
 
-                                            <Col xxl={3} md={6}>
+                                            <Col xxl={6} md={6}>
                                                 <div>
                                                     <Label htmlFor="basiInput" className="form-label">Youtube URL</Label>
-                                                    <Input type="text" className="form-control" id="title" />
+                                                    <Input type="text" onChange={e => onChange(e)}  className="form-control" name="url" />
                                                 </div>
                                             </Col>
 
@@ -52,9 +62,9 @@ const CreateYoutubeVideo = () => {
                                   
                                 </CardBody>
                                 <CardFooter>
-                                <div class="d-flex align-items-start gap-3 mt-4">
+                                <div className="d-flex align-items-start gap-3 mt-4">
                                 
-                                  <Link to="/youtube-videos" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link>
+                                <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
                               </div>
                             </CardFooter>
                             </Card>
@@ -73,4 +83,9 @@ const CreateYoutubeVideo = () => {
     );
 }
 
-export default CreateYoutubeVideo;
+
+CreateYoutubeVideo.propTypes = {
+    createYoutubeVideo: PropTypes.func.isRequired,
+}
+
+export default connect(null, { createYoutubeVideo })(CreateYoutubeVideo);

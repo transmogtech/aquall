@@ -1,38 +1,76 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import UiContent from "../../Components/Common/UiContent";
 
 //import Components
 import BreadCrumb from '../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../Components/Common/PreviewCardHeader';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import Select from "react-select";
+import { connect, useSelector } from 'react-redux';
+import { updateNews } from '../../actions/news';
 
+import PropTypes from 'prop-types';
+import { getLanguages } from '../../actions/language';
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ChangeStatus from './ChangeStatus';
 
 
-const EditNews = (props) => {
+const EditNews = ({updateNews, getLanguages, language: { languages } }) => {
 
-    // const id = props.match.params.id;
+    let {id } = useParams();
 
-    const handleSubmit = () => {
-        //return redirect('/news-management');
-    }
-
-    const [selectedLanguage, setSelectedLanguage] = useState(null);
-
+    const newsList = useSelector(state => state.news.newsList);
+    const news = newsList.find(news => news._id === id);
     
-    function handleSelectLanugage(selectedLanguage) {
-        setSelectedLanguage(selectedLanguage);
-    }
+    // console.log(news);
 
-  const Languages  = [
-    { value: '01', label: 'English' },
-    { value: '02', label: 'Telugu' }
-  ];
+    useEffect(() => {
+        getLanguages();
+      }, [getLanguages]);
+      
+    
+  const [description, setDescription] = useState(null);
+  const [language, setLanguage] = useState(null);
+  const [image, setImage] = useState(null);
+
+  const [formData, setFormData] = useState();
+
+const navigate = useNavigate();
+
+const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+        setImage(e.target.files[0]);
+        // console.log(e.target.files);
+        setFormData({...formData, imageUrl: e.target.files[0] });
+    }
+  };
+
+   const onChange = (e) => {
+    setFormData({...formData, [e.target.name]: e.target.value });
+  };
+    
+  const Languages  = [];
+
+  languages.forEach(row => Languages.push({ value: row.url, label: row.title}));
+
+  function handleChangeLanguage(language) {
+    setLanguage(language.value);
+    console.log(language.value);
+    setFormData({...formData, language: language.value });
+
+}
+  
+  const handleSubmit = () => {
+
+   
+    updateNews(id, formData);
+
+    navigate('/news-management');
+
+}
     document.title = "Edit News | Aquall Admin";
     return (
         <React.Fragment>
@@ -55,19 +93,19 @@ const EditNews = (props) => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Title</Label>
-                                                        <Input type="text" className="form-control" id="title" placeholder="Title" defaultValue="Lorem Ipsum" />
+                                                        <Input type="text" className="form-control" id="title" placeholder="Title" name="title" onChange={e => onChange(e)} defaultValue={news.title} />
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
-                                                        <Input type="text" className="form-control" id="title" placeholder="URL Slug" defaultValue="lorem-ipsum" />
+                                                        <Input type="text" className="form-control" id="title" placeholder="URL Slug" name="url" onChange={e => onChange(e)} defaultValue={news.url} />
                                                     </div>
                                                 </Col>
                                                 <Col xxl={6} md={6}>
                                                     <label className="form-label">Language: </label>
-                                              <Select value={selectedLanguage}  onChange={() => {  handleSelectLanugage(); }}  options={Languages}  />
+                                              <Select value={news.language} onChange={handleChangeLanguage}  options={Languages}  />
 
                                         
 
@@ -76,31 +114,21 @@ const EditNews = (props) => {
                                                 <Col lg={6} >
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                        <Input type="file" className="form-control" id="inputGroupFile02" />
+                                                        <Input type="file" className="form-control" onChange={handleFileChange} id="inputGroupFile02" />
 
                                                     </div>
                                                 </Col>
                                                 <Col lg={6} >
                                                     <div>
                                                     <Label htmlFor="basiInput" className="form-label">Youtube Video URL</Label>
-                                                        <Input type="text" className="form-control" id="inputGroupFile02" />
+                                                        <Input type="text" className="form-control" defaultValue={news.videoUrl} name="videoUrl" onChange={e => onChange(e)} id="inputGroupFile02" />
                                                       
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
                                                         <Label htmlFor="description" className="form-label">Description</Label>
-                                                        <CKEditor
-                                                            editor={ClassicEditor}
-                                                            data="<p>Hello from CKEditor 5!</p>"
-                                                            onReady={(editor) => {
-                                                                // You can store the "editor" and use when it is needed.
-
-                                                            }}
-                                                            onChange={(editor) => {
-                                                                editor.getData();
-                                                            }}
-                                                        />
+                                                        <textarea className="form-control" placeholder="Description" id="description" rows="3" name="description" onChange={e => onChange(e)} defaultValue={news.description}></textarea>
                                                     </div>
                                                 </Col>
 
@@ -130,19 +158,19 @@ const EditNews = (props) => {
                                                 <Col xxl={12} md={12}>
                                                     <div>
                                                         <Label htmlFor="description" className="form-label">Meta Title</Label>
-                                                        <textarea className="form-control" placeholder="Meta Title" id="description" rows="3">Lorem Ipsum is simple dummy text</textarea>
+                                                        <textarea className="form-control" placeholder="Meta Title" id="description" name="metaTitle" onChange={e => onChange(e)} rows="3" defaultValue={news.metaTitle} ></textarea>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
                                                         <Label htmlFor="description" className="form-label">Meta Description</Label>
-                                                        <textarea className="form-control" placeholder="Meta Description" id="description" rows="3">Lorem Ipsum is simple dummy text</textarea>
+                                                        <textarea className="form-control" placeholder="Meta Description" name="metaDescription" onChange={e => onChange(e)}  id="description" rows="3" defaultValue={news.metaDescription} ></textarea>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
                                                         <Label htmlFor="description" className="form-label">Meta Keywords</Label>
-                                                        <textarea className="form-control" placeholder="Meta Keywords" id="description" rows="3">Lorem Ipsum is simple dummy text</textarea>
+                                                        <textarea className="form-control" placeholder="Meta Keywords" id="description" name="metaKeywords" onChange={e => onChange(e)}  rows="3" defaultValue={news.metaKeywords}></textarea>
                                                     </div>
                                                 </Col>
 
@@ -154,8 +182,8 @@ const EditNews = (props) => {
                                     </CardBody>
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
-
-                                            <Link to="/news-management" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link>
+                                        <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
+                                            {/* <Link to="/news-management" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link> */}
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -167,16 +195,24 @@ const EditNews = (props) => {
                 </Container>
 
             </div>
-            <div className="d-none code-view">
-                                        <pre className="language-markup" style={{ height: "275px" }}>
-                                            <code>
-                                                <ChangeStatus />
-                                            </code>
-                                        </pre>
-                                    </div>
-
+         
         </React.Fragment>
     );
 }
 
-export default EditNews;
+
+  
+
+EditNews.propTypes = {
+    updateNews: PropTypes.func.isRequired,
+    getLanguages: PropTypes.func.isRequired,
+    language: PropTypes.object.isRequired,
+
+}
+
+
+const mapStateToProps = state => ({
+    language: state.language,
+  });
+  
+export default connect(mapStateToProps, {updateNews, getLanguages})(EditNews);

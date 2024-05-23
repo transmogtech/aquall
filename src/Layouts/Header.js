@@ -17,7 +17,6 @@ import NotificationDropdown from '../Components/Common/NotificationDropdown';
 import ProfileDropdown from '../Components/Common/ProfileDropdown';
 import LightDark from '../Components/Common/LightDark';
 
-import { changeSidebarVisibility } from '../slices/thunks';
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
 
@@ -38,7 +37,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
 
     const toogleMenuBtn = () => {
         var windowSize = document.documentElement.clientWidth;
-        dispatch(changeSidebarVisibility("show"));
+        // dispatch(changeSidebarVisibility("show"));
 
         if (windowSize > 767)
             document.querySelector(".hamburger-icon").classList.toggle('open');
@@ -77,23 +76,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
                         <div className="d-flex">
 
                             <div className="navbar-brand-box horizontal-logo">
-                                <Link to="/" className="logo logo-dark">
-                                    <span className="logo-sm">
-                                        <img src={logoSm} alt="" height="22" />
-                                    </span>
-                                    <span className="logo-lg">
-                                        <img src={logoDark} alt="" height="17" />
-                                    </span>
-                                </Link>
-
-                                <Link to="/" className="logo logo-light">
-                                    <span className="logo-sm">
-                                        <img src={logoSm} alt="" height="22" />
-                                    </span>
-                                    <span className="logo-lg">
-                                        <img src={logoLight} alt="" height="17" />
-                                    </span>
-                                </Link>
+                               
                             </div>
 
                             <button

@@ -1,39 +1,88 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import TableContainer from '../../../Components/Common/TableContainerReactTable';
 import { Link } from 'react-router-dom';
-import {  Button, Col, Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
-import Select from "react-select";
+import { connect } from 'react-redux';
+import Loader from '../../../Components/Common/Loader';
+import PropTypes from 'prop-types';
+import ChangeStatus from '../../../Components/Common/ChangeStatus';
+import moment from 'moment/moment';
+
+import DeleteModal from "../../../Components/Common/DeleteModal";
+
+import { changeStatusCultureType, deleteCultureType, getCultureTypes, updateCultureType } from '../../../actions/cultureType';
+import EditModal from './Edit';
+
+const DataTable = ({ changeStatusCultureType, deleteCultureType, getCultureTypes,updateCultureType, cultureType: { culturetypes, loading } }) => {
+  const [id, setId] = useState(null);
+  const searchTable = [];
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [statusModal, setStatusModal] = useState(false);
+  const [selectedSingle, setSelectedSingle] = useState(null);
+
+  useEffect(() => {
+    getCultureTypes();
+  }, []);
 
 
-const SearchTable = () => {
-  const searchTable =
-    [
-      { id: "01", title: "Vannamei", action: "01" },
-      { id: "02", title: "Black Tiger	 ", action: "02" },
-      { id: "03", title: "fish", action: "03" },
-      { id: "04", title: "Carb", action: "04" },
-    ];
-    
-    const [modal_grid, setmodal_grid] = useState(false);
-    const [selectedSingle, setSelectedSingle] = useState(null);
+  culturetypes.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
 
-    function tog_grid() {
-        setmodal_grid(!modal_grid);
-    }
+  const [editCultureType, setEditCultureType] = useState(false);
+  const [defaultValue, setDefaultValue] = useState(null);
 
-    const [create_culture_type, setcreate_culture_type] = useState(false);
+  function toggle_edit(id) {
+    setEditCultureType(!editCultureType);
+    setId(id);
 
-    function toggle_create() {
-      setcreate_culture_type(!create_culture_type);
+    const culturetype = culturetypes.find(culturetype => culturetype._id === id);
+    // console.log(culturetype);
+
+    setDefaultValue(culturetype.title);
+
   }
-    const [modal_center, setmodal_center] = useState(false);
-    function tog_center() {
-        setmodal_center(!modal_center);
-    }
 
-    function handleSelectSingle(selectedSingle) {
-      setSelectedSingle(selectedSingle);
+
+  const onChange = (e) => {
+    setDefaultValue(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    updateCultureType(id, defaultValue);
+    setEditCultureType(false);
   }
+
+  function tog_grid(id) {
+    setStatusModal(true);
+    setId(id);
+  }
+
+
+  function tog_center(id) {
+    setDeleteModal(true);
+    setId(id);
+  }
+
+  const handleDelete = () => {
+    deleteCultureType(id);
+    setDeleteModal(false);
+
+  }
+
+
+  function handleSelectSingle(selectedSingle) {
+    setSelectedSingle(selectedSingle.value);
+    console.log(selectedSingle);
+
+  }
+  const handleChageStatus = () => {
+    changeStatusCultureType(id, selectedSingle);
+    setStatusModal(false);
+  }
+
+  const statusOptions = [
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' }
+  ];
+
 
   const columns = useMemo(
     () => [
@@ -54,6 +103,11 @@ const SearchTable = () => {
         enableColumnFilter: false,
       },
       {
+        header: "Status",
+        accessorKey: "status",
+        enableColumnFilter: false,
+      },
+      {
         header: "Action",
         accessorKey: "action",
         enableColumnFilter: false,
@@ -62,7 +116,7 @@ const SearchTable = () => {
           return (
             <div>
             <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to='#!' onClick={() => toggle_create(true)} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+            <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
             <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
@@ -72,114 +126,40 @@ const SearchTable = () => {
     []
   );
 
-const statusOptions = [
-  { value: 'Active', label: 'Active' },
-  { value: 'Inactive', label: 'Inactive' }
-];
-
   return (
     <React.Fragment >
-      <TableContainer
-        columns={(columns || [])}
-        data={(searchTable || [])}
-        isGlobalFilter={true}
-        customPageSize={5}
-        SearchPlaceholder='Search...'
+      {loading ? (
+        <Loader />
+      ) : (
+        <TableContainer
+          columns={(columns || [])}
+          data={(searchTable || [])}
+          isGlobalFilter={true}
+          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          SearchPlaceholder='Search...'
+        />
+      )}
+      <DeleteModal
+        show={deleteModal}
+        onCloseClick={() => setDeleteModal(false)}
+        onDeleteClick={handleDelete}
       />
 
-<Modal
-                isOpen={modal_grid}
-                toggle={() => {
-                    tog_grid();
-                }}
-            >
-                <ModalHeader className="modal-title" toggle={() => {
-                    tog_grid();
-                }}>
-                    Status
-
-                </ModalHeader>
-                <ModalBody>
-                    <form action="#">
-                        <div className="row g-3">
-                            <Col xxl={12}>
-                                <div>
-                                    <label htmlFor="firstName" className="form-label">Status</label>
-                                    <Select value={selectedSingle}  onChange={() => {  handleSelectSingle(); }}  options={statusOptions}  />
-                                </div>
-                            </Col>
-                
-                            <Col xxl={12}>
-                                <label htmlFor="passwordInput" className="form-label">Comment</label>
-                                <textarea className="form-control" placeholder="Enter Comment" id="comment" rows="3"></textarea>
-                            </Col>
-                            <Col lg={12}>
-                                <div className="hstack gap-2 justify-content-end">
-                                    <Button color="light" onClick={() => setmodal_grid(false)}>Close</Button>
-                                    <Button color="primary" onClick={() => setmodal_grid(false)} >Submit</Button>
-                                </div>
-                            </Col>
-                        </div>
-                    </form>
-                </ModalBody>
-            </Modal>
-
-            <Modal
-                isOpen={create_culture_type}
-                toggle={() => {
-                    toggle_create();
-                }}
-            >
-                <ModalHeader className="modal-title" toggle={() => {
-                    toggle_create();
-                }}>
-                    Edit culture type
-
-                </ModalHeader>
-                <ModalBody>
-                    <form action="#">
-                        <div className="row g-3">
-                            <Col xxl={12}>
-                                <div>
-                                    <label htmlFor="firstName" className="form-label">Name</label>
-                                    <Input type="text" className="form-control" id="name" placeholder="Name" defaultValue="Vannamei" />
-                                </div>
-                            </Col>
-                
-                            <Col lg={12}>
-                                <div className="hstack gap-2 justify-content-end">
-                                    <Button color="light" onClick={() => setcreate_culture_type(false)}>Close</Button>
-                                    <Button color="primary" onClick={() => setcreate_culture_type(false)} >Submit</Button>
-                                </div>
-                            </Col>
-                        </div>
-                    </form>
-                </ModalBody>
-            </Modal>
-
-
-            <Modal
-                isOpen={modal_center}
-                toggle={() => {
-                    tog_center();
-                }}
-                centered
-            >
-                <ModalHeader className="modal-title">
-                    Delete
-                </ModalHeader>
-                <ModalBody className="text-center p-5">
-                   <i className="mdi mdi-trash-can  mdi-48px mdi-spin text-danger"></i>
-                    <div className="mt-4">
-                        <h4 className="mb-3">Are you sure?</h4>
-                        <p className="text-muted mb-4"> You want to delete this record.</p>
-                        <div className="hstack gap-2 justify-content-center">
-                            <Button color="light" onClick={() => setmodal_center(false)}>Close</Button>
-                            <Link to="#" className="btn btn-danger">Delete</Link>
-                        </div>
-                    </div>
-                </ModalBody>
-            </Modal>
+      <ChangeStatus
+        show={statusModal}
+        onCloseClick={() => setStatusModal(false)}
+        onClick={handleChageStatus}
+        statusOptions={statusOptions}
+        selectedSingle={selectedSingle}
+        handleSelectSingle={handleSelectSingle}
+      />
+      <EditModal
+        show={editCultureType}
+        onCloseClick={() => setEditCultureType(false)}
+        onChange={onChange}
+        handleSubmit={handleSubmit}
+        defaultValue={defaultValue}
+      />
     </React.Fragment >
 
     
@@ -188,4 +168,16 @@ const statusOptions = [
 
 
 
-export {  SearchTable };
+DataTable.propTypes = {
+  getCultureTypes: PropTypes.func.isRequired,
+  cultureType: PropTypes.object.isRequired,
+  deleteCultureType: PropTypes.func.isRequired,
+  changeStatusCultureType: PropTypes.func.isRequired,
+  updateCultureType: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+  cultureType: state.cultureType,
+});
+
+export default connect(mapStateToProps, { getCultureTypes, deleteCultureType, changeStatusCultureType, updateCultureType })(DataTable);

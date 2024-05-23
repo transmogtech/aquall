@@ -7,19 +7,7 @@ import {
 } from "reactstrap";
 
 //redux
-import {
-    changeLayout,
-    changeSidebarTheme,
-    changeLayoutMode,
-    changeLayoutWidth,
-    changeLayoutPosition,
-    changeTopbarTheme,
-    changeLeftsidebarSizeType,
-    changeLeftsidebarViewType,
-    changeSidebarImageType,
-    changePreLoader,
-    changeSidebarVisibility
-} from "../../slices/thunks";
+
 import { useSelector, useDispatch } from "react-redux";
 
 //import Constant
@@ -52,10 +40,10 @@ const RightSidebar = () => {
     const dispatch = useDispatch();
 
     const [show, setShow] = useState(false);
-    function tog_show() {
-        setShow(!show);
-        dispatch(changeSidebarTheme("gradient"));
-    }
+    // function tog_show() {
+    //     setShow(!show);
+    //     dispatch(changeSidebarTheme("gradient"));
+    // }
 
     useEffect(() => {
         if (show && document.getElementById("sidebar-color-dark") && document.getElementById("sidebar-color-light")) {
@@ -69,7 +57,7 @@ const RightSidebar = () => {
         (layout) => ({
             layoutType: layout.layoutType,
             leftSidebarType: layout.leftSidebarType,
-            layoutModeType: layout.layoutModeType,
+            layoutModeType: layout.layoutModeTypes,
             layoutWidthType: layout.layoutWidthType,
             layoutPositionType: layout.layoutPositionType,
             topbarThemeType: layout.topbarThemeType,

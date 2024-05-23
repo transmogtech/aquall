@@ -1,47 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
-import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
+import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import {  Link } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import Select from "react-select";
+import { createArea } from '../../../actions/area';
+import PropTypes from 'prop-types';
+import { connect, useSelector } from 'react-redux';
+import { getStates } from '../../../actions/state';
+import { getDistricts } from '../../../actions/district';
 
-
-const CreateArea = () => {
-
-
-    const states  = [
-      { value: '01', label: 'Andhrapradesh' },
-      { value: '02', label: 'Telangana' },
-      { value: '03', label: 'Tamilnadu' }
-    ];
+const CreateArea = ({createArea, getStates, getDistricts, state: { states }}) => {
 
     
-    const districts  = [
-        { value: '01', label: 'Srikakulam' },
-        { value: '02', label: 'Vizayanagaram' },
-        { value: '03', label: 'Vizag' },
-        { value: '03', label: 'Eastgodavari' },
-        { value: '03', label: 'Westgodavari' }
-      ];
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState();
+    const [selectedState, setSelectedState] = useState(null);
+    const [options, setOptions] = useState([]);
+    const [selectedDistrict, setSelectedDistrict] = useState(['']);
+    const Districts   = [];
 
 
-      const [selectedDistrict, setSelectedDistrict] = useState(false);
-      const [selectedState, setSelectedState] = useState(null);
-
+    useEffect(() => {
+        getStates();
+        getDistricts();
+      }, [getStates, getDistricts]);
       
-    function handleSelectState(selectedState) {
-        setSelectedState(selectedState);
+    
+    const districtsData = useSelector(state => state.district.districts);
+    // console.log(districtsData);
+    const onChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = () => {
+        createArea(formData);
+
+        navigate('/areas');
     }
 
-    
-    function handleSelectDistrict(selectedDistrict) {
-        setSelectedDistrict(selectedDistrict);
+    function handleSelectState(selectedState) {
+
+        setFormData({...formData, stateId: selectedState.value });
+        console.log(selectedState.value);
+
+        setSelectedState(selectedState.value);
+
+
+        districtsData.forEach(district => {
+            if (district.stateId._id === selectedState.value) {
+                Districts.push({ value: district._id, label: district.title});
+            }
+          });
+
+        // const districtArr = districtsData.find(district => district.stateId._id === selectedState.value);
+          setOptions(Districts);
+        console.log(Districts);
+
+        // districtArr.forEach(row => Districts.push({ value: row._id, label: row.title}));
+
     }
-  const handleSubmit = () => {
-  }
+
+    function handleSelectDistrict(selectedDistrict) {
+        setFormData({...formData, districtId: selectedDistrict.value });
+
+        setSelectedDistrict(selectedDistrict.value);
+    }
+
+
+    // const states  = [
+    //     { value: '01', label: 'Andhrapradesh' },
+    //     { value: '02', label: 'Telangana' },
+    //     { value: '03', label: 'Tamilnadu' }
+    //   ];
+
+      const States   = [];
+
+      states.forEach(row => States.push({ value: row._id, label: row.title}));
+    
+ 
 
     document.title = "Create Area | Aquall Admin";
     return (
@@ -61,34 +101,33 @@ const CreateArea = () => {
                                     <div className="live-preview">
                                         <Row className="gy-4">
                                           
-                                       
                                         <Col xxl={3} md={6}>
                                                 <div>
                                                     <Label htmlFor="basiInput" className="form-label">State</Label>
-                                                    <Select value={selectedState}  onChange={() => {  handleSelectState(); }}  options={states}  />
-                                                </div>
-                                            </Col>
-
-                                             
-                                        <Col xxl={3} md={6}>
-                                                <div>
-                                                    <Label htmlFor="basiInput" className="form-label">District</Label>
-                                                    <Select value={selectedDistrict}  onChange={() => {  handleSelectDistrict(); }}  options={districts}  />
+                                                    <Select  onChange={handleSelectState}  options={States} name='stateId' id='stateId'  />
                                                 </div>
                                             </Col>
                                             <Col xxl={3} md={6}>
                                                 <div>
-                                                    <Label htmlFor="basiInput" className="form-label">Area</Label>
-                                                    <Input type="text" className="form-control" id="title" placeholder="Area" />
+                                                    <Label htmlFor="basiInput" className="form-label">District</Label>
+                                                    <Select  onChange={handleSelectDistrict}  options={options}  />
+
+                                                    
                                                 </div>
                                             </Col>
+                                            <Col xxl={3} md={6}>
+                                                <div>
+                                                    <Label htmlFor="title" className="form-label">Name</Label>
+                                                    <Input type="text" className="form-control" onChange={e => onChange(e)} name="title"  id="title" placeholder="Title" />
+                                                </div>
+                                            </Col>
+
                                             <Col xxl={3} md={6}>
                                                 <div>
                                                     <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
-                                                    <Input type="text" className="form-control" id="title" placeholder="URL Slug" />
+                                                    <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" placeholder="URL Slug" />
                                                 </div>
                                             </Col>
-
                                         </Row>
 
                                     </div>
@@ -112,23 +151,23 @@ const CreateArea = () => {
                                         <Row className="gy-4">
                                       
                                         <Col xxl={12} md={12}>
-                                                <div>
-                                                    <Label htmlFor="description" className="form-label">Meta Title</Label>
-                                                    <textarea className="form-control" placeholder="Meta Title" id="description" rows="3"></textarea>
-                                                </div>
-                                            </Col>
-                                            <Col xxl={12} md={12}>
-                                                <div>
-                                                    <Label htmlFor="description" className="form-label">Meta Description</Label>
-                                                    <textarea className="form-control" placeholder="Meta Description" id="description" rows="3"></textarea>
-                                                </div>
-                                            </Col>
-                                            <Col xxl={12} md={12}>
-                                                <div>
-                                                    <Label htmlFor="description" className="form-label">Meta Keywords</Label>
-                                                    <textarea className="form-control" placeholder="Meta Keywords" id="description" rows="3"></textarea>
-                                                </div>
-                                            </Col>
+                                                    <div>
+                                                        <Label htmlFor="metaTitle" className="form-label">Meta Title</Label>
+                                                        <textarea className="form-control" placeholder="Meta Title" onChange={e => onChange(e)} name="metaTitle" id="metaTitle" rows="3"></textarea>
+                                                    </div>
+                                                </Col>
+                                                <Col xxl={12} md={12}>
+                                                    <div>
+                                                        <Label htmlFor="metaDescription" className="form-label">Meta Description</Label>
+                                                        <textarea className="form-control" placeholder="Meta Description" onChange={e => onChange(e)} name="metaDescription" id="metaDescription" rows="3"></textarea>
+                                                    </div>
+                                                </Col>
+                                                <Col xxl={12} md={12}>
+                                                    <div>
+                                                        <Label htmlFor="metaKeywords" className="form-label">Meta Keywords</Label>
+                                                        <textarea className="form-control" placeholder="Meta Keywords" onChange={e => onChange(e)} name="metaKeywords" id="metaKeywords" rows="3"></textarea>
+                                                    </div>
+                                                </Col>
 
 
                                         </Row>
@@ -137,9 +176,8 @@ const CreateArea = () => {
                                   
                                 </CardBody>
                                 <CardFooter>
-                                <div class="d-flex align-items-start gap-3 mt-4">
-                                
-                                  <Link to="/areas" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link>
+                                <div className="d-flex align-items-start gap-3 mt-4">
+                                <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
                               </div>
                             </CardFooter>
                             </Card>
@@ -157,4 +195,17 @@ const CreateArea = () => {
     );
 }
 
-export default CreateArea;
+CreateArea.propTypes = {
+    createArea: PropTypes.func.isRequired,
+    getStates: PropTypes.func.isRequired,
+    state: PropTypes.object.isRequired,
+
+}
+
+
+const mapStateToProps = state => ({
+    state: state.state,
+  });
+  
+
+export default connect(mapStateToProps, {createArea, getStates, getDistricts})(CreateArea);

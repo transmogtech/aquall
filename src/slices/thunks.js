@@ -37,7 +37,7 @@ export * from "./mailbox/thunk";
 export * from "./dashboardAnalytics/thunk";
 
 // Dashboard CRM
-// export * from "./dashboardCRM/thunk";
+export * from "./dashboardCRM/thunk";
 
 // Dashboard Ecommerce
 export * from "./dashboardEcommerce/thunk";
@@ -64,4 +64,4 @@ export * from "./todos/thunk"
 export * from "./jobs/thunk";
 
 // API Key
-export * from "./apiKey/thunk"; 
+export * from "./apiKey/thunk";

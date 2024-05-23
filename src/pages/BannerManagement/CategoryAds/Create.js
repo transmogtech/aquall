@@ -52,7 +52,7 @@ const CreateSliderImage = () => {
                                   
                                 </CardBody>
                                 <CardFooter>
-                                <div class="d-flex align-items-start gap-3 mt-4">
+                                <div className="d-flex align-items-start gap-3 mt-4">
                                 
                                   <Link to="/slider-images" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link>
                               </div>

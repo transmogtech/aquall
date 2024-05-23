@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
-import { Card, CardBody, CardHeader, Col, Container, Row, Button } from 'reactstrap'
-import {  SearchTable } from './ReactTable'
+import React from 'react'
+import { Card, CardBody, CardHeader, Col, Container, Row } from 'reactstrap'
+import   DataTable  from './ReactTable'
 import { Link } from 'react-router-dom';
-
+import Alert from '../../Components/Common/Alert';
+import BreadCrumb from '../../Components/Common/BreadCrumb';
 const Languages = () => {
-  document.title = "React Tables | Velzon - React Admin & Dashboard Template";
+  document.title = "Language Management | Aquall Admin";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-         
+        <BreadCrumb title="Language Listing" pageTitle="Language Management" />
+
           <Row>
             <Col lg={12}>
               <Card>
@@ -21,7 +23,9 @@ const Languages = () => {
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <SearchTable />
+                <Alert />
+
+                  <DataTable />
                 </CardBody>
               </Card>
             </Col>

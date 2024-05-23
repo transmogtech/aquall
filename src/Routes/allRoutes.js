@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom";
 
 //Dashboard
 import DashboardEcommerce from "../pages/DashboardEcommerce";
-
 // //Calendar
 // import MonthGrid from "../pages/Calendar/MonthGrid";
 // import Calendar from "../pages/Calendar/Maincalender";
@@ -302,6 +301,8 @@ import EditProduct from "../pages/ProductManagement/Edit.js";
 import EcommerceOrders from "../pages/OrderManagement/index.js";
 import EcommerceOrderDetail from "../pages/OrderManagement/EcommerceOrderDetail.js";
 import EcommerceCustomers from "../pages/UserManagement/Users/index.js";
+import CreateUser from "../pages/UserManagement/Users/Create.js";
+import EditUser from "../pages/UserManagement/Users/Edit.js";
 import UserRoles from "../pages/UserManagement/Roles/index.js";
 import ProductRequests from "../pages/RequestManagement/ProductRequests/index.js";
 import TechnicianRequests from "../pages/RequestManagement/TechnicianRequests/index.js";
@@ -405,6 +406,9 @@ const authProtectedRoutes = [
   { path: "/orders", component: <EcommerceOrders /> },
   { path: "/order-details", component: <EcommerceOrderDetail /> },
   { path: "/users", component: <EcommerceCustomers /> },
+  { path: "/create-user", component: <CreateUser /> },
+  { path: "/edit/user/:id", component: <EditUser /> },
+
   { path: "/user-roles", component: <UserRoles /> },
   { path: "/product-requests", component: <ProductRequests /> },
   { path: "/company-requests", component: <CompanyRequests /> },

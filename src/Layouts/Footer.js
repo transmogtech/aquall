@@ -12,7 +12,7 @@ const Footer = () => {
                         </Col>
                         <Col sm={6}>
                             <div className="text-sm-end d-none d-sm-block">
-                                Design & Develop by Transmog Technologies Pvt. Ltd.
+                                Design & Develop by Trransmmog Technologies Pvt. Ltd.
                             </div>
                         </Col>
                     </Row>

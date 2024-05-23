@@ -1,60 +1,93 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import TableContainer from '../../../Components/Common/TableContainerReactTable';
 import { Link } from 'react-router-dom';
-import {  Button, Col, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import Select from "react-select";
+import ChangeStatus from '../../../Components/Common/ChangeStatus';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import moment from 'moment/moment';
+import DeleteModal from '../../../Components/Common/DeleteModal';
+import Loader from '../../../Components/Common/Loader';
+import { getAreas, deleteArea, changeStatusArea } from '../../../actions/area';
+
+const DataTable = ({ getAreas, deleteArea, changeStatusArea, area: { areas, loading } }) => {
+
+  const [id, setId] = useState(null);
+  const searchTable = [];
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [statusModal, setStatusModal] = useState(false);
+  const [selectedSingle, setSelectedSingle] = useState(null);
+
+  useEffect(() => {
+    getAreas();
+  }, [getAreas]);
 
 
-const SearchTable = () => {
-  const searchTable =
-    [
-      { id: "01", state: "Andhrapradesh", district: "Westgodavari", area: "akividu", action: "01" },
-      { id: "02", state: "Telangana",  district: "Westgodavari", area: "eluru", action: "02" },
-      { id: "03", state: "Tamilnadu", district: "Prakasam", area: "pandillapalli", action: "03" },
-      { id: "04", state: "Andhrapradesh", district: "Prakasam", area: "chakicharla", action: "04" },
-      { id: "05", state: "Telangana",  district: "Prakasam", area: "kesupalem", action: "05" },
-      { id: "06", state: "Tamilnadu", district: "Prakasam", area: "kopollu", action: "06" },
-      { id: "07", state: "Andhrapradesh", district: "Guntur", area: "kesavapuram", action: "07" },
-      { id: "08", state: "Telangana",  district: "Prakasam", area: "Tetupuram", action: "08" },
-      { id: "09", state: "Tamilnadu", district: "Prakasam", area: "vavilatipadu", action: "09" },
-      { id: "10", state: "Tamilnadu", district: "Prakasam", area: "Velagapudi", action: "10" },
-    ];
-    
-    const [modal_grid, setmodal_grid] = useState(false);
-    const [selectedSingle, setSelectedSingle] = useState(null);
+  areas.forEach(row => searchTable.push({ 
+    id: row._id, 
+    state: row.stateId.title, 
+    district: row.districtId.title, 
+    title: row.title, 
+    action: row._id, 
+    url: row.url, 
+    status: row.status, 
+    created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') 
+  }));
 
-    function tog_grid() {
-        setmodal_grid(!modal_grid);
-    }
 
-    
-    const [modal_center, setmodal_center] = useState(false);
-    function tog_center() {
-        setmodal_center(!modal_center);
-    }
 
-    function handleSelectSingle(selectedSingle) {
-      setSelectedSingle(selectedSingle);
+  function tog_grid(id) {
+    setStatusModal(true);
+    setId(id);
   }
+
+
+  function tog_center(id) {
+    setDeleteModal(true);
+    setId(id);
+  }
+
+  const handleDelete = () => {
+    deleteArea(id);
+    setDeleteModal(false);
+
+  }
+
+
+  function handleSelectSingle(selectedSingle) {
+    setSelectedSingle(selectedSingle.value);
+    console.log(selectedSingle);
+
+  }
+  const handleChageStatus = () => {
+    changeStatusArea(id, selectedSingle);
+    setStatusModal(false);
+  }
+
+  const statusOptions = [
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' }
+  ];
+
 
   const columns = useMemo(
     () => [
       {
-        header: "ID",
+        
+        header: "Created On",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span className="">{cell.getValue()}</span>
           );
         },
-        accessorKey: "id",
+        accessorKey: "created",
         enableColumnFilter: false,
       },
-      
       {
         header: "State",
         accessorKey: "state",
         enableColumnFilter: false,
       },
+      
       {
         header: "District",
         accessorKey: "district",
@@ -62,7 +95,17 @@ const SearchTable = () => {
       },
       {
         header: "Area",
-        accessorKey: "area",
+        accessorKey: "title",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Slug",
+        accessorKey: "url",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Status",
+        accessorKey: "status",
         enableColumnFilter: false,
       },
       {
@@ -73,9 +116,9 @@ const SearchTable = () => {
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to={`/edit/area/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to={`/edit/area/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -84,81 +127,34 @@ const SearchTable = () => {
     []
   );
 
-const statusOptions = [
-  { value: 'Active', label: 'Active' },
-  { value: 'Inactive', label: 'Inactive' }
-];
 
   return (
     <React.Fragment >
-      <TableContainer
-        columns={(columns || [])}
-        data={(searchTable || [])}
-        isGlobalFilter={true}
-        customPageSize={5}
-        SearchPlaceholder='Search...'
+       {loading ? (
+        <Loader />
+      ) : (
+        <TableContainer
+          columns={(columns || [])}
+          data={(searchTable || [])}
+          isGlobalFilter={true}
+          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          SearchPlaceholder='Search...'
+        />
+      )}
+      <DeleteModal
+        show={deleteModal}
+        onCloseClick={() => setDeleteModal(false)}
+        onDeleteClick={handleDelete}
       />
 
-<Modal
-                isOpen={modal_grid}
-                toggle={() => {
-                    tog_grid();
-                }}
-            >
-                <ModalHeader className="modal-title" toggle={() => {
-                    tog_grid();
-                }}>
-                    Status
-
-                </ModalHeader>
-                <ModalBody>
-                    <form action="#">
-                        <div className="row g-3">
-                            <Col xxl={12}>
-                                <div>
-                                    <label htmlFor="firstName" className="form-label">Status</label>
-                                    <Select value={selectedSingle}  onChange={() => {  handleSelectSingle(); }}  options={statusOptions}  />
-                                </div>
-                            </Col>
-                
-                            <Col xxl={12}>
-                                <label htmlFor="passwordInput" className="form-label">Comment</label>
-                                <textarea className="form-control" placeholder="Enter Comment" id="comment" rows="3"></textarea>
-                            </Col>
-                            <Col lg={12}>
-                                <div className="hstack gap-2 justify-content-end">
-                                    <Button color="light" onClick={() => setmodal_grid(false)}>Close</Button>
-                                    <Button color="primary" onClick={() => setmodal_grid(false)} >Submit</Button>
-                                </div>
-                            </Col>
-                        </div>
-                    </form>
-                </ModalBody>
-            </Modal>
-
-
-            <Modal
-                isOpen={modal_center}
-                toggle={() => {
-                    tog_center();
-                }}
-                centered
-            >
-                <ModalHeader className="modal-title">
-                    Delete
-                </ModalHeader>
-                <ModalBody className="text-center p-5">
-                   <i className="mdi mdi-trash-can  mdi-48px mdi-spin text-danger"></i>
-                    <div className="mt-4">
-                        <h4 className="mb-3">Are you sure?</h4>
-                        <p className="text-muted mb-4"> You want to delete this record.</p>
-                        <div className="hstack gap-2 justify-content-center">
-                            <Button color="light" onClick={() => setmodal_center(false)}>Close</Button>
-                            <Link to="#" className="btn btn-danger">Delete</Link>
-                        </div>
-                    </div>
-                </ModalBody>
-            </Modal>
+      <ChangeStatus
+        show={statusModal}
+        onCloseClick={() => setStatusModal(false)}
+        onClick={handleChageStatus}
+        statusOptions={statusOptions}
+        selectedSingle={selectedSingle}
+        handleSelectSingle={handleSelectSingle}
+      />
     </React.Fragment >
 
     
@@ -167,4 +163,14 @@ const statusOptions = [
 
 
 
-export {  SearchTable };
+
+DataTable.propTypes = {
+  getAreas: PropTypes.func.isRequired,
+  area: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = state => ({
+  area: state.area,
+});
+
+export default connect(mapStateToProps, { getAreas, deleteArea, changeStatusArea })(DataTable);

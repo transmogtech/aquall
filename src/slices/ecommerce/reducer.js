@@ -42,7 +42,7 @@ const EcommerceSlice = createSlice({
     });
 
     builder.addCase(deleteProducts.fulfilled, (state, action) => {
-      state.products = (state.products || []).filter((product) => product._id !== action.payload);
+      state.products = (state.products || []).filter((product) => product._id.toString() !== action.payload.product.toString());
     });
 
     builder.addCase(deleteProducts.rejected, (state, action) => {

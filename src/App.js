@@ -1,19 +1,24 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 //import Scss
 import './assets/scss/themes.scss';
-
+import { Provider } from 'react-redux'
 //imoprt Route
 import Route from './Routes';
+import { loadUser } from './actions/auth';
+import { setAuthorization } from './helpers/api_helper';
 
+if(localStorage.getItem('token')){
+  setAuthorization(localStorage.getItem('token'));
+}
 // Import Firebase Configuration file
 // import { initFirebaseBackend } from "./helpers/firebase_helper";
 
 // Fake Backend 
-import fakeBackend from "./helpers/AuthType/fakeBackend";
+// import fakeBackend from "./helpers/AuthType/fakeBackend";
 
 // Activating fake backend
-fakeBackend();
+// fakeBackend();
 
 // const firebaseConfig = {
 //   apiKey: process.env.REACT_APP_APIKEY,
@@ -30,6 +35,7 @@ fakeBackend();
 // initFirebaseBackend(firebaseConfig);
 
 function App() {
+
   return (
     <React.Fragment>
       <Route />

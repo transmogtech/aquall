@@ -1,8 +1,8 @@
 import React from 'react'
 import { Card, CardBody, CardHeader, Col, Container, Row, Button } from 'reactstrap'
-import {  SearchTable } from './ReactTable'
+import DataTable from './ReactTable'
 import { Link } from 'react-router-dom';
-
+import Alert from '../../../Components/Common/Alert';
 const SliderImages = () => {
   document.title = "React Tables | Velzon - React Admin & Dashboard Template";
   return (
@@ -22,7 +22,8 @@ const SliderImages = () => {
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <SearchTable />
+                  <Alert />
+                  <DataTable />
                 </CardBody>
               </Card>
             </Col>

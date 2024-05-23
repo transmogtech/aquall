@@ -1,53 +1,89 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import TableContainer from '../../Components/Common/TableContainerReactTable';
 import { Link } from 'react-router-dom';
-import {  Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { ToastContainer, toast } from 'react-toastify';
-import ChangeStatus from './ChangeStatus';
+import ChangeStatus from '../../Components/Common/ChangeStatus';
+import { connect } from 'react-redux';
+import { getLanguages, deleteLanguage, changeStatusLanguage } from '../../actions/language';
+import PropTypes from 'prop-types';
+import moment  from 'moment/moment';
+import DeleteModal from '../../Components/Common/DeleteModal';
+import Loader from '../../Components/Common/Loader';
 
+const DataTable = ({ getLanguages, deleteLanguage, changeStatusLanguage, language: { languages, loading } }) => {
 
-const SearchTable = () => {
-  const searchTable =
-    [
-      { id: "01", title: "Telugu", action: "01" },
-      { id: "02", title: "English", action: "02" },
-    ];
-
-    
-    const [modal_grid, setmodal_grid] = useState(false);
-
-    function tog_grid() {
-        setmodal_grid(!modal_grid);
-
-        toast("Toast Duration 5s", { position: "top-right", hideProgressBar: false, className: 'bg-success text-white' });
-
-    }
-
-  const durationnotify = () => toast("Toast Duration 5s", { position: "top-right", hideProgressBar: false, className: 'bg-success text-white' });
-
+  const [id, setId] = useState(null);
+  const searchTable = [];
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [statusModal, setStatusModal] = useState(false);
   const [selectedSingle, setSelectedSingle] = useState(null);
 
+  useEffect(() => {
+    getLanguages();
+  }, [getLanguages]);
+  
 
-  const [modal_center, setmodal_center] = useState(false);
-  function tog_center() {
-    setmodal_center(!modal_center);
+  languages.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, url: row.url, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+
+  
+
+  function tog_grid(id) {
+    setStatusModal(true);
+    setId(id);
   }
+
+
+  function tog_center(id) {
+    setDeleteModal(true);
+    setId(id);
+  }
+
+  const handleDelete = () => {
+    deleteLanguage(id);
+    setDeleteModal(false);
+
+  }
+
+  
+  function handleSelectSingle(selectedSingle) {
+    setSelectedSingle(selectedSingle.value);
+    console.log(selectedSingle);
+
+  }
+  const handleChageStatus = () => {
+    changeStatusLanguage(id, selectedSingle);
+    setStatusModal(false);
+  }
+
+  const statusOptions = [
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' }
+  ];
 
   const columns = useMemo(
     () => [
       {
-        header: "ID",
+        header: "Created On",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span className="">{cell.getValue()}</span>
           );
         },
-        accessorKey: "id",
+        accessorKey: "created",
         enableColumnFilter: false,
       },
       {
         header: "Title",
         accessorKey: "title",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Slug",
+        accessorKey: "url",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Status",
+        accessorKey: "status",
         enableColumnFilter: false,
       },
       {
@@ -72,39 +108,31 @@ const SearchTable = () => {
 
   return (
     <React.Fragment >
+       {loading ? (
+                   <Loader />
+                  ) : (
       <TableContainer
         columns={(columns || [])}
         data={(searchTable || [])}
         isGlobalFilter={true}
-        customPageSize={5}
+        customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
         SearchPlaceholder='Search...'
       />
+    )}
+ <DeleteModal
+    show={deleteModal}
+    onCloseClick={() => setDeleteModal(false)}
+    onDeleteClick={handleDelete}
+  />
 
-     
-<ChangeStatus modal_grid={modal_grid} />
-
-      <Modal
-        isOpen={modal_center}
-        toggle={() => {
-          tog_center();
-        }}
-        centered
-      >
-        <ModalHeader className="modal-title">
-          Delete
-        </ModalHeader>
-        <ModalBody className="text-center p-5">
-          <i className="mdi mdi-trash-can  mdi-48px mdi-spin text-danger"></i>
-          <div className="mt-4">
-            <h4 className="mb-3">Are you sure?</h4>
-            <p className="text-muted mb-4"> You want to delete this record.</p>
-            <div className="hstack gap-2 justify-content-center">
-              <Button color="light" onClick={() => setmodal_center(false)}>Close</Button>
-              <Link to="#" className="btn btn-danger">Delete</Link>
-            </div>
-          </div>
-        </ModalBody>
-      </Modal>
+  <ChangeStatus 
+   show={statusModal}
+   onCloseClick={() => setStatusModal(false)}
+   onClick={handleChageStatus}
+   statusOptions={statusOptions}
+   selectedSingle={selectedSingle}
+   handleSelectSingle={handleSelectSingle}
+  />
     </React.Fragment >
 
 
@@ -112,5 +140,14 @@ const SearchTable = () => {
 };
 
 
+DataTable.propTypes = {
+  getLanguages: PropTypes.func.isRequired,
+  language: PropTypes.object.isRequired,
+  deleteLanguage: PropTypes.func.isRequired,
+}
 
-export { SearchTable };
+const mapStateToProps = state => ({
+  language: state.language,
+});
+
+export default connect(mapStateToProps, { getLanguages, deleteLanguage, changeStatusLanguage })(DataTable);

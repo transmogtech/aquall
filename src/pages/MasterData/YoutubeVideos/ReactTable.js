@@ -1,51 +1,76 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import TableContainer from '../../../Components/Common/TableContainerReactTable';
 import { Link } from 'react-router-dom';
-import {  Button, Col, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import Select from "react-select";
+import { connect } from 'react-redux';
+import Loader from '../../../Components/Common/Loader';
+import PropTypes from 'prop-types';
+import ChangeStatus from '../../../Components/Common/ChangeStatus';
+import moment from 'moment/moment';
+
+import DeleteModal from "../../../Components/Common/DeleteModal";
+import { changeStatusYoutubeVideo, deleteYoutubeVideo, getYoutubeVideos } from '../../../actions/youtubeVideo';
+
+const DataTable = ({ changeStatusYoutubeVideo, deleteYoutubeVideo, getYoutubeVideos, youtubeVideo: { youtubevideos, loading } }) => {
+
+  const [id, setId] = useState(null);
+  const searchTable = [];
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [statusModal, setStatusModal] = useState(false);
+  const [selectedSingle, setSelectedSingle] = useState(null);
+
+  useEffect(() => {
+    getYoutubeVideos();
+  }, []);
 
 
-const SearchTable = () => {
-  const searchTable =
-    [
-      { id: "01", title: "How to control EHP in shrimp farming ? (Telugu)", url: "https://youtu.be/ChZeBq9I3xA", action: "01" },
-      { id: "02", title: "Why the range of optimum water quality parameters differ among labs ? (English)	", url: "https://youtu.be/mFsLtVDmNoM", action: "02" },
-      { id: "03", title: "Home Aquaculture – Farming Fish in Concrete Cement Tanks in your Backyard", url: "https://youtu.be/jRzh9rOx7eY",  action: "03" },
-      
-      { id: "04", title: "| Murrel Korameenu Fish Farming Information Guide |10TV	", url: "https://youtu.be/Z0HfVgzNDUU",  action: "04" },
-      
-      { id: "05", title: "Shrimp farming, lessons from 2020 and the way forward (Telugu)	", url: "https://youtu.be/Ezfkzwala10",  action: "05" },
-      
-      { id: "06", title: "How to control Microcystis / Blue green algae in Aquaculture ? (Telugu)	", url: "https://youtu.be/wmOlyBLaVVY",  action: "06" }
-    ];
-    
-    const [modal_grid, setmodal_grid] = useState(false);
-    const [selectedSingle, setSelectedSingle] = useState(null);
+  youtubevideos.forEach(row => searchTable.push({ id: row._id, title: row.title, url: row.url, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
 
-    function tog_grid() {
-        setmodal_grid(!modal_grid);
-    }
 
-    
-    const [modal_center, setmodal_center] = useState(false);
-    function tog_center() {
-        setmodal_center(!modal_center);
-    }
 
-    function handleSelectSingle(selectedSingle) {
-      setSelectedSingle(selectedSingle);
+  function tog_grid(id) {
+    setStatusModal(true);
+    setId(id);
   }
+
+
+  function tog_center(id) {
+    setDeleteModal(true);
+    setId(id);
+  }
+
+  const handleDelete = () => {
+    deleteYoutubeVideo(id);
+    setDeleteModal(false);
+
+  }
+
+
+  function handleSelectSingle(selectedSingle) {
+    setSelectedSingle(selectedSingle.label);
+    console.log(selectedSingle);
+
+  }
+  const handleChageStatus = () => {
+    changeStatusYoutubeVideo(id, selectedSingle);
+    setStatusModal(false);
+  }
+
+  const statusOptions = [
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' }
+  ];
+
 
   const columns = useMemo(
     () => [
       {
-        header: "ID",
+        header: "Created On",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span className="">{cell.getValue()}</span>
           );
         },
-        accessorKey: "id",
+        accessorKey: "created",
         enableColumnFilter: false,
       },
       
@@ -57,6 +82,11 @@ const SearchTable = () => {
       {
         header: "Url",
         accessorKey: "url",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Status",
+        accessorKey: "status",
         enableColumnFilter: false,
       },
       {
@@ -78,87 +108,47 @@ const SearchTable = () => {
     []
   );
 
-const statusOptions = [
-  { value: 'Active', label: 'Active' },
-  { value: 'Inactive', label: 'Inactive' }
-];
-
   return (
     <React.Fragment >
-      <TableContainer
-        columns={(columns || [])}
-        data={(searchTable || [])}
-        isGlobalFilter={true}
-        customPageSize={5}
-        SearchPlaceholder='Search...'
+     {loading ? (
+        <Loader />
+      ) : (
+        <TableContainer
+          columns={(columns || [])}
+          data={(searchTable || [])}
+          isGlobalFilter={true}
+          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          SearchPlaceholder='Search...'
+        />
+      )}
+      <DeleteModal
+        show={deleteModal}
+        onCloseClick={() => setDeleteModal(false)}
+        onDeleteClick={handleDelete}
       />
 
-<Modal
-                isOpen={modal_grid}
-                toggle={() => {
-                    tog_grid();
-                }}
-            >
-                <ModalHeader className="modal-title" toggle={() => {
-                    tog_grid();
-                }}>
-                    Status
-
-                </ModalHeader>
-                <ModalBody>
-                    <form action="#">
-                        <div className="row g-3">
-                            <Col xxl={12}>
-                                <div>
-                                    <label htmlFor="firstName" className="form-label">Status</label>
-                                    <Select value={selectedSingle}  onChange={() => {  handleSelectSingle(); }}  options={statusOptions}  />
-                                </div>
-                            </Col>
-                
-                            <Col xxl={12}>
-                                <label htmlFor="passwordInput" className="form-label">Comment</label>
-                                <textarea className="form-control" placeholder="Enter Comment" id="comment" rows="3"></textarea>
-                            </Col>
-                            <Col lg={12}>
-                                <div className="hstack gap-2 justify-content-end">
-                                    <Button color="light" onClick={() => setmodal_grid(false)}>Close</Button>
-                                    <Button color="primary" onClick={() => setmodal_grid(false)} >Submit</Button>
-                                </div>
-                            </Col>
-                        </div>
-                    </form>
-                </ModalBody>
-            </Modal>
-
-
-            <Modal
-                isOpen={modal_center}
-                toggle={() => {
-                    tog_center();
-                }}
-                centered
-            >
-                <ModalHeader className="modal-title">
-                    Delete
-                </ModalHeader>
-                <ModalBody className="text-center p-5">
-                   <i className="mdi mdi-trash-can  mdi-48px mdi-spin text-danger"></i>
-                    <div className="mt-4">
-                        <h4 className="mb-3">Are you sure?</h4>
-                        <p className="text-muted mb-4"> You want to delete this record.</p>
-                        <div className="hstack gap-2 justify-content-center">
-                            <Button color="light" onClick={() => setmodal_center(false)}>Close</Button>
-                            <Link to="#" className="btn btn-danger">Delete</Link>
-                        </div>
-                    </div>
-                </ModalBody>
-            </Modal>
+      <ChangeStatus
+        show={statusModal}
+        onCloseClick={() => setStatusModal(false)}
+        onClick={handleChageStatus}
+        statusOptions={statusOptions}
+        selectedSingle={selectedSingle}
+        handleSelectSingle={handleSelectSingle}
+      />
     </React.Fragment >
 
     
   );
 };
 
+DataTable.propTypes = {
+  getYoutubeVideos: PropTypes.func.isRequired,
+  youtubeVideo: PropTypes.object.isRequired,
+  deleteYoutubeVideo: PropTypes.func.isRequired,
+}
 
+const mapStateToProps = state => ({
+  youtubeVideo: state.youtubeVideo,
+});
 
-export {  SearchTable };
+export default connect(mapStateToProps, { changeStatusYoutubeVideo, deleteYoutubeVideo, getYoutubeVideos })(DataTable);
