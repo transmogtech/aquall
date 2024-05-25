@@ -93,9 +93,9 @@ const Layout = (props) => {
     call dark/light mode
     */
     const onChangeLayoutMode = (value) => {
-        if (changeLayoutMode) {
-            dispatch(changeLayoutMode(value));
-        }
+        // if (changeLayoutMode) {
+        //     dispatch(changeLayoutMode(value));
+        // }
     };
 
     const [headerClass, setHeaderClass] = useState("");
