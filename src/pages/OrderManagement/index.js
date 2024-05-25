@@ -34,12 +34,12 @@ import { useFormik } from "formik";
 import { useSelector, useDispatch } from "react-redux";
 
 // //Import actions
-// import {
-//   getOrders as onGetOrders,
-//   addNewOrder as onAddNewOrder,
-//   updateOrder as onUpdateOrder,
-//   deleteOrder as onDeleteOrder,
-// } from "../../slices/thunks";
+ import {
+   getOrders as onGetOrders,
+   addNewOrder as onAddNewOrder,
+   updateOrder as onUpdateOrder,
+   deleteOrder as onDeleteOrder,
+ } from "../../slices/thunks";
 
 import Loader from "../../Components/Common/Loader";
 import { toast, ToastContainer } from 'react-toastify';

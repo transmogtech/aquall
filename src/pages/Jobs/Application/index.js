@@ -217,7 +217,6 @@ const Application = () => {
                   to="#"
                   onClick={() => {
                     const data = cell.row.original;
-                    handleUpdateApplicationClick(data);
                   }}
                   className="text-success"
                 >
