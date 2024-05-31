@@ -8,17 +8,12 @@ import Select from "react-select";
 const SearchTable = () => {
   const searchTable =
     [
-      { id: "01", product: "Bio Treat 80	",  company: "APEX FROZEN LIMITED	", status: "active", action: "01" },
-      { id: "02", product: "Purelite",  company: "KRISHNA CHEMICALS	", status: "active", action: "02" },
-      { id: "03", product: "Aqua soft	",  company: "KRISHNA CHEMICALS	", status: "inactive", action: "03" },
+      { id: "May 28th 2024, 2:56:20 pm	", product: "Bio Treat 80	",  company: "APEX FROZEN LIMITED	", status: "active", action: "01", },
+      { id: "May 28th 2024, 2:56:20 pm	", product: "Purelite",  company: "KRISHNA CHEMICALS	", status: "active", action: "02" },
+      { id: "May 28th 2024, 2:56:20 pm	", product: "Aqua soft	",  company: "KRISHNA CHEMICALS	", status: "inactive", action: "03" },
 
-      { id: "04", product: "aerator motor	",  company: "APEX FROZEN LIMITED	", status: "inactive", action: "04" },
-      { id: "05", product: "motor",  company: "KRISHNA CHEMICALS	", status: "active", action: "05" },
-      { id: "06", product: "2 - HP VARAM GEAR BOX		",  company: "KRISHNA CHEMICALS	", status: "active", action: "06" },
-
-      { id: "07", product: "2- HP 4 PADDLE IMPELLER	",  company: "APEX FROZEN LIMITED	", status: "active", action: "07" },
-      { id: "08", product: "anjaneyagroup",  company: "Vannamei	", status: "inactive", action: "08" },
-      { id: "09", product: "srimanjunathahatcheries	",  company: "Vannamei	", status: "active", action: "09" },
+      { id: "May 28th 2024, 2:56:20 pm	", product: "aerator motor	",  company: "APEX FROZEN LIMITED	", status: "inactive", action: "04" },
+      { id: "May 28th 2024, 2:56:20 pm	", product: "motor",  company: "KRISHNA CHEMICALS	", status: "active", action: "05" },
     ];
     
     const [modal_grid, setmodal_grid] = useState(false);
@@ -41,10 +36,10 @@ const SearchTable = () => {
   const columns = useMemo(
     () => [
       {
-        header: "ID",
+        header: "Created",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span className="">{cell.getValue()}</span>
           );
         },
         accessorKey: "id",

@@ -176,7 +176,7 @@ const authProtectedRoutes = [
   { path: "/create-youtube-video", component: <CreateYoutubeVideo /> },
   { path: "/edit/youtube-video/:id", component: <EditYoutubeVideo /> },
 
-  { path: "/hatecheries-pdf", component: <HatecheriesPDF /> },
+  { path: "/brood-stock", component: <HatecheriesPDF /> },
   { path: "/culture-types", component: <CultureTypes /> },
   { path: "/hp-sizes", component: <HpSize /> },
 

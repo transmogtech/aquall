@@ -7,6 +7,7 @@ import Loader from '../../Components/Common/Loader';
 import PropTypes from 'prop-types';
 import DeleteModal from '../../Components/Common/DeleteModal';
 import ChangeStatus from '../../Components/Common/ChangeStatus';
+import moment from 'moment/moment';
 
 
 const SearchTable = ({ getNewsList, deleteNews, changeStatusNews, news: { newsList, loading } }) => {
@@ -22,7 +23,7 @@ const SearchTable = ({ getNewsList, deleteNews, changeStatusNews, news: { newsLi
   }, [getNewsList]);
 
 
-  newsList.forEach(row => searchTable.push({ id: row._id, title: row.title, image: row.imageUrl, action: row._id, language: row.language, status: row.status, created: row.created }));
+  newsList.forEach(row => searchTable.push({ id: row._id, title: row.title, image: row.imageUrl, action: row._id, language: row.language, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a')  }));
 
 
   function tog_grid(id) {
