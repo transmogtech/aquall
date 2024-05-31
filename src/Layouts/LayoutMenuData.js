@@ -275,7 +275,7 @@ isSeeds
         {
           id: "jobs",
           label: "Jobs Management",
-          link: "/job-lists",
+          link: "/jobs",
           parentId: "jobs",
         },
         {
