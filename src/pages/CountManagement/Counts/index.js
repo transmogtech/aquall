@@ -1,16 +1,56 @@
-import React, { useState} from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { Card, CardBody, CardHeader, Col, Container, Row, Table } from 'reactstrap'
-import {  SearchTable } from './ReactTable'
 import { Link } from 'react-router-dom';
+import { getCounts, changeStatusCount, deleteCount } from '../../../actions/count';
+import PropTypes from "prop-types";
+import { connect } from 'react-redux';
+import DeleteModal from '../../../Components/Common/DeleteModal';
+import ChangeStatus from '../../../Components/Common/ChangeStatus';
 
+const Counts = ({ getCounts, changeStatusCount, deleteCount, count: { counts } }) => {
 
-const Counts = () => {
+  useEffect(() => {
+    getCounts();
+  }, []);
 
-  
-  const [isView, setIsView] = useState(false);
-  function viewRequest() {
-    setIsView(!isView);
+  const [id, setId] = useState(null);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [statusModal, setStatusModal] = useState(false);
+  const [selectedSingle, setSelectedSingle] = useState(null);
+
+  function tog_grid(id) {
+    setStatusModal(true);
+    setId(id);
   }
+
+
+  function tog_center(id) {
+    setDeleteModal(true);
+    setId(id);
+  }
+
+  const handleDelete = () => {
+    deleteCount(id);
+    setDeleteModal(false);
+
+  }
+
+
+  function handleSelectSingle(selectedSingle) {
+    setSelectedSingle(selectedSingle.value);
+    console.log(selectedSingle);
+
+  }
+  const handleChageStatus = () => {
+    changeStatusCount(id, selectedSingle);
+    setStatusModal(false);
+  }
+
+  const statusOptions = [
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' }
+  ];
+
 
   document.title = "Counts | Aquall Admin";
   return (
@@ -25,51 +65,59 @@ const Counts = () => {
                   <h5 className="card-title mb-0 float-start">Count</h5>
                   <div className='float-end'>
                      
-                      <Link to='/create-count' onClick={() => viewRequest()} className="btn btn-success"
+                      <Link to='/create-count' className="btn btn-success"
                       ><i className="ri-add-line align-bottom me-1"></i> Add</Link>
                   </div>
                 </CardHeader>
                 <CardBody>
                 <div className="table-responsive">
-<Table className="table-nowrap table-bordered border-primary mb-0">
+{ counts ? counts.map((row, index) => (
+
+<Table className="table-nowrap table-bordered border-primary mb-0" key={index}>
+
     <thead>
         <tr>
-            <th scope="col">No. 1</th>
-            <th scope="col" colSpan={3}>Type Name : Vannamei	</th>
-            <th scope="col" colSpan={4}>Area Name : ANDHRAPRDESH	</th>
+            <th scope="col">No. { index + 1 }</th>
+            <th scope="col" colSpan={2}>Count Type  : { row.categoryId.title}	</th>
+            <th scope="col" colSpan={2}>Count Area : {row.countareaId.title}	</th>
+            <th scope="col" colSpan={2}>Culture Type: {row.culturetypeId.title}	</th>
+            <th scope="col" colSpan={2}>Status: {row.status}	</th>
             <th scope="col">
-            <Link  to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link  to='/edit/count/1' className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link  to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+            <Link onClick={() => tog_grid(row._id)} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+            <Link  to={`/edit/count/${row._id}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+            <Link onClick={() => tog_center(row._id)} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </th>
         </tr>
     </thead>
-    <tbody>
-        <tr className="table-warning">
-            <td>20</td>
-            <td>30</td>
-            <td>40</td>
-            <td>50</td>
-            <td>60</td>
-            <td>70</td>
-            <td>80</td>
-            <td>90</td>
-            <td>100</td>
-        </tr>
-        <tr>
-        <td>580</td>
-            <td>460</td>
-            <td>410</td>
-            <td>340</td>
-            <td>300</td>
-            <td>280</td>
-            <td>260</td>
-            <td>250</td>
-            <td>240</td>
-        </tr>
-    </tbody>
+    
+       <tbody key={index}>
+       <tr className="table-warning">
+       {row.counts.map((counter, index) => (
+       
+        <td>{counter.count}</td>
+      ))
+    }
+    </tr>
+    <tr>
+    {row.counts.map((counter, index) => (
+        <td>{counter.volume}</td>
+      ))
+    }
+    </tr>
+   </tbody>
+      
+       
 </Table>
+
+))
+: (
+  <Fragment>
+    No Data Found
+  </Fragment>
+)
+}
 </div>
+
                 </CardBody>
               </Card>
             </Col>
@@ -78,8 +126,34 @@ const Counts = () => {
 
         </Container>
       </div>
-    </React.Fragment>
+      <DeleteModal
+        show={deleteModal}
+        onCloseClick={() => setDeleteModal(false)}
+        onDeleteClick={handleDelete}
+      />
+
+      <ChangeStatus
+        show={statusModal}
+        onCloseClick={() => setStatusModal(false)}
+        onClick={handleChageStatus}
+        statusOptions={statusOptions}
+        selectedSingle={selectedSingle}
+        handleSelectSingle={handleSelectSingle}
+      />
+    </React.Fragment >
   )
 }
 
-export default Counts;
+Counts.propTypes = {
+  getCounts: PropTypes.func.isRequired,
+  changeStatusCount: PropTypes.func.isRequired,
+  deleteCount: PropTypes.func.isRequired,
+  counts: PropTypes.object.isRequired,
+
+}
+
+const mapStateToProps = state => ({
+  count: state.count,
+});
+
+export default connect(mapStateToProps, { getCounts, changeStatusCount, deleteCount })(Counts);

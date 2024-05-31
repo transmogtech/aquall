@@ -1,10 +1,10 @@
 import React from 'react'
 import { Card, CardBody, CardHeader, Col, Container, Row, Button } from 'reactstrap'
-import {  SearchTable } from './ReactTable'
+import DataTable from './ReactTable'
 import { Link } from 'react-router-dom';
-
+import Alert from '../../../Components/Common/Alert';
 const BestDeals = () => {
-  document.title = "React Tables | Velzon - React Admin & Dashboard Template";
+  document.title = "Best Deals | Aquall Admin";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -14,14 +14,16 @@ const BestDeals = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h5 className="card-title mb-0 float-start">Best Deals Management</h5>
+                  <h5 className="card-title mb-0 float-start">App Best Deals Management</h5>
                   <div className='float-end'>
                      
                       <Link to="/create-best-deal" color="success" className="btn btn-success" id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Link>
+                      
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <SearchTable />
+                  <Alert />
+                  <DataTable />
                 </CardBody>
               </Card>
             </Col>

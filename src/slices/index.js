@@ -87,6 +87,28 @@ import userRole from "./userRole";
 import user from "./user";
 import sliderImage from "./sliderImage";
 import bannerImage from "./bannerImage";
+import appBannerImage from "./appBannerImage";
+import company from "./company";
+import plStage from "./plStage";
+import saltPercentage from "./saltPercentage";
+import feedType from "./feedType";
+import peddlerType from "./peddlerType";
+import chemicalCategory from "./chemicalCategory";
+import appClassifiedImage from "./appClassifiedImage";
+import advertisement from "./advertisement";
+import sponsoredAd from "./sponsoredAd";
+import bestDeal from "./bestDeal";
+import appSliderImage from "./appSliderImage";
+import productRequest from "./productRequest";
+import labRequest from "./labRequest";
+import technicianRequest from "./technicianRequest";
+import companyRequest from "./companyRequest";
+import countArea from "./countArea";
+import countType from "./countType";
+import count from "./count";
+import job from "./job";
+import jobApplication from "./jobApplication";
+
 const rootReducer = combineReducers({
     Layout: LayoutReducer,
     Login: LoginReducer,
@@ -112,7 +134,7 @@ const rootReducer = combineReducers({
     Team: TeamDataReducer,
     FileManager: FileManagerReducer,
     Todos: TodosReducer,
-    Jobs: JobReducer,
+    // Jobs: JobReducer,
     APIKey: APIKeyReducer,
     alert,
     auth,
@@ -132,7 +154,28 @@ const rootReducer = combineReducers({
     userRole,
     user,
     sliderImage,
-    bannerImage
+    bannerImage,
+    appBannerImage,
+    company,
+    plStage,
+    saltPercentage, 
+    feedType,
+    peddlerType,
+    chemicalCategory,
+    appClassifiedImage,
+    advertisement,
+    sponsoredAd,
+    bestDeal, 
+    appSliderImage,
+    productRequest,
+    labRequest,
+    technicianRequest,
+    companyRequest,
+    countArea,
+    countType,
+    count,
+    job, 
+    jobApplication
 });
 
 export default rootReducer;

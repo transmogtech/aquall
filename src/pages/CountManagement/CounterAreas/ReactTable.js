@@ -1,60 +1,108 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import TableContainer from '../../../Components/Common/TableContainerReactTable';
 import { Link } from 'react-router-dom';
-import {  Button, Col, Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
-import Select from "react-select";
+import { connect } from 'react-redux';
+import Loader from '../../../Components/Common/Loader';
+import PropTypes from 'prop-types';
+import ChangeStatus from '../../../Components/Common/ChangeStatus';
+import moment from 'moment/moment';
+
+import DeleteModal from "../../../Components/Common/DeleteModal";
+
+import { changeStatusCountArea, deleteCountArea, getCountAreas, updateCountArea } from '../../../actions/countArea';
+import EditModal from './Edit';
+
+const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas,updateCountArea, countArea: { countareas, loading } }) => {
+
+  const [id, setId] = useState(null);
+  const searchTable = [];
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [statusModal, setStatusModal] = useState(false);
+  const [selectedSingle, setSelectedSingle] = useState(null);
+
+  useEffect(() => {
+    getCountAreas();
+  }, []);
 
 
-const SearchTable = () => {
-  const searchTable =
-    [
-      { id: "01", title: "ONGOLE", action: "01" },
-      { id: "02", title: "VIZAG", action: "02" },
-      { id: "03", title: "ANDHRAPRDESH", action: "03" },
-      { id: "04", title: "KAKINADA", action: "04" },
-      { id: "05", title: "NELLORE", action: "05" },
-    ];
-    
-    const [modal_grid, setmodal_grid] = useState(false);
-    const [selectedSingle, setSelectedSingle] = useState(null);
+  countareas.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
 
-    function tog_grid() {
-        setmodal_grid(!modal_grid);
-    }
+  const [editCountArea, setEditCountArea] = useState(false);
+  const [defaultValue, setDefaultValue] = useState(null);
 
-    
-    const [modal_center, setmodal_center] = useState(false);
-    function tog_center() {
-        setmodal_center(!modal_center);
-    }
+  function toggle_edit(id) {
+    setEditCountArea(!editCountArea);
+    // const countarea = countareas.find(countarea => countarea._id === id);
+    setId(id);
+    // setDefaultValue(id);
 
-    function handleSelectSingle(selectedSingle) {
-      setSelectedSingle(selectedSingle);
   }
 
-  
-  const [isView, setIsView] = useState(false);
-  function viewRequest() {
-    setIsView(!isView);
+
+  const onChange = (e) => {
+    setDefaultValue(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    updateCountArea(id, {"title": defaultValue});
+    setEditCountArea(false);
   }
+
+  function tog_grid(id) {
+    setStatusModal(true);
+    setId(id);
+  }
+
+
+  function tog_center(id) {
+    setDeleteModal(true);
+    setId(id);
+  }
+
+  const handleDelete = () => {
+    deleteCountArea(id);
+    setDeleteModal(false);
+
+  }
+
+
+  function handleSelectSingle(selectedSingle) {
+    setSelectedSingle(selectedSingle.value);
+    console.log(selectedSingle);
+
+  }
+  const handleChageStatus = () => {
+    changeStatusCountArea(id, selectedSingle);
+    setStatusModal(false);
+  }
+
+  const statusOptions = [
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' }
+  ];
 
 
   const columns = useMemo(
     () => [
       {
-        header: "ID",
+        header: "Created",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span>{cell.getValue()}</span>
           );
         },
-        accessorKey: "id",
+        accessorKey: "created",
         enableColumnFilter: false,
       },
       
       {
         header: "Title",
         accessorKey: "title",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Status",
+        accessorKey: "status",
         enableColumnFilter: false,
       },
       {
@@ -66,7 +114,7 @@ const SearchTable = () => {
           return (
             <div>
             <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => viewRequest(cell.getValue())} to='#' className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+            <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
             <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
@@ -76,107 +124,40 @@ const SearchTable = () => {
     []
   );
 
-const statusOptions = [
-  { value: 'Active', label: 'Active' },
-  { value: 'Inactive', label: 'Inactive' }
-];
-
   return (
     <React.Fragment >
-      <TableContainer
-        columns={(columns || [])}
-        data={(searchTable || [])}
-        isGlobalFilter={true}
-        customPageSize={5}
-        SearchPlaceholder='Search...'
+      {loading ? (
+        <Loader />
+      ) : (
+        <TableContainer
+          columns={(columns || [])}
+          data={(searchTable || [])}
+          isGlobalFilter={true}
+          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          SearchPlaceholder='Search...'
+        />
+      )}
+      <DeleteModal
+        show={deleteModal}
+        onCloseClick={() => setDeleteModal(false)}
+        onDeleteClick={handleDelete}
       />
 
-<Modal
-                isOpen={modal_grid}
-                toggle={() => {
-                    tog_grid();
-                }}
-            >
-                <ModalHeader className="modal-title" toggle={() => {
-                    tog_grid();
-                }}>
-                    Status
-
-                </ModalHeader>
-                <ModalBody>
-                    <form action="#">
-                        <div className="row g-3">
-                            <Col xxl={12}>
-                                <div>
-                                    <label htmlFor="firstName" className="form-label">Status</label>
-                                    <Select value={selectedSingle}  onChange={() => {  handleSelectSingle(); }}  options={statusOptions}  />
-                                </div>
-                            </Col>
-                
-                            <Col xxl={12}>
-                                <label htmlFor="passwordInput" className="form-label">Comment</label>
-                                <textarea className="form-control" placeholder="Enter Comment" id="comment" rows="3"></textarea>
-                            </Col>
-                            <Col lg={12}>
-                                <div className="hstack gap-2 justify-content-end">
-                                    <Button color="light" onClick={() => setmodal_grid(false)}>Close</Button>
-                                    <Button color="primary" onClick={() => setmodal_grid(false)} >Submit</Button>
-                                </div>
-                            </Col>
-                        </div>
-                    </form>
-                </ModalBody>
-            </Modal>
-
-
-            <Modal
-                isOpen={modal_center}
-                toggle={() => {
-                    tog_center();
-                }}
-                centered
-            >
-                <ModalHeader className="modal-title">
-                    Delete
-                </ModalHeader>
-                <ModalBody className="text-center p-5">
-                   <i className="mdi mdi-trash-can  mdi-48px mdi-spin text-danger"></i>
-                    <div className="mt-4">
-                        <h4 className="mb-3">Are you sure?</h4>
-                        <p className="text-muted mb-4"> You want to delete this record.</p>
-                        <div className="hstack gap-2 justify-content-center">
-                            <Button color="light" onClick={() => setmodal_center(false)}>Close</Button>
-                            <Link to="#" className="btn btn-danger">Delete</Link>
-                        </div>
-                    </div>
-                </ModalBody>
-            </Modal>
-
-             
-      <Modal isOpen={isView} toggle={() => { viewRequest(); }} >
-        
-        <ModalHeader className="bg-light p-3" toggle={() => {
-          viewRequest();
-        }}>
-          Edit Count Area
-
-        </ModalHeader>
-        <ModalBody>
-          <form action="#">
-            <div className="row g-3">
-            <Col xxl={12}>
-                <label htmlFor="passwordInput" className="form-label">Name</label>
-                <Input name='name' id='name' className='form-control' />
-              </Col>
-              <Col lg={12}>
-                <div className="hstack gap-2 justify-content-end">
-                  <Button color="light" onClick={() => setIsView(false)}>Close</Button>
-                </div>
-              </Col>
-            </div>
-          </form>
-        </ModalBody>
-      </Modal>
+      <ChangeStatus
+        show={statusModal}
+        onCloseClick={() => setStatusModal(false)}
+        onClick={handleChageStatus}
+        statusOptions={statusOptions}
+        selectedSingle={selectedSingle}
+        handleSelectSingle={handleSelectSingle}
+      />
+      <EditModal
+        show={editCountArea}
+        onCloseClick={() => setEditCountArea(false)}
+        onChange={onChange}
+        handleSubmit={handleSubmit}
+        defaultValue={id}
+      />
     </React.Fragment >
 
     
@@ -185,4 +166,16 @@ const statusOptions = [
 
 
 
-export {  SearchTable };
+DataTable.propTypes = {
+  getCountAreas: PropTypes.func.isRequired,
+  countArea: PropTypes.object.isRequired,
+  deleteCountArea: PropTypes.func.isRequired,
+  changeStatusCountArea: PropTypes.func.isRequired,
+  updateCountArea: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+  countArea: state.countArea,
+});
+
+export default connect(mapStateToProps, { getCountAreas, deleteCountArea, changeStatusCountArea, updateCountArea })(DataTable);

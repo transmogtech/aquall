@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, CardBody, CardHeader, Col, Container, Row, Button } from 'reactstrap'
-import {  SearchTable } from './ReactTable'
+import  DataTable  from './ReactTable'
 import { Link } from 'react-router-dom';
 
 const Companies = () => {
@@ -14,14 +14,14 @@ const Companies = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h5 className="card-title mb-0 float-start">State Management</h5>
+                  <h5 className="card-title mb-0 float-start">Company Management</h5>
                   <div className='float-end'>
                      
                       <Link to="/create-company" color="success" className="btn btn-success" id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Link>
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <SearchTable />
+                  <DataTable />
                 </CardBody>
               </Card>
             </Col>

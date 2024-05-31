@@ -493,12 +493,12 @@ isSeeds
           link: "/count-areas",
           parentId: "counts",
         },
-        // {
-        //   id: "count-percents",
-        //   label: "Counter Percentages",
-        //   link: "/count-percents",
-        //   parentId: "counts",
-        // },
+        {
+          id: "count-types",
+          label: "Counter Types",
+          link: "/count-types",
+          parentId: "counts",
+        },
         {
           id: "counts",
           label: "Counts",

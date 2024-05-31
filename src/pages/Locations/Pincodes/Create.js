@@ -134,13 +134,13 @@ const CreatePincode = ({createPincode, getStates, getDistricts, getAreas}) => {
 
     };
 
-    const handleSubmit = () => {
+        const handleSubmit = () => {
 
 
-        createPincode(formData);
+            createPincode(formData);
 
-        navigate('/pincodes');
-    }
+            navigate('/pincodes');
+        }
 
     document.title = "Create Pincode | Aquall Admin";
     return (
@@ -185,7 +185,7 @@ const CreatePincode = ({createPincode, getStates, getDistricts, getAreas}) => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                        <Input type="text" className="form-control" name="title" onChange={e => onChange(e)}placeholder="Name" />
+                                                        <Input type="text" className="form-control" name="title" onChange={e => onChange(e)} placeholder="Name" />
                                                     </div>
                                                 </Col>
 
