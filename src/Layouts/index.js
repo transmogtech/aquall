@@ -94,8 +94,8 @@ const Layout = (props) => {
     */
     const onChangeLayoutMode = (value) => {
 //        if (changeLayoutMode) {
-  //          dispatch(changeLayoutMode(value));
-    //    }
+  //          dispatch(changeLayoutMode(value));}
+   
     };
 
     const [headerClass, setHeaderClass] = useState("");
