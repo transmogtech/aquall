@@ -212,9 +212,9 @@ isSeeds
           parentId: "master-data",
         },
         {
-          id: "hatecheries-pdf",
-          label: "Hatecheries PDF",
-          link: "/hatecheries-pdf",
+          id: "brood-stock",
+          label: "Brood Stock",
+          link: "/brood-stock",
           parentId: "master-data",
         },
         {

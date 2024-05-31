@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Alert from '../../../Components/Common/Alert';
 
 const HatecheriesPDF = () => {
-  document.title = "React Tables | Velzon - React Admin & Dashboard Template";
+  document.title = "Brood Stock | Aquall Admin";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -15,7 +15,7 @@ const HatecheriesPDF = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h5 className="card-title mb-0 float-start">Hatecheries PDF Management</h5>
+                  <h5 className="card-title mb-0 float-start">Brood Stock Management</h5>
                   <div className='float-end'>
                      
                   </div>
