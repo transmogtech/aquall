@@ -3,9 +3,9 @@ import TableContainer from '../../../Components/Common/TableContainerReactTable'
 import { Link } from 'react-router-dom';
 import {  Button, Col, Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
 import Select from "react-select";
+import { getCounts } from '../../../actions/count';
 
-
-const SearchTable = () => {
+const SearchTable = ({ getCounts, count: {counts}}) => {
   const searchTable =
     [
       { id: "01", title: "ONGOLE", action: "01" },

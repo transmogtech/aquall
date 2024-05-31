@@ -1,113 +1,98 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import TableContainer from '../../../../Components/Common/TableContainerReactTable';
 import { Link } from 'react-router-dom';
-import {  Button, Col, Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
-import Select from "react-select";
+import { connect } from 'react-redux';
+import Loader from '../../../../Components/Common/Loader';
+import PropTypes from 'prop-types';
+import ChangeStatus from '../../../../Components/Common/ChangeStatus';
+import moment from 'moment/moment';
+import DeleteModal from "../../../../Components/Common/DeleteModal";
+import { changeStatusSaltPercentage, deleteSaltPercentage, getSaltPercentages } from '../../../../actions/saltPercentage';
+
+const DataTable = ({ changeStatusSaltPercentage, deleteSaltPercentage, getSaltPercentages, saltPercentage: { saltpercentages, loading } }) => {
+
+  const [id, setId] = useState(null);
+  const searchTable = [];
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [statusModal, setStatusModal] = useState(false);
+  const [selectedSingle, setSelectedSingle] = useState(null);
+
+  useEffect(() => {
+    getSaltPercentages();
+  }, []);
 
 
-const SearchTable = () => {
-  const searchTable =
-  [
-    { id: "01", culture_type: "Vannamei", company: "RNK Agro Chemicals Ltd", type: "Crumble", salt: "5 to 35", action: "01" },
-    { id: "02", culture_type: "Vannamei", company: "RNK Agro Chemicals Ltd", type: "Pellet", salt: "0-30", action: "02" },
-    { id: "03", culture_type: "Vannamei", company: "VAM Life Science (P).Ltd", type: "Crumble", salt: "0 to 35", action: "03" },
-    { id: "04", culture_type: "Vannamei", company: "VAM Life Science (P).Ltd	", type: "Pellet", salt: "5 to 35", action: "04" },
-  ];
-    
-    const [modal_grid, setmodal_grid] = useState(false);
-    const [selectedSingle, setSelectedSingle] = useState(null);
+  saltpercentages.forEach(row => searchTable.push({ id: row._id, cultureType: row.culturetypeId.title, company: row.companyId.name, plStage: row.plstageId.name, name: row.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
 
-    function tog_grid() {
-        setmodal_grid(!modal_grid);
-    }
-
-    const [create_culture_type, setcreate_culture_type] = useState(false);
-
-    function toggle_create() {
-      setcreate_culture_type(!create_culture_type);
+  function tog_grid(id) {
+    setStatusModal(true);
+    setId(id);
   }
-    const [modal_center, setmodal_center] = useState(false);
-    function tog_center() {
-        setmodal_center(!modal_center);
-    }
 
-    function handleSelectSingle(selectedSingle) {
-      setSelectedSingle(selectedSingle);
+
+  function tog_center(id) {
+    setDeleteModal(true);
+    setId(id);
   }
-  
-  const [selectedCompany, setSelectedCompany] = useState(false);
-    function handleSelectCompany(selectedCompany) {
-      setSelectedCompany(selectedCompany);
-    }
 
-    const [selectedCultureType, setSelectedCultureType] = useState(false);
-    function handleSelectCultureType(selectedCultureType) {
-      setSelectedCultureType(selectedCultureType);
-    }
-    
+  const handleDelete = () => {
+    deleteSaltPercentage(id);
+    setDeleteModal(false);
 
-    const [selectPlStage, setSelectPlStage] = useState(false);
-
-    function handleSelectPlStage(selectPlStage) {
-      setSelectPlStage(selectPlStage);
-    }
-    
-    
-const culture_type = [
-  { value: 'Vannamei', label: 'Vannamei' },
-  { value: 'Black Tiger', label: 'Black Tiger' },
-  { value: 'fish', label: 'fish' },
-  { value: 'Carb', label: 'Carb' },
-];
+  }
 
 
-const company = [
-  { value: 'RNK Agro Chemicals Ltd	', label: 'RNK Agro Chemicals Ltd	' },
-  { value: 'VAM Life Science (P).Ltd	', label: 'VAM Life Science (P).Ltd	' },
-  { value: 'BMR Group	', label: 'BMR Group	' },
+  function handleSelectSingle(selectedSingle) {
+    setSelectedSingle(selectedSingle.value);
+    console.log(selectedSingle);
 
-  { value: 'Devi Feeds Private Limited	', label: 'Devi Feeds Private Limited	' },
+  }
+  const handleChageStatus = () => {
+    changeStatusSaltPercentage(id, selectedSingle);
+    setStatusModal(false);
+  }
 
-];
-
-
-const pl_stages = [
-  { value: '9 TO 12	', label: '9 TO 12		' },
-  { value: '6 to 12 days ', label: '6 to 12 days ' },
-  
+  const statusOptions = [
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' }
   ];
-  
+
+
   const columns = useMemo(
     () => [
       {
-        header: "ID",
+        header: "Created On",
         cell: (cell) => {
           return (
             <span className="fw-semibold">{cell.getValue()}</span>
           );
         },
-        accessorKey: "id",
+        accessorKey: "created",
         enableColumnFilter: false,
       },
-      
       {
         header: "Culture Type",
-        accessorKey: "culture_type",
+        accessorKey: "cultureType",
         enableColumnFilter: false,
       },
       {
-        header: "Company Name",
+        header: "Company",
         accessorKey: "company",
         enableColumnFilter: false,
       },
       {
-        header: "PL Stage",
-        accessorKey: "type",
+        header: "Pl Stage",
+        accessorKey: "plStage",
         enableColumnFilter: false,
       },
       {
-        header: "Salt Percentage",
-        accessorKey: "salt",
+        header: "Title",
+        accessorKey: "name",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Status",
+        accessorKey: "status",
         enableColumnFilter: false,
       },
       {
@@ -119,7 +104,7 @@ const pl_stages = [
           return (
             <div>
             <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to='#!' onClick={() => toggle_create(true)} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+            <Link to={`/edit/salt-percentage/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
             <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
@@ -129,132 +114,33 @@ const pl_stages = [
     []
   );
 
-const statusOptions = [
-  { value: 'Active', label: 'Active' },
-  { value: 'Inactive', label: 'Inactive' }
-];
-
   return (
     <React.Fragment >
-      <TableContainer
-        columns={(columns || [])}
-        data={(searchTable || [])}
-        isGlobalFilter={true}
-        customPageSize={5}
-        SearchPlaceholder='Search...'
+      {loading ? (
+        <Loader />
+      ) : (
+        <TableContainer
+          columns={(columns || [])}
+          data={(searchTable || [])}
+          isGlobalFilter={true}
+          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          SearchPlaceholder='Search...'
+        />
+      )}
+      <DeleteModal
+        show={deleteModal}
+        onCloseClick={() => setDeleteModal(false)}
+        onDeleteClick={handleDelete}
       />
 
-<Modal
-                isOpen={modal_grid}
-                toggle={() => {
-                    tog_grid();
-                }}
-            >
-                <ModalHeader className="modal-title" toggle={() => {
-                    tog_grid();
-                }}>
-                    Status
-
-                </ModalHeader>
-                <ModalBody>
-                    <form action="#">
-                        <div className="row g-3">
-                            <Col xxl={12}>
-                                <div>
-                                    <label htmlFor="firstName" className="form-label">Status</label>
-                                    <Select value={selectedSingle}  onChange={() => {  handleSelectSingle(); }}  options={statusOptions}  />
-                                </div>
-                            </Col>
-                
-                            <Col xxl={12}>
-                                <label htmlFor="passwordInput" className="form-label">Comment</label>
-                                <textarea className="form-control" placeholder="Enter Comment" id="comment" rows="3"></textarea>
-                            </Col>
-                            <Col lg={12}>
-                                <div className="hstack gap-2 justify-content-end">
-                                    <Button color="light" onClick={() => setmodal_grid(false)}>Close</Button>
-                                    <Button color="primary" onClick={() => setmodal_grid(false)} >Submit</Button>
-                                </div>
-                            </Col>
-                        </div>
-                    </form>
-                </ModalBody>
-            </Modal>
-
-            <Modal
-                isOpen={create_culture_type}
-                toggle={() => {
-                    toggle_create();
-                }}
-            >
-                <ModalHeader className="modal-title" toggle={() => {
-                    toggle_create();
-                }}>
-                    Edit Salt Percentage
-
-                </ModalHeader>
-                <ModalBody>
-                    <form action="#">
-                        <div className="row g-3">
-                        <Col xxl={12}>
-                                <div>
-                                    <label htmlFor="firstName" className="form-label">Culture Type</label>
-                                    <Select value={selectedCultureType}  onChange={() => {  handleSelectCultureType(); }}  options={culture_type}  />
-                                </div>
-                            </Col>
-                            <Col xxl={12}>
-                                <div>
-                                    <label htmlFor="firstName" className="form-label">Company Name</label>
-                                    <Select value={selectedCompany}  onChange={() => {  handleSelectCompany(); }}  options={company}  />
-                                </div>
-                            </Col>
-                            <Col xxl={12}>
-                                <div>
-                                    <label htmlFor="firstName" className="form-label">PL Stage</label>
-                                    <Select value={selectPlStage}  onChange={() => {  handleSelectPlStage(); }}  options={pl_stages}  />
-                                </div>
-                            </Col>
-                            <Col xxl={12}>
-                                <div>
-                                    <label htmlFor="firstName" className="form-label">Salt Percentage</label>
-                                    <Input type="text" className="form-control" id="name" placeholder="Salt Percentage" />
-                                </div>
-                            </Col>
-                
-                            <Col lg={12}>
-                                <div className="hstack gap-2 justify-content-end">
-                                    <Button color="light" onClick={() => setcreate_culture_type(false)}>Close</Button>
-                                    <Button color="primary" onClick={() => setcreate_culture_type(false)} >Submit</Button>
-                                </div>
-                            </Col>
-                        </div>
-                    </form>
-                </ModalBody>
-            </Modal>
-
-
-            <Modal
-                isOpen={modal_center}
-                toggle={() => {
-                    tog_center();
-                }}
-                centered
-            >
-                <ModalHeader className="modal-title">
-                    Delete
-                </ModalHeader>
-                <ModalBody className="text-center p-5">
-                   <i className="mdi mdi-trash-can  mdi-48px mdi-spin text-danger"></i>
-                    <div className="mt-4">
-                        <h4 className="mb-3">Are you sure?</h4>
-                        <p className="text-muted mb-4"> You want to delete this record.</p>
-                        <div className="hstack gap-2 justify-content-center">
-                            <Button color="light" onClick={() => setmodal_center(false)}>Close</Button>
-                            <Link to="#" className="btn btn-danger">Delete</Link>
-                        </div>
-                    </div>
-                </ModalBody>
-            </Modal>
+      <ChangeStatus
+        show={statusModal}
+        onCloseClick={() => setStatusModal(false)}
+        onClick={handleChageStatus}
+        statusOptions={statusOptions}
+        selectedSingle={selectedSingle}
+        handleSelectSingle={handleSelectSingle}
+      />
     </React.Fragment >
 
     
@@ -263,4 +149,15 @@ const statusOptions = [
 
 
 
-export {  SearchTable };
+DataTable.propTypes = {
+  getSaltPercentages: PropTypes.func.isRequired,
+  saltPercentage: PropTypes.object.isRequired,
+  deleteSaltPercentage: PropTypes.func.isRequired,
+  changeStatusSaltPercentage: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+  saltPercentage: state.saltPercentage,
+});
+
+export default connect(mapStateToProps, { changeStatusSaltPercentage, deleteSaltPercentage, getSaltPercentages })(DataTable);

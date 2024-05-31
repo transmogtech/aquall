@@ -1,10 +1,10 @@
 import React from 'react'
 import { Card, CardBody, CardHeader, Col, Container, Row, Button } from 'reactstrap'
-import {  SearchTable } from './ReactTable'
+import DataTable from './ReactTable'
 import { Link } from 'react-router-dom';
-
+import Alert from '../../../Components/Common/Alert';
 const TechnicianRequests = () => {
-  document.title = "React Tables | Velzon - React Admin & Dashboard Template";
+  document.title = "Technician Request | Aquall Admin";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -17,11 +17,12 @@ const TechnicianRequests = () => {
                   <h5 className="card-title mb-0 float-start">Technician Request</h5>
                   <div className='float-end'>
                      
-                  
+                   
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <SearchTable />
+                  <Alert /> 
+                  <DataTable />
                 </CardBody>
               </Card>
             </Col>

@@ -1,60 +1,92 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import TableContainer from '../../../Components/Common/TableContainerReactTable';
 import { Link } from 'react-router-dom';
-import { Button, Col, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import Select from "react-select";
+import { connect, useSelector } from 'react-redux';
+import Loader from '../../../Components/Common/Loader';
+import PropTypes from 'prop-types';
+import ChangeStatus from '../../../Components/Common/ChangeStatus';
+import moment from 'moment/moment';
+import ViewModal from "./View";
+import DeleteModal from "../../../Components/Common/DeleteModal";
+import { getCompanyRequests, changeStatusCompanyRequest, deleteCompanyRequest } from '../../../actions/companyRequest';
+ 
+const DataTable = ({ getCompanyRequests, changeStatusCompanyRequest, deleteCompanyRequest, companyRequest: { companyrequests, loading } }) => {
 
-
-const SearchTable = () => {
-  const searchTable =
-    [
-      { id: "01", requestTime: "23 Jan, 2024 07:56 AM	", name: "Murthy", email: "murthy.murthy08206@gmail.com", mobile: "9618697777", action: "01" },
-      { id: "02", requestTime: "30 Oct, 2023 04:39 PM	", name: "tqYgFKY", email: "Uncernise@fmaill.xyz", mobile: "8897724124", action: "02" },
-      { id: "03", requestTime: "01 Oct, 2023 06:06 AM", name: "Yogesh", email: "Yogeshnnaikmanki431@gimel.come", mobile: "9141882173", action: "03" },
-      { id: "04", requestTime: "01 Oct, 2023 02:23 AM	", name: "Gopala Rout	", email: "gopalarout802@gmail.com", mobile: "9938705950", action: "04" },
-      { id: "05", requestTime: "30 Sep, 2023 08:23 PM		", name: "Karthik Nani", email: "nanikarthik085@gmail.com", mobile: "7993347798", action: "05" },
-      { id: "06", requestTime: "30 Sep, 2023 08:02 PM	", name: "Pavan", email: "n.pavan9068@gmail.com", mobile: "9177582585", action: "06" },
-    ];
-
-  const [modal_grid, setmodal_grid] = useState(false);
+  const [id, setId] = useState(null);
+  const searchTable = [];
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [statusModal, setStatusModal] = useState(false);
   const [selectedSingle, setSelectedSingle] = useState(null);
+  const [comment, setComment] = useState(null);
 
-  function tog_grid() {
-    setmodal_grid(!modal_grid);
+  useEffect(() => {
+    getCompanyRequests();
+  }, []);
+
+// console.log(companies);
+companyrequests.forEach(row => {  if(row === undefined) {return}
+  searchTable.push({ id: row._id,  email: row.email, action: row._id, status: row.status, name: row.name, mobile: row.mobile, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') })});
+
+
+
+  function tog_grid(id) {
+    setStatusModal(true);
+    setId(id);
   }
 
 
-  const [modal_center, setmodal_center] = useState(false);
-  function tog_center() {
-    setmodal_center(!modal_center);
+  function tog_center(id) {
+    setDeleteModal(true);
+    setId(id);
   }
 
-  
+  const handleDelete = () => {
+    deleteCompanyRequest(id);
+    setDeleteModal(false);
+
+  }
+
+
+  function handleSelectSingle(selectedSingle) {
+    setSelectedSingle(selectedSingle.label);
+    console.log(selectedSingle);
+
+  }
+
   const [isView, setIsView] = useState(false);
-  function viewRequest() {
+  const [viewData, setViewData] = useState('');
+  function viewRequest(id) {
+    setViewData(id);
     setIsView(!isView);
   }
 
-  function handleSelectSingle(selectedSingle) {
-    setSelectedSingle(selectedSingle);
+
+
+ const  handleCommentChange = (e) => {
+    setComment(e.target.value);
+
   }
+  const handleChageStatus = () => {
+    changeStatusCompanyRequest(id, selectedSingle, comment);
+    setStatusModal(false);
+  }
+
+  const statusOptions = [
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' }
+  ];
+
 
   const columns = useMemo(
     () => [
       {
-        header: "ID",
+        header: "Requested Date & Time",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span className="">{cell.getValue()}</span>
           );
         },
-        accessorKey: "id",
-        enableColumnFilter: false,
-      },
-
-      {
-        header: "Request Time",
-        accessorKey: "requestTime",
+        accessorKey: "created",
         enableColumnFilter: false,
       },
       
@@ -62,17 +94,22 @@ const SearchTable = () => {
         header: "Name",
         accessorKey: "name",
         enableColumnFilter: false,
+       
       },
-      
       {
         header: "Email",
         accessorKey: "email",
         enableColumnFilter: false,
       },
-      
       {
         header: "Mobile",
         accessorKey: "mobile",
+        enableColumnFilter: false,
+      },
+      
+      {
+        header: "Status",
+        accessorKey: "status",
         enableColumnFilter: false,
       },
       {
@@ -83,9 +120,9 @@ const SearchTable = () => {
         cell: (cell) => {
           return (
             <div>
-              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-              <Link to='#' onClick={() => viewRequest(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-eye'></i></Link>&nbsp;&nbsp;
-              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+            <Link onClick={() => viewRequest(cell.getValue())} to='#!' className="btn btn-sm btn-warning"><i className='las la-eye'></i></Link>&nbsp;&nbsp;
+            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -94,133 +131,57 @@ const SearchTable = () => {
     []
   );
 
-  const statusOptions = [
-    { value: 'Active', label: 'Active' },
-    { value: 'Inactive', label: 'Inactive' }
-  ];
 
   return (
     <React.Fragment >
+    {loading ? (
+      <Loader />
+    ) : (
       <TableContainer
         columns={(columns || [])}
         data={(searchTable || [])}
         isGlobalFilter={true}
-        customPageSize={5}
+        customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
         SearchPlaceholder='Search...'
       />
+    )}
+    <DeleteModal
+      show={deleteModal}
+      onCloseClick={() => setDeleteModal(false)}
+      onDeleteClick={handleDelete}
+      />
 
-      <Modal
-        isOpen={modal_grid}
-        toggle={() => {
-          tog_grid();
-        }}
-      >
-        <ModalHeader className="bg-light p-3" toggle={() => {
-          tog_grid();
-        }}>
-          Status
+    <ViewModal
+      show={isView}
+      onCloseClick={() => setIsView(false)}
+      id={viewData}
+    />
 
-        </ModalHeader>
-        <ModalBody>
-          <form action="#">
-            <div className="row g-3">
-              <Col xxl={12}>
-                <div>
-                  <label htmlFor="firstName" className="form-label">Status</label>
-                  <Select value={selectedSingle} onChange={() => { handleSelectSingle(); }} options={statusOptions} />
-                </div>
-              </Col>
-
-              <Col xxl={12}>
-                <label htmlFor="passwordInput" className="form-label">Comment</label>
-                <textarea className="form-control" placeholder="Enter Comment" id="comment" rows="3"></textarea>
-              </Col>
-              <Col lg={12}>
-                <div className="hstack gap-2 justify-content-end">
-                  <Button color="light" onClick={() => setmodal_grid(false)}>Close</Button>
-                  <Button color="primary" onClick={() => setmodal_grid(false)} >Submit</Button>
-                </div>
-              </Col>
-            </div>
-          </form>
-        </ModalBody>
-      </Modal>
-
-      <Modal isOpen={isView} toggle={() => { viewRequest(); }} >
-        
-        <ModalHeader className="bg-light p-3" toggle={() => {
-          viewRequest();
-        }}>
-          View request
-
-        </ModalHeader>
-        <ModalBody>
-          <form action="#">
-            <div className="row g-3">
-              <Col xxl={12}>
-              <span className='fw-semibold'>Product Name: </span> 2 Hp aerator frame	
-              </Col>
-
-              <Col xxl={12}>
-              <span className='fw-semibold'>Company Name: </span> sai aqua tech
- 	
-              </Col>
-              
-              <Col xxl={12}>
-              <span className='fw-semibold'>Category: </span> Aerators
-              </Col>
-              
-              <Col xxl={12}>
-              <span className='fw-semibold'>Volume: </span> 2 	
-              </Col>
-              
-              <Col xxl={12}>
-              <span className='fw-semibold'>Price: </span> 2700.00
-              </Col>
-              
-              <Col xxl={12}>
-              <span className='fw-semibold'>Discount: </span> 2%
-              </Col>
-
-              <Col lg={12}>
-                <div className="hstack gap-2 justify-content-end">
-                  <Button color="light" onClick={() => setIsView(false)}>Close</Button>
-                </div>
-              </Col>
-            </div>
-          </form>
-        </ModalBody>
-      </Modal>
-
-
-      <Modal
-        isOpen={modal_center}
-        toggle={() => {
-          tog_center();
-        }}
-        centered
-      >
-        <ModalHeader className="bg-light p-3">
-          Delete
-        </ModalHeader>
-        <ModalBody className="text-center p-5">
-          <i className="mdi mdi-trash-can  mdi-48px mdi-spin text-danger"></i>
-          <div className="mt-4">
-            <h4 className="mb-3">Are you sure?</h4>
-            <p className="text-muted mb-4"> You want to delete this record.</p>
-            <div className="hstack gap-2 justify-content-center">
-              <Button color="light" onClick={() => setmodal_center(false)}>Close</Button>
-              <Link to="#" className="btn btn-danger">Delete</Link>
-            </div>
-          </div>
-        </ModalBody>
-      </Modal>
-    </React.Fragment >
-
-
+    <ChangeStatus
+      show={statusModal}
+      onCloseClick={() => setStatusModal(false)}
+      onClick={handleChageStatus}
+      statusOptions={statusOptions}
+      selectedSingle={selectedSingle}
+      handleSelectSingle={handleSelectSingle}
+      handleCommentChange={handleCommentChange}
+    />
+  </React.Fragment >
+    
   );
 };
 
 
 
-export { SearchTable };
+DataTable.propTypes = {
+  getCompanyRequests: PropTypes.func.isRequired,
+  companyRequest: PropTypes.object.isRequired,
+  deleteCompanyRequest: PropTypes.func.isRequired,
+  changeStatusCompanyRequest: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+  companyRequest: state.companyRequest,
+});
+
+export default connect(mapStateToProps, { changeStatusCompanyRequest, deleteCompanyRequest, getCompanyRequests })(DataTable);

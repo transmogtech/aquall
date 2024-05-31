@@ -1,10 +1,10 @@
 import React from 'react'
 import { Card, CardBody, CardHeader, Col, Container, Row, Button } from 'reactstrap'
-import {  SearchTable } from './ReactTable'
+import DataTable from './ReactTable'
 import { Link } from 'react-router-dom';
-
+import Alert from '../../../Components/Common/Alert';
 const AppBannerImages = () => {
-  document.title = "React Tables | Velzon - React Admin & Dashboard Template";
+  document.title = "Banner Images | Aquall Admin";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -18,10 +18,12 @@ const AppBannerImages = () => {
                   <div className='float-end'>
                      
                       <Link to="/create-app-banner-image" color="success" className="btn btn-success" id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Link>
+                      
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <SearchTable />
+                  <Alert />
+                  <DataTable />
                 </CardBody>
               </Card>
             </Col>

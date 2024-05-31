@@ -23,7 +23,7 @@ export const createJob = (formData) => async dispatch => {
 
     dispatch({
       type: CREATE_JOB,
-      payload: response.job
+      payload: response.jobs
     });
 
     dispatch(setAlert('Job created successfully', 'success'));
