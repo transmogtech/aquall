@@ -11,8 +11,8 @@ import {
 
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import BreadCrumb from "../../Components/Common/BreadCrumb";
-import { productDetails } from "../../common/data/ecommerce";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
+import { productDetails } from "../../../common/data/ecommerce";
 import EcommerceOrderProduct from "./EcommerceOrderProduct";
 import avatar3 from "../../assets/images/users/avatar-3.jpg";
 

@@ -108,6 +108,8 @@ import countType from "./countType";
 import count from "./count";
 import job from "./job";
 import jobApplication from "./jobApplication";
+import product from "./product";
+import order from "./order";
 
 const rootReducer = combineReducers({
     Layout: LayoutReducer,
@@ -175,7 +177,9 @@ const rootReducer = combineReducers({
     countType,
     count,
     job, 
-    jobApplication
+    jobApplication,
+    product, 
+    order
 });
 
 export default rootReducer;

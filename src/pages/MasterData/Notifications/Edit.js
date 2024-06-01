@@ -1,78 +1,60 @@
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { Link } from 'react-router-dom';
-import Select from "react-select";
+import { useNavigate, useParams } from 'react-router-dom';
+import { updateNotification} from '../../../actions/notification';
+import { getCategories } from '../../../actions/category';
+import { getCompanies } from '../../../actions/company';
+import { getProducts } from '../../../actions/product';
+import PropTypes from 'prop-types';
+import { connect, useSelector } from 'react-redux';
 
+const EditNotification = ({ updateNotification, getCategories, getCompanies,getProducts, category: { categories }, company: { companies }, product: { products } }) => {
 
-const EditNotification = () => {
-
+    const { id } = useParams();
+    useEffect(() => {
+        getCategories();
+        getCompanies();
+        getProducts();
+    });
 
     
-    const [selectedCategory, setSelectedCategory] = useState(false);
-    const [selectedCompany, setSelectedCompany] = useState(null);
-    const [selectedProduct, setSelectedProduct] = useState(null);
 
+    const notifications = useSelector(state => state.notification.notifications);
+    const notification = notifications.find(notification => notification._id === id);
 
-    function handleSelectCategory(selectedCategory) {
-        setSelectedCategory(selectedCategory);
-    }
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState();
 
-
-    function handleSelectCompany(selectedCompany) {
-        setSelectedCompany(selectedCompany);
-    }
-
-    function handleSelectProduct(selectedProduct) {
-        setSelectedProduct(selectedProduct);
-    }
+    const onChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
 
     const handleSubmit = () => {
+        updateNotification(id, formData);
+
+        navigate('/notifications');
     }
 
 
-
-    const categories = [
-        {id: "01", name: "Seed"},
-        {id: "02", name: "Feed"},
-        {id: "03", name: "Chemical"},
-        {id: "04", name: "Aerators"},
-        {id: "05", name: "Test Kit"},
-        {id: "06", name: "Other"},
-    ];
-
-    const company = [
-        {id: "01", name: "APEX FROZEN LIMITED"},
-        {id: "02", name: "KRISHNA CHEMICALS"},
-        {id: "03", name: "Vannamei"},
-    ];
-    
-    const product = [
-        {id: "01", name: "Bio Treat 80"},
-        {id: "02", name: "Purelite"},
-        {id: "03", name: "Aqua soft	"},
-        {id: "04", name: "aerator motor	"},
-        {id: "05", name: "motor"},
-    ];
-
-    document.title = "Edit Notification | Aquall Admin";
+    document.title = "Create Notification | Aquall Admin";
     return (
         <React.Fragment>
             <UiContent />
             <div className="page-content">
 
                 <Container fluid>
-                    <BreadCrumb title="Edit Notification" pageTitle="Notification Management" />
+                    <BreadCrumb title="Create Notification" pageTitle="Notification Management" />
                     <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                         <Row>
                             <Col lg={12}>
                                 <Card>
-                                    <PreviewCardHeader title="Edit Notification" />
+                                    <PreviewCardHeader title="Create Notification" />
 
                                     <CardBody className="card-body">
                                         <div className="live-preview">
@@ -82,32 +64,74 @@ const EditNotification = () => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Category</Label>
-                                                        <Select value={selectedCategory} onChange={() => { handleSelectCategory(); }} options={categories} />
+                                                        <select
+                                                            className="form-select"
+                                                            data-choices
+                                                            name="categoryId"
+                                                            onChange={e => onChange(e)}
+                                                        >
+                                                            <option value="">Select Category</option>
+                                                            {
+                                                                categories.map((item, index) => {
+                                                                    return (
+                                                                        <option key={index} value={item._id} selected={item._id == notification.categoryId._id}>{item.title}</option>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </select>
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Company</Label>
-                                                        <Select value={selectedCompany} onChange={() => { handleSelectCompany(); }} options={company} />
+                                                        <select
+                                                            className="form-select"
+                                                            data-choices
+                                                            name="companyId"
+                                                            onChange={e => onChange(e)}
+                                                        >
+                                                            <option value="">Select Company</option>
+                                                            {
+                                                                companies.map((item, index) => {
+                                                                    return (
+                                                                        <option key={index} value={item._id} selected={item._id == notification.companyId._id}>{item.name}</option>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </select>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Product</Label>
-                                                        <Select value={selectedProduct} onChange={() => { handleSelectProduct(); }} options={product} />
+                                                        <select
+                                                            className="form-select"
+                                                            data-choices
+                                                            name="productId"
+                                                            onChange={e => onChange(e)}
+                                                        >
+                                                            <option value="">Select Product</option>
+                                                            {
+                                                                products.map((item, index) => {
+                                                                    return (
+                                                                        <option key={index} value={item._id} selected={item._id == notification.productId._id}>{item.name}</option>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </select>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Title</Label>
-                                                        <Input type="text" className="form-control" id="title" placeholder="URL Slug" />
+                                                        <Input type="text" className="form-control" name="title" onChange={e => onChange(e)} placeholder="Title" defaultValue={notification.title} />
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
                                                         <Label htmlFor="description" className="form-label">Description</Label>
-                                                        <textarea className="form-control" placeholder="Meta Keywords" id="description" rows="3"></textarea>
+                                                        <textarea className="form-control" placeholder="Meta Keywords" onChange={e => onChange(e)} name="description" defaultValue={notification.description} rows="3"></textarea>
                                                     </div>
                                                 </Col>
                                             </Row>
@@ -120,7 +144,9 @@ const EditNotification = () => {
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
 
-                                            <Link to="/notifications" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link>
+                                        <button type="submit" className="btn btn-secondary">
+                                                        Save
+                                                    </button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -141,4 +167,23 @@ const EditNotification = () => {
     );
 }
 
-export default EditNotification;
+EditNotification.propTypes = {
+    updateNotification: PropTypes.func.isRequired,
+    getProducts: PropTypes.func.isRequired,
+    getCategories: PropTypes.func.isRequired,
+    getCompanies: PropTypes.func.isRequired,
+    product: PropTypes.object.isRequired,
+    category: PropTypes.object.isRequired,
+    company: PropTypes.object.isRequired,
+
+}
+
+const mapStateToProps = state => ({
+    product: state.product,
+    category: state.category,
+    company: state.company,
+  });
+  
+
+
+export default connect(mapStateToProps, {updateNotification, getProducts, getCategories, getCompanies})(EditNotification);
