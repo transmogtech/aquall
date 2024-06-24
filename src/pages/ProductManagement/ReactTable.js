@@ -76,7 +76,7 @@ const DataTable = ({ changeStatusProduct, deleteProduct, getProducts, product: {
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-            <img className="rounded-circle header-profile-user" src={`http://localhost:3030/${cell.getValue()}`} alt="Header Avatar"></img>
+            <img className="rounded-circle header-profile-user" src={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} alt="Header Avatar"></img>
           )
         }
       },
@@ -108,9 +108,9 @@ const DataTable = ({ changeStatusProduct, deleteProduct, getProducts, product: {
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to={`/edit/product/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to={`/edit/product/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -148,7 +148,7 @@ const DataTable = ({ changeStatusProduct, deleteProduct, getProducts, product: {
       />
     </React.Fragment >
 
-    
+
   );
 };
 

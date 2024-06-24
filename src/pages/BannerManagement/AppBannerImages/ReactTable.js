@@ -10,7 +10,7 @@ import moment from 'moment/moment';
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusAppBannerImage, deleteAppBannerImage, getAppBannerImages } from '../../../actions/appBannerImage';
 
-const DataTable = ({  changeStatusAppBannerImage, deleteAppBannerImage, getAppBannerImages, appBannerImage: { appbannerimages, loading } }) => {
+const DataTable = ({ changeStatusAppBannerImage, deleteAppBannerImage, getAppBannerImages, appBannerImage: { appbannerimages, loading } }) => {
 
   const [id, setId] = useState(null);
   const searchTable = [];
@@ -52,9 +52,9 @@ const DataTable = ({  changeStatusAppBannerImage, deleteAppBannerImage, getAppBa
 
   }
 
-  
 
- const  handleCommentChange = (e) => {
+
+  const handleCommentChange = (e) => {
     setComment(e.target.value);
 
   }
@@ -98,7 +98,7 @@ const DataTable = ({  changeStatusAppBannerImage, deleteAppBannerImage, getAppBa
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-            <img className="rounded-circle header-profile-user" src={`http://localhost:3030/${cell.getValue()}`} alt="Header Avatar"></img>
+            <img className="rounded-circle header-profile-user" src={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} alt="Header Avatar"></img>
           )
         }
       },
@@ -107,7 +107,7 @@ const DataTable = ({  changeStatusAppBannerImage, deleteAppBannerImage, getAppBa
         accessorKey: "url",
         enableColumnFilter: false,
       },
-     {
+      {
         header: "Priority",
         accessorKey: "priority",
         enableColumnFilter: false,

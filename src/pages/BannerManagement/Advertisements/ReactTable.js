@@ -52,9 +52,9 @@ const DataTable = ({ changeStatusAdvertisement, deleteAdvertisement, getAdvertis
 
   }
 
-  
 
- const  handleCommentChange = (e) => {
+
+  const handleCommentChange = (e) => {
     setComment(e.target.value);
 
   }
@@ -89,7 +89,7 @@ const DataTable = ({ changeStatusAdvertisement, deleteAdvertisement, getAdvertis
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-            <img className="rounded-circle header-profile-user" src={`http://localhost:3030/${cell.getValue()}`} alt="Header Avatar"></img>
+            <img className="rounded-circle header-profile-user" src={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} alt="Header Avatar"></img>
           )
         }
       },

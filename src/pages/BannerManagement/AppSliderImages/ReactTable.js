@@ -10,7 +10,7 @@ import moment from 'moment/moment';
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusAppSliderImage, deleteAppSliderImage, getAppSliderImages } from '../../../actions/appSliderImage';
 
-const DataTable = ({  changeStatusAppSliderImage, deleteAppSliderImage, getAppSliderImages, appSliderImage: { appsliderimages, loading } }) => {
+const DataTable = ({ changeStatusAppSliderImage, deleteAppSliderImage, getAppSliderImages, appSliderImage: { appsliderimages, loading } }) => {
 
   const [id, setId] = useState(null);
   const searchTable = [];
@@ -52,9 +52,9 @@ const DataTable = ({  changeStatusAppSliderImage, deleteAppSliderImage, getAppSl
 
   }
 
-  
 
- const  handleCommentChange = (e) => {
+
+  const handleCommentChange = (e) => {
     setComment(e.target.value);
 
   }
@@ -98,7 +98,7 @@ const DataTable = ({  changeStatusAppSliderImage, deleteAppSliderImage, getAppSl
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-            <img className="rounded-circle header-profile-user" src={`http://localhost:3030/${cell.getValue()}`} alt="Header Avatar"></img>
+            <img className="rounded-circle header-profile-user" src={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} alt="Header Avatar"></img>
           )
         }
       },
@@ -107,7 +107,7 @@ const DataTable = ({  changeStatusAppSliderImage, deleteAppSliderImage, getAppSl
         accessorKey: "url",
         enableColumnFilter: false,
       },
-     {
+      {
         header: "Priority",
         accessorKey: "priority",
         enableColumnFilter: false,

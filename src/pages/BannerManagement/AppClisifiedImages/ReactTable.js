@@ -10,7 +10,7 @@ import moment from 'moment/moment';
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusAppClassifiedImage, deleteAppClassifiedImage, getAppClassifiedImages } from '../../../actions/appClassifiedImage';
 
-const DataTable = ({changeStatusAppClassifiedImage, deleteAppClassifiedImage, getAppClassifiedImages, appClassifiedImage: { appclassifiedimages, loading } }) => {
+const DataTable = ({ changeStatusAppClassifiedImage, deleteAppClassifiedImage, getAppClassifiedImages, appClassifiedImage: { appclassifiedimages, loading } }) => {
 
   const [id, setId] = useState(null);
   const searchTable = [];
@@ -52,9 +52,9 @@ const DataTable = ({changeStatusAppClassifiedImage, deleteAppClassifiedImage, ge
 
   }
 
-  
 
- const  handleCommentChange = (e) => {
+
+  const handleCommentChange = (e) => {
     setComment(e.target.value);
 
   }
@@ -89,7 +89,7 @@ const DataTable = ({changeStatusAppClassifiedImage, deleteAppClassifiedImage, ge
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-            <img className="rounded-circle header-profile-user" src={`http://localhost:3030/${cell.getValue()}`} alt="Header Avatar"></img>
+            <img className="rounded-circle header-profile-user" src={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} alt="Header Avatar"></img>
           )
         }
       },

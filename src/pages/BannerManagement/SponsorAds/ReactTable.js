@@ -82,14 +82,14 @@ const DataTable = ({ changeStatusSponsoredAd, deleteSponsoredAd, getSponsoredAds
         accessorKey: "created",
         enableColumnFilter: false,
       },
-     
+
       {
         header: "Image",
         accessorKey: "image",
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-            <img className="rounded-circle header-profile-user" src={`http://localhost:3030/${cell.getValue()}`} alt="Header Avatar"></img>
+            <img className="rounded-circle header-profile-user" src={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} alt="Header Avatar"></img>
           )
         }
       },
