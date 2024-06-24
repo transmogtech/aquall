@@ -98,7 +98,8 @@ import Products from "../pages/ProductManagement/index.js";
 import CreateProduct from "../pages/ProductManagement/Create.js";
 import EditProduct from "../pages/ProductManagement/Edit.js";
 import EcommerceOrders from "../pages/OrderManagement/index.js";
-import EcommerceOrderDetail from "../pages/OrderManagement/EcommerceOrderDetail.js";
+import CreateOrder from "../pages/OrderManagement/Create.js";
+// import EcommerceOrderDetail from "../pages/OrderManagement/EcommerceOrderDetail.js";
 import EcommerceCustomers from "../pages/UserManagement/Users/index.js";
 import CreateUser from "../pages/UserManagement/Users/Create.js";
 import EditUser from "../pages/UserManagement/Users/Edit.js";
@@ -208,7 +209,8 @@ const authProtectedRoutes = [
   { path: "/create-product", component: <CreateProduct /> },
   { path: "/edit/product/:id", component: <EditProduct /> },
   { path: "/orders", component: <EcommerceOrders /> },
-  { path: "/order-details", component: <EcommerceOrderDetail /> },
+  { path: "/create-order", component: <CreateOrder /> },
+  // { path: "/order-details", component: <EcommerceOrderDetail /> },
   { path: "/users", component: <EcommerceCustomers /> },
   { path: "/create-user", component: <CreateUser /> },
   { path: "/edit/user/:id", component: <EditUser /> },

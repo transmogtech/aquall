@@ -1,64 +1,39 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { Link } from 'react-router-dom';
-import Select from "react-select";
+import { useNavigate } from 'react-router-dom';
+import { createNotification } from '../../../actions/notification';
+import { getCategories } from '../../../actions/category';
+import { getCompanies } from '../../../actions/company';
+import { getProducts } from '../../../actions/product';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
+const CreateNotification = ({ createNotification, getCategories, getCompanies,getProducts, category: { categories }, company: { companies }, product: { products } }) => {
 
-const CreateNotification = () => {
+    useEffect(() => {
+        getCategories();
+        getCompanies();
+        getProducts();
+    });
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState();
 
-
-    
-    const [selectedCategory, setSelectedCategory] = useState(false);
-    const [selectedCompany, setSelectedCompany] = useState(null);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-
-
-    function handleSelectCategory(selectedCategory) {
-        setSelectedCategory(selectedCategory);
-    }
-
-
-    function handleSelectCompany(selectedCompany) {
-        setSelectedCompany(selectedCompany);
-    }
-
-    function handleSelectProduct(selectedProduct) {
-        setSelectedProduct(selectedProduct);
-    }
+    const onChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
 
     const handleSubmit = () => {
+        createNotification(formData);
+
+        navigate('/notifications');
     }
 
-
-
-    const categories = [
-        {value: "01", label: "Seed"},
-        {value: "02", label: "Feed"},
-        {value: "03", label: "Chemical"},
-        {value: "04", label: "Aerators"},
-        {value: "05", label: "Test Kit"},
-        {value: "06", label: "Other"},
-    ];
-
-    const company = [
-        {value: "01", label: "APEX FROZEN LIMITED"},
-        {value: "02", label: "KRISHNA CHEMICALS"},
-        {value: "03", label: "Vannamei"},
-    ];
-    
-    const product = [
-        {value: "01", label: "Bio Treat 80"},
-        {value: "02", label: "Purelite"},
-        {value: "03", label: "Aqua soft	"},
-        {value: "04", label: "aerator motor	"},
-        {value: "05", label: "motor"},
-    ];
 
     document.title = "Create Notification | Aquall Admin";
     return (
@@ -82,32 +57,74 @@ const CreateNotification = () => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Category</Label>
-                                                        <Select value={selectedCategory} onChange={() => { handleSelectCategory(); }} options={categories} />
+                                                        <select
+                                                            className="form-select"
+                                                            data-choices
+                                                            name="categoryId"
+                                                            onChange={e => onChange(e)}
+                                                        >
+                                                            <option value="">Select Category</option>
+                                                            {
+                                                                categories.map((item, index) => {
+                                                                    return (
+                                                                        <option key={index} value={item._id}>{item.title}</option>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </select>
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Company</Label>
-                                                        <Select value={selectedCompany} onChange={() => { handleSelectCompany(); }} options={company} />
+                                                        <select
+                                                            className="form-select"
+                                                            data-choices
+                                                            name="companyId"
+                                                            onChange={e => onChange(e)}
+                                                        >
+                                                            <option value="">Select Company</option>
+                                                            {
+                                                                companies.map((item, index) => {
+                                                                    return (
+                                                                        <option key={index} value={item._id}>{item.name}</option>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </select>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Product</Label>
-                                                        <Select value={selectedProduct} onChange={() => { handleSelectProduct(); }} options={product} />
+                                                        <select
+                                                            className="form-select"
+                                                            data-choices
+                                                            name="productId"
+                                                            onChange={e => onChange(e)}
+                                                        >
+                                                            <option value="">Select Product</option>
+                                                            {
+                                                                products.map((item, index) => {
+                                                                    return (
+                                                                        <option key={index} value={item._id}>{item.name}</option>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </select>
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Title</Label>
-                                                        <Input type="text" className="form-control" id="title" placeholder="URL Slug" />
+                                                        <Input type="text" className="form-control" name="title" onChange={e => onChange(e)} placeholder="Title" />
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
                                                         <Label htmlFor="description" className="form-label">Description</Label>
-                                                        <textarea className="form-control" placeholder="Meta Keywords" id="description" rows="3"></textarea>
+                                                        <textarea className="form-control" placeholder="Meta Keywords" onChange={e => onChange(e)} name="description" rows="3"></textarea>
                                                     </div>
                                                 </Col>
                                             </Row>
@@ -120,7 +137,9 @@ const CreateNotification = () => {
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
 
-                                            <Link to="/notifications" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link>
+                                        <button type="submit" className="btn btn-secondary">
+                                                        Save
+                                                    </button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -141,4 +160,23 @@ const CreateNotification = () => {
     );
 }
 
-export default CreateNotification;
+CreateNotification.propTypes = {
+    createNotification: PropTypes.func.isRequired,
+    getProducts: PropTypes.func.isRequired,
+    getCategories: PropTypes.func.isRequired,
+    getCompanies: PropTypes.func.isRequired,
+    product: PropTypes.object.isRequired,
+    category: PropTypes.object.isRequired,
+    company: PropTypes.object.isRequired,
+
+}
+
+const mapStateToProps = state => ({
+    product: state.product,
+    category: state.category,
+    company: state.company,
+  });
+  
+
+
+export default connect(mapStateToProps, {createNotification, getProducts, getCategories, getCompanies})(CreateNotification);
