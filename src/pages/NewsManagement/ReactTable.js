@@ -23,7 +23,7 @@ const SearchTable = ({ getNewsList, deleteNews, changeStatusNews, news: { newsLi
   }, [getNewsList]);
 
 
-  newsList.forEach(row => searchTable.push({ id: row._id, title: row.title, image: row.imageUrl, action: row._id, language: row.language, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a')  }));
+  newsList.forEach(row => searchTable.push({ id: row._id, title: row.title, image: row.imageUrl, action: row._id, language: row.language, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
 
 
   function tog_grid(id) {
@@ -42,7 +42,7 @@ const SearchTable = ({ getNewsList, deleteNews, changeStatusNews, news: { newsLi
     setDeleteModal(false);
   }
 
-  
+
   function handleSelectSingle(selectedSingle) {
     setSelectedSingle(selectedSingle.value);
     console.log(selectedSingle);
@@ -77,7 +77,7 @@ const SearchTable = ({ getNewsList, deleteNews, changeStatusNews, news: { newsLi
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-            <img className="rounded-circle header-profile-user" src={`http://localhost:3030/${cell.getValue()}`} alt="Header Avatar"></img>
+            <img className="rounded-circle header-profile-user" src={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} alt="Header Avatar"></img>
           )
         }
       },
@@ -119,30 +119,30 @@ const SearchTable = ({ getNewsList, deleteNews, changeStatusNews, news: { newsLi
   return (
     <React.Fragment >
       {loading ? (
-                   <Loader />
-                  ) : (
-      <TableContainer
-        columns={(columns || [])}
-        data={(searchTable || [])}
-        isGlobalFilter={true}
-        customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
-        SearchPlaceholder='Search...'
+        <Loader />
+      ) : (
+        <TableContainer
+          columns={(columns || [])}
+          data={(searchTable || [])}
+          isGlobalFilter={true}
+          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          SearchPlaceholder='Search...'
+        />
+      )}
+      <DeleteModal
+        show={deleteModal}
+        onCloseClick={() => setDeleteModal(false)}
+        onDeleteClick={handleDelete}
       />
-    )}
- <DeleteModal
-    show={deleteModal}
-    onCloseClick={() => setDeleteModal(false)}
-    onDeleteClick={handleDelete}
-  />
 
-  <ChangeStatus 
-   show={statusModal}
-   onCloseClick={() => setStatusModal(false)}
-   onClick={handleChageStatus}
-   statusOptions={statusOptions}
-   selectedSingle={selectedSingle}
-   handleSelectSingle={handleSelectSingle}
-  />
+      <ChangeStatus
+        show={statusModal}
+        onCloseClick={() => setStatusModal(false)}
+        onClick={handleChageStatus}
+        statusOptions={statusOptions}
+        selectedSingle={selectedSingle}
+        handleSelectSingle={handleSelectSingle}
+      />
     </React.Fragment >
 
 

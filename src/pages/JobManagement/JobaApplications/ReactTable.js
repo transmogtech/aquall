@@ -84,7 +84,7 @@ const DataTable = ({ changeStatusJobApplication, deleteJobApplication, getJobApp
         accessorKey: "created",
         enableColumnFilter: false,
       },
-      
+
       {
         header: "Job Title",
         accessorKey: "job",
@@ -101,7 +101,7 @@ const DataTable = ({ changeStatusJobApplication, deleteJobApplication, getJobApp
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-            <Link to={`http://localhost:3030/${cell.getValue()}`}   className="btn btn-sm btn-warning"><i className='las la-download'></i></Link>
+            <Link to={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-download'></i></Link>
           );
         }
       },
@@ -119,9 +119,9 @@ const DataTable = ({ changeStatusJobApplication, deleteJobApplication, getJobApp
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -157,10 +157,10 @@ const DataTable = ({ changeStatusJobApplication, deleteJobApplication, getJobApp
         selectedSingle={selectedSingle}
         handleSelectSingle={handleSelectSingle}
       />
-     
+
     </React.Fragment >
 
-    
+
   );
 };
 

@@ -10,7 +10,7 @@ import moment from 'moment/moment';
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusFooterLogo, deleteFooterLogo, getFooterLogos } from '../../../actions/footerLogo';
 
-const DataTable = ({  changeStatusFooterLogo, deleteFooterLogo, getFooterLogos, footerLogo: { footerlogos, loading } }) => {
+const DataTable = ({ changeStatusFooterLogo, deleteFooterLogo, getFooterLogos, footerLogo: { footerlogos, loading } }) => {
 
   const [id, setId] = useState(null);
   const searchTable = [];
@@ -81,7 +81,7 @@ const DataTable = ({  changeStatusFooterLogo, deleteFooterLogo, getFooterLogos, 
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-            <img className="rounded-circle header-profile-user" src={`http://localhost:3030/${cell.getValue()}`} alt="Header Avatar"></img>
+            <img className="rounded-circle header-profile-user" src={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} alt="Header Avatar"></img>
           )
         }
       },
