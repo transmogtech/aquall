@@ -40,6 +40,9 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
         }
     };
 
+    const deleteImage = () => {
+        setAppClassifiedImage({ ...appclassifiedimage, image: null });
+    }
 
     const handleSubmit = () => {
         updateAppClassifiedImage(id, formData);
@@ -82,7 +85,14 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
                                                         <Col xxl={3} md={6}>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                                <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                {
+                                                                    appclassifiedimage.image ? (
+                                                                        <div className="img-wrap">
+                                                                            <span className="close" onClick={() => deleteImage()}>&times;</span>
+                                                                            <img src={`${process.env.REACT_APP_API_URL}/${appclassifiedimage.image}`} width="100%" />
+                                                                        </div>
+                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                }
                                                             </div>
                                                         </Col>
 

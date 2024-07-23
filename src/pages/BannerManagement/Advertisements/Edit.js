@@ -43,6 +43,9 @@ const EditAdvertisement = ({ updateAdvertisement, getAdvertisement }) => {
         }
     };
 
+    const deleteImage = () => {
+        setAdvertisement({ ...advertisement, image: null });
+    }
 
     const handleSubmit = () => {
         updateAdvertisement(id, formData);
@@ -81,8 +84,14 @@ const EditAdvertisement = ({ updateAdvertisement, getAdvertisement }) => {
 
                                                             <Col xxl={4} md={6}>
                                                                 <div>
-                                                                    <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                                    <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                    <Label htmlFor="basiInput" className="form-label">Image</Label>{
+                                                                        advertisement.image ? (
+                                                                            <div className="img-wrap">
+                                                                                <span className="close" onClick={() => deleteImage()}>&times;</span>
+                                                                                <img src={`${process.env.REACT_APP_API_URL}/${advertisement.image}`} width="100%" />
+                                                                            </div>
+                                                                        ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                    }
                                                                 </div>
                                                             </Col>
 

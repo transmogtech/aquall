@@ -11,12 +11,13 @@ import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 import { loadUser } from '../actions/auth';
 const Index = ({ isAuthenticated, loadUser }) => {
+    const token = localStorage.getItem('token');
+
     const [active, setActive] = useState(false);
     useEffect(() => {
         const fetchUser = async () => {
             const response = await loadUser();
-            // console.log(response);
-            if (response._id) { setActive(true) };
+            if (response && !('error' in response)) { setActive(true) };
         }
         fetchUser();
 
@@ -45,7 +46,7 @@ const Index = ({ isAuthenticated, loadUser }) => {
                         <Route
                             path={route.path}
                             element={
-                                active ? <VerticalLayout>{route.component}</VerticalLayout> : <Navigate to='/login' />
+                                token ? <VerticalLayout>{route.component}</VerticalLayout> : <Navigate to='/login' />
 
                                 // </AuthProtected>
                             }

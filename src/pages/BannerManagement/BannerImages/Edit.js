@@ -39,6 +39,9 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
         }
     };
 
+    const deleteImage = () => {
+        setBannerImage({ ...bannerimage, image: null });
+    }
 
     const handleSubmit = () => {
         updateBannerImage(id, formData);
@@ -47,7 +50,7 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
     }
 
 
-    document.title = "Create Banner Image | Aquall Admin";
+    document.title = "Edit Banner Image | Aquall Admin";
     return (
         <React.Fragment>
             {
@@ -57,17 +60,16 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
                         <div className="page-content">
 
                             <Container fluid>
-                                <BreadCrumb title="Create Banner Image" pageTitle="Banner Image Management" />
+                                <BreadCrumb title="Edit Banner Image" pageTitle="Banner Image Management" />
                                 <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                                     <Row>
                                         <Col lg={12}>
                                             <Card>
-                                                <PreviewCardHeader title="Create Banner Image" />
+                                                <PreviewCardHeader title="Edit Banner Image" />
 
                                                 <CardBody className="card-body">
                                                     <div className="live-preview">
                                                         <Row className="gy-4">
-
 
                                                             <Col xxl={3} md={6}>
                                                                 <div>
@@ -79,7 +81,14 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                                    <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                    {
+                                                                        bannerimage.image ? (
+                                                                            <div className="img-wrap">
+                                                                                <span className="close" onClick={() => deleteImage()}>&times;</span>
+                                                                                <img src={`${process.env.REACT_APP_API_URL}/${bannerimage.image}`} width="100%" />
+                                                                            </div>
+                                                                        ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                    }
                                                                 </div>
                                                             </Col>
 

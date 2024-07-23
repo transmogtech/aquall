@@ -10,14 +10,16 @@ import Select from "react-select";
 import { createAppBannerImage } from '../../../actions/appBannerImage';
 import { getCategories } from '../../../actions/category';
 import { getCompanies } from '../../../actions/company';
+import { getProducts } from '../../../actions/product';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const CreateAppBannerImage = ({ createAppBannerImage, getCategories, getCompanies, category: { categories }, company: { companies } }) => {
+const CreateAppBannerImage = ({ createAppBannerImage, getCategories, getCompanies, getProducts, category: { categories }, company: { companies }, product: { products } }) => {
 
     useEffect(() => {
         getCategories();
         getCompanies();
+        getProducts();
     }, []);
 
 
@@ -28,23 +30,16 @@ const CreateAppBannerImage = ({ createAppBannerImage, getCategories, getCompanie
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const product = [
-        { value: "01", label: "Bio Treat 80" },
-        { value: "02", label: "Purelite" },
-        { value: "03", label: "Aqua soft	" },
-        { value: "04", label: "aerator motor	" },
-        { value: "05", label: "motor" },
-    ];
 
     const [selectedCategory, setSelectedCategory] = useState(false);
     const [selectedCompany, setSelectedCompany] = useState(null);
     const [selectedProduct, setSelectedProduct] = useState([]);
-    
+
     const Categories = [];
     const Companies = [];
-    categories.forEach(row => Categories.push({ value: row._id, label: row.title}));
+    categories.forEach(row => Categories.push({ value: row._id, label: row.title }));
 
-    companies.forEach(row => Companies.push({ value: row._id, label: row.name}));
+    companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -52,17 +47,20 @@ const CreateAppBannerImage = ({ createAppBannerImage, getCategories, getCompanie
         }
     };
 
-    function handleSelectCategory(selectedCategory) {
+    async function handleSelectCategory(selectedCategory) {
         setFormData({ ...formData, categoryId: selectedCategory.value });
-
         setSelectedCategory(selectedCategory.label);
+        await getCompanies({ categoryId: selectedCategory.value });
+
     }
 
 
-    function handleSelectCompany(selectedCompany) {
+    async function handleSelectCompany(selectedCompany) {
         setFormData({ ...formData, companyId: selectedCompany.value });
 
         setSelectedCompany(selectedCompany.label);
+
+        await getProducts({ companyId: selectedCompany.value });
     }
 
     const handleProductChange = (e, index) => {
@@ -72,25 +70,25 @@ const CreateAppBannerImage = ({ createAppBannerImage, getCategories, getCompanie
 
         if (checked) {
 
-        values.push(e.target.value);
+            values.push(e.target.value);
         } else {
             values.splice(values.indexOf(value), 1);
         }
         setSelectedProduct(values);
         console.log(values);
-        setFormData({ ...formData, products: selectedProduct });
+        setFormData({ ...formData, products: values });
 
     };
 
 
     const handleSubmit = () => {
 
-       createAppBannerImage(formData);
+        createAppBannerImage(formData);
 
         navigate('/app-banner-images');
     }
 
-    
+
     document.title = "Create App Banner Image | Aquall Admin";
     return (
         <React.Fragment>
@@ -150,14 +148,14 @@ const CreateAppBannerImage = ({ createAppBannerImage, getCategories, getCompanie
                                                 </Col>
                                                 <Col md={12}>
                                                     <h6 className="form-label">Products</h6>
-                                                    {product.map((prod, index) => (
+                                                    {products.map((prod, index) => (
                                                         <div className="form-check-inline" key={index}>
-                                                            <Input type='checkbox' className='form-check-input' value={prod.value} onChange={e => handleProductChange(e, index)} /> {prod.label}
+                                                            <Input type='checkbox' className='form-check-input' value={prod._id} onChange={e => handleProductChange(e, index)} /> {prod.name}
                                                         </div>
                                                     ))}
 
                                                 </Col>
-                                               
+
 
 
                                             </Row>
@@ -167,7 +165,7 @@ const CreateAppBannerImage = ({ createAppBannerImage, getCategories, getCompanie
                                     </CardBody>
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
-                                        <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
+                                            <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -191,11 +189,13 @@ CreateAppBannerImage.propTypes = {
     getCompanies: PropTypes.func.isRequired,
     company: PropTypes.object.isRequired,
     category: PropTypes.object.isRequired,
+    product: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
     company: state.company,
     category: state.category,
-  });
-  
-export default connect(mapStateToProps, { createAppBannerImage, getCategories, getCompanies })(CreateAppBannerImage);
+    product: state.product,
+});
+
+export default connect(mapStateToProps, { createAppBannerImage, getCategories, getCompanies, getProducts })(CreateAppBannerImage);

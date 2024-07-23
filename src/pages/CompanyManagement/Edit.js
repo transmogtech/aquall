@@ -50,6 +50,9 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const deleteImage = () => {
+        setCompany({ ...company, logo: null });
+    }
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setFormData({ ...formData, logo: e.target.files[0] });
@@ -100,7 +103,14 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
                                                         <Col xxl={4} md={4}>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Company Logo</Label>
-                                                                <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                {
+                                                                    company.logo ? (
+                                                                        <div className="img-wrap">
+                                                                            <span className="close" onClick={() => deleteImage()}>&times;</span>
+                                                                            <img src={`${process.env.REACT_APP_API_URL}/${company.logo}`} width="100%" />
+                                                                        </div>
+                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                }
                                                             </div>
                                                         </Col>
 

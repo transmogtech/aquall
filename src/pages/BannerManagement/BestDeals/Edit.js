@@ -10,10 +10,12 @@ import Select from "react-select";
 import { updateBestDeal, getBestDeal } from '../../../actions/bestDeal';
 import { getCategories } from '../../../actions/category';
 import { getCompanies } from '../../../actions/company';
+import { getProducts } from '../../../actions/product';
+
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
 import Loader from '../../../Components/Common/Loader';
-const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getBestDeal, category: { categories }, company: { companies } }) => {
+const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getProducts, getBestDeal, category: { categories }, company: { companies }, product: { products } }) => {
 
     const { id } = useParams();
     const [bestdeal, setBestDeal] = useState([]);
@@ -25,19 +27,23 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getBestDeal
 
     useEffect(() => {
         getCategories();
-        getCompanies();
         const fetchtData = async () => {
             const response = await getBestDeal(id);
             setBestDeal(response);
             setSelectedProduct(response.products);
-            setSelectedCompany(response.companyId.name);
-            setSelectedCategory(response.categoryId.title);
+            setSelectedCompany(response.companyId);
+            setSelectedCategory(response.categoryId);
+            await getCompanies({ categoryId: response.categoryId });
+            await getProducts({ companyId: response.companyId });
+            setLoading(false);
+
         }
         fetchtData();
-        setLoading(false);
     }, []);
 
-
+    const deleteImage = () => {
+        setBestDeal({ ...bestdeal, image: null });
+    }
 
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
@@ -46,20 +52,6 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getBestDeal
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const product = [
-        { value: "01", label: "Bio Treat 80" },
-        { value: "02", label: "Purelite" },
-        { value: "03", label: "Aqua soft	" },
-        { value: "04", label: "aerator motor	" },
-        { value: "05", label: "motor" },
-    ];
-
-
-    const Categories = [];
-    const Companies = [];
-    categories.forEach(row => Categories.push({ value: row._id, label: row.title }));
-
-    companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -67,18 +59,19 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getBestDeal
         }
     };
 
-    function handleSelectCategory(selectedCategory) {
-        setFormData({ ...formData, categoryId: selectedCategory.value });
 
-        setSelectedCategory(selectedCategory.label);
-    }
+    const handleSelectCategory = async (e) => {
+        const companyArr = await getCompanies({ categoryId: e.target.value });
+        setFormData({ ...formData, categoryId: e.target.value });
+        // console.log(companyArr);
+    };
 
+    const handleSelectCompany = async (e) => {
+        const productArr = await getProducts({ companyId: e.target.value });
+        setFormData({ ...formData, companyId: e.target.value });
+        // console.log(companyArr);
+    };
 
-    function handleSelectCompany(selectedCompany) {
-        setFormData({ ...formData, companyId: selectedCompany.value });
-
-        setSelectedCompany(selectedCompany.label);
-    }
 
     const handleProductChange = (e, index) => {
 
@@ -128,14 +121,40 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getBestDeal
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Category</Label>
-                                                            <Select value={{ label: selectedCategory }} onChange={handleSelectCategory} options={Categories} />
+                                                            <select
+                                                                className="form-select"
+                                                                defaultValue={selectedCategory}
+                                                                name="categoryId"
+                                                                onChange={e => handleSelectCategory(e)}>
+                                                                <option value="">Select Category</option>
+                                                                {
+                                                                    categories.map((item, index) => {
+                                                                        return (
+                                                                            <option key={index} value={item._id} >{item.title}</option>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </select>
                                                         </div>
                                                     </Col>
 
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Company</Label>
-                                                            <Select value={{ label: selectedCompany }} onChange={handleSelectCompany} options={Companies} />
+                                                            <select
+                                                                className="form-select"
+                                                                defaultValue={selectedCompany}
+                                                                name="companyId"
+                                                                onChange={e => handleSelectCompany(e)}>
+                                                                <option value="">Select Company</option>
+                                                                {
+                                                                    companies.map((item, index) => {
+                                                                        return (
+                                                                            <option key={index} value={item._id} >{item.name}</option>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </select>
                                                         </div>
                                                     </Col>
 
@@ -143,7 +162,14 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getBestDeal
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                            <Input type="file" className="form-control" id="title" placeholder="URL Slug" onChange={handleFileChange} />
+                                                            {
+                                                                bestdeal.image ? (
+                                                                    <div className="img-wrap">
+                                                                        <span className="close" onClick={() => deleteImage()}>&times;</span>
+                                                                        <img src={`${process.env.REACT_APP_API_URL}/${bestdeal.image}`} width="100%" />
+                                                                    </div>
+                                                                ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                            }
                                                         </div>
                                                     </Col>
                                                     <Col xxl={4} md={6}>
@@ -166,11 +192,11 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getBestDeal
                                                     </Col>
                                                     <Col md={12}>
                                                         <h6 className="form-label">Products</h6>
-                                                        {product.map((prod, index) => (
+                                                        {products.map((prod, index) => (
                                                             <div className="form-check-inline" key={index}>
-                                                                <Input type='checkbox' className='form-check-input' value={prod.value}
-                                                                    // defaultChecked={bestdeal.products.includes(prod.value)}
-                                                                    onChange={e => handleProductChange(e, index)} /> {prod.label}
+                                                                <Input type='checkbox' className='form-check-input' value={prod._id}
+                                                                    defaultChecked={selectedProduct.includes(prod._id)}
+                                                                    onChange={e => handleProductChange(e, index)} /> {prod.name}
                                                             </div>
                                                         ))}
 
@@ -207,14 +233,17 @@ EditBestDeal.propTypes = {
     updateBestDeal: PropTypes.func.isRequired,
     getCategories: PropTypes.func.isRequired,
     getCompanies: PropTypes.func.isRequired,
+    getProducts: PropTypes.func.isRequired,
     getBestDeal: PropTypes.func.isRequired,
     company: PropTypes.object.isRequired,
-    category: PropTypes.object.isRequired
+    category: PropTypes.object.isRequired,
+    product: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
     company: state.company,
-    category: state.category
+    category: state.category,
+    product: state.product,
 });
 
-export default connect(mapStateToProps, { updateBestDeal, getCategories, getCompanies, getBestDeal })(EditBestDeal);
+export default connect(mapStateToProps, { updateBestDeal, getCategories, getCompanies, getBestDeal, getProducts })(EditBestDeal);

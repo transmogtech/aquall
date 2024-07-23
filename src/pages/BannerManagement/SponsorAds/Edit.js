@@ -39,7 +39,9 @@ const EditSponsorAd = ({ updateSponsoredAd, getSponsoredAd }) => {
             setFormData({ ...formData, image: e.target.files[0] });
         }
     };
-
+    const deleteImage = () => {
+        setSponsoredAd({ ...sponsoredad, image: null });
+    }
 
     const handleSubmit = () => {
         updateSponsoredAd(id, formData);
@@ -85,7 +87,14 @@ const EditSponsorAd = ({ updateSponsoredAd, getSponsoredAd }) => {
                                                         <Col xxl={3} md={6}>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                                <Input type="file" className="form-control" id="title" onChange={handleFileChange} />
+                                                                {
+                                                                    sponsoredad.image ? (
+                                                                        <div className="img-wrap">
+                                                                            <span className="close" onClick={() => deleteImage()}>&times;</span>
+                                                                            <img src={`${process.env.REACT_APP_API_URL}/${sponsoredad.image}`} width="100%" />
+                                                                        </div>
+                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                }
                                                             </div>
                                                         </Col>
                                                         <Col xxl={3} md={6}>

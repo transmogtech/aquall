@@ -6,16 +6,15 @@ import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { useParams, useNavigate } from 'react-router-dom';
-import Select from "react-select";
 import { updateAppBannerImage, getAppBannerImage } from '../../../actions/appBannerImage';
 import { getCategories } from '../../../actions/category';
 import { getCompanies } from '../../../actions/company';
 import { getProducts } from '../../../actions/product';
 import PropTypes from 'prop-types';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import Loader from '../../../Components/Common/Loader';
 
-const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCategories, getCompanies, category: { categories }, company: { companies } }) => {
+const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCategories, getCompanies, getProducts, category: { categories }, company: { companies }, product: { products } }) => {
 
     const { id } = useParams();
     const [appbannerimage, setAppBannerImage] = useState([]);
@@ -27,16 +26,20 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
 
     useEffect(() => {
         getCategories();
-        getCompanies();
+
         const fetchtData = async () => {
             const response = await getAppBannerImage(id);
             setAppBannerImage(response);
             setSelectedProduct(response.products);
-            setSelectedCompany(response.companyId.name);
-            setSelectedCategory(response.categoryId.title);
+            await getCompanies({ categoryId: response.categoryId });
+            await getProducts({ companyId: response.companyId });
+
+            setSelectedCompany(response.companyId);
+            setSelectedCategory(response.categoryId);
+            setLoading(false);
+
         }
         fetchtData();
-        setLoading(false);
     }, []);
 
     const navigate = useNavigate();
@@ -46,20 +49,7 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const product = [
-        { value: "01", label: "Bio Treat 80" },
-        { value: "02", label: "Purelite" },
-        { value: "03", label: "Aqua soft	" },
-        { value: "04", label: "aerator motor	" },
-        { value: "05", label: "motor" },
-    ];
 
-
-    const Categories = [];
-    const Companies = [];
-    categories.forEach(row => Categories.push({ value: row._id, label: row.title }));
-
-    companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -67,19 +57,18 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
         }
     };
 
-    function handleSelectCategory(selectedCategory) {
-        setFormData({ ...formData, categoryId: selectedCategory.value });
+    const handleSelectCategory = async (e) => {
+        const companyArr = await getCompanies({ categoryId: e.target.value });
+        setFormData({ ...formData, categoryId: e.target.value });
+        // console.log(companyArr);
+    };
 
-        setSelectedCategory(selectedCategory.label);
-    }
+    const handleSelectCompany = async (e) => {
+        const productArr = await getProducts({ companyId: e.target.value });
+        setFormData({ ...formData, companyId: e.target.value });
+        // console.log(companyArr);
+    };
 
-
-    function handleSelectCompany(selectedCompany) {
-        setFormData({ ...formData, companyId: selectedCompany.value });
-
-        setSelectedCompany(selectedCompany.label);
-        // getProducts(selectedCompany.value);
-    }
 
     const handleProductChange = (e, index) => {
 
@@ -94,9 +83,13 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
         }
         setSelectedProduct(values);
         console.log(values);
-        setFormData({ ...formData, products: selectedProduct });
+        setFormData({ ...formData, products: values });
 
     };
+
+    const deleteImage = () => {
+        setAppBannerImage({ ...appbannerimage, image: null });
+    }
 
 
     const handleSubmit = () => {
@@ -129,14 +122,41 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Category</Label>
-                                                            <Select value={{ label: selectedCategory }} onChange={handleSelectCategory} options={Categories} />
+                                                            <select
+                                                                className="form-select"
+                                                                defaultValue={selectedCategory}
+                                                                name="categoryId"
+                                                                onChange={e => handleSelectCategory(e)}>
+                                                                <option value="">Select Category</option>
+                                                                {
+                                                                    categories.map((item, index) => {
+                                                                        return (
+                                                                            <option key={index} value={item._id} >{item.title}</option>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </select>
+
                                                         </div>
                                                     </Col>
 
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Company</Label>
-                                                            <Select value={{ label: selectedCompany }} onChange={handleSelectCompany} options={Companies} />
+                                                            <select
+                                                                className="form-select"
+                                                                defaultValue={selectedCompany}
+                                                                name="companyId"
+                                                                onChange={e => handleSelectCompany(e)}>
+                                                                <option value="">Select Category</option>
+                                                                {
+                                                                    companies.map((item, index) => {
+                                                                        return (
+                                                                            <option key={index} value={item._id} >{item.name}</option>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </select>
                                                         </div>
                                                     </Col>
 
@@ -144,7 +164,12 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                            <Input type="file" className="form-control" id="title" placeholder="URL Slug" onChange={handleFileChange} />
+                                                            {appbannerimage.image ? (
+                                                                <div className="img-wrap">
+                                                                    <span className="close" onClick={() => deleteImage()}>&times;</span>
+                                                                    <img src={`${process.env.REACT_APP_API_URL}/${appbannerimage.image}`} width="100%" />
+                                                                </div>
+                                                            ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />}
                                                         </div>
                                                     </Col>
                                                     <Col xxl={4} md={6}>
@@ -167,11 +192,11 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
                                                     </Col>
                                                     <Col md={12}>
                                                         <h6 className="form-label">Products</h6>
-                                                        {product.map((prod, index) => (
+                                                        {products.map((prod, index) => (
                                                             <div className="form-check-inline" key={index}>
-                                                                <Input type='checkbox' className='form-check-input' value={prod.value}
-                                                                    // defaultChecked={appbannerimage.products.includes(prod.value)}
-                                                                    onChange={e => handleProductChange(e, index)} /> {prod.label}
+                                                                <Input type='checkbox' className='form-check-input' value={prod._id}
+                                                                    defaultChecked={selectedProduct.includes(prod._id)}
+                                                                    onChange={e => handleProductChange(e, index)} /> {prod.name}
                                                             </div>
                                                         ))}
 
@@ -209,13 +234,17 @@ EditAppBannerImage.propTypes = {
     getCategories: PropTypes.func.isRequired,
     getCompanies: PropTypes.func.isRequired,
     getAppBannerImage: PropTypes.func.isRequired,
+    getProducts: PropTypes.func.isRequired,
     company: PropTypes.object.isRequired,
-    category: PropTypes.object.isRequired
+    category: PropTypes.object.isRequired,
+    product: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
     company: state.company,
-    category: state.category
+    category: state.category,
+    product: state.product
+
 });
 
-export default connect(mapStateToProps, { updateAppBannerImage, getCategories, getCompanies, getAppBannerImage })(EditAppBannerImage);
+export default connect(mapStateToProps, { updateAppBannerImage, getCategories, getCompanies, getAppBannerImage, getProducts })(EditAppBannerImage);

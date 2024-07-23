@@ -47,7 +47,11 @@ const EditSliderImage = ({ updateSliderImage, getSliderImage }) => {
     }
 
 
-    document.title = "Create Slider Image | Aquall Admin";
+    const deleteImage = () => {
+        setSliderImage({ ...sliderimage, image: null });
+    }
+
+    document.title = "Edit Slider Image | Aquall Admin";
     return (
         <React.Fragment>
             {
@@ -56,12 +60,12 @@ const EditSliderImage = ({ updateSliderImage, getSliderImage }) => {
                         <div className="page-content">
 
                             <Container fluid>
-                                <BreadCrumb title="Create Slider Image" pageTitle="Slider Image Management" />
+                                <BreadCrumb title="Edit Slider Image" pageTitle="Slider Image Management" />
                                 <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                                     <Row>
                                         <Col lg={12}>
                                             <Card>
-                                                <PreviewCardHeader title="Create Slider Image" />
+                                                <PreviewCardHeader title="Edit Slider Image" />
 
                                                 <CardBody className="card-body">
                                                     <div className="live-preview">
@@ -78,7 +82,14 @@ const EditSliderImage = ({ updateSliderImage, getSliderImage }) => {
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                                    <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+
+
+                                                                    {sliderimage.image ? (
+                                                                        <div className="img-wrap">
+                                                                            <span className="close" onClick={() => deleteImage()}>&times;</span>
+                                                                            <img src={`${process.env.REACT_APP_API_URL}/${sliderimage.image}`} width="100%" />
+                                                                        </div>
+                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />}
                                                                 </div>
                                                             </Col>
 

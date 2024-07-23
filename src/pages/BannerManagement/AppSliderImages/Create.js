@@ -12,12 +12,14 @@ import { getCategories } from '../../../actions/category';
 import { getCompanies } from '../../../actions/company';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { getProducts } from '../../../actions/product';
 
-const CreateAppSliderImage = ({ createAppSliderImage, getCategories, getCompanies, category: { categories }, company: { companies } }) => {
+const CreateAppSliderImage = ({ createAppSliderImage, getCategories, getCompanies, getProducts, category: { categories }, company: { companies }, product: { products } }) => {
 
     useEffect(() => {
         getCategories();
         getCompanies();
+        getProducts();
     }, []);
 
 
@@ -28,23 +30,15 @@ const CreateAppSliderImage = ({ createAppSliderImage, getCategories, getCompanie
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const product = [
-        { value: "01", label: "Bio Treat 80" },
-        { value: "02", label: "Purelite" },
-        { value: "03", label: "Aqua soft	" },
-        { value: "04", label: "aerator motor	" },
-        { value: "05", label: "motor" },
-    ];
-
     const [selectedCategory, setSelectedCategory] = useState(false);
     const [selectedCompany, setSelectedCompany] = useState(null);
     const [selectedProduct, setSelectedProduct] = useState([]);
-    
+
     const Categories = [];
     const Companies = [];
-    categories.forEach(row => Categories.push({ value: row._id, label: row.title}));
+    categories.forEach(row => Categories.push({ value: row._id, label: row.title }));
 
-    companies.forEach(row => Companies.push({ value: row._id, label: row.name}));
+    companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -52,15 +46,17 @@ const CreateAppSliderImage = ({ createAppSliderImage, getCategories, getCompanie
         }
     };
 
-    function handleSelectCategory(selectedCategory) {
+    async function handleSelectCategory(selectedCategory) {
         setFormData({ ...formData, categoryId: selectedCategory.value });
+        await getCompanies({ categoryId: selectedCategory.value });
 
         setSelectedCategory(selectedCategory.label);
     }
 
 
-    function handleSelectCompany(selectedCompany) {
+    async function handleSelectCompany(selectedCompany) {
         setFormData({ ...formData, companyId: selectedCompany.value });
+        await getProducts({ companyId: selectedCompany.value });
 
         setSelectedCompany(selectedCompany.label);
     }
@@ -72,25 +68,25 @@ const CreateAppSliderImage = ({ createAppSliderImage, getCategories, getCompanie
 
         if (checked) {
 
-        values.push(e.target.value);
+            values.push(e.target.value);
         } else {
             values.splice(values.indexOf(value), 1);
         }
         setSelectedProduct(values);
         console.log(values);
-        setFormData({ ...formData, products: selectedProduct });
+        setFormData({ ...formData, products: values });
 
     };
 
 
     const handleSubmit = () => {
 
-       createAppSliderImage(formData);
+        createAppSliderImage(formData);
 
         navigate('/app-slider-images');
     }
 
-    
+
     document.title = "Create App Slider Image | Aquall Admin";
     return (
         <React.Fragment>
@@ -150,14 +146,14 @@ const CreateAppSliderImage = ({ createAppSliderImage, getCategories, getCompanie
                                                 </Col>
                                                 <Col md={12}>
                                                     <h6 className="form-label">Products</h6>
-                                                    {product.map((prod, index) => (
+                                                    {products.map((prod, index) => (
                                                         <div className="form-check-inline" key={index}>
-                                                            <Input type='checkbox' className='form-check-input' value={prod.value} onChange={e => handleProductChange(e, index)} /> {prod.label}
+                                                            <Input type='checkbox' className='form-check-input' value={prod._id} onChange={e => handleProductChange(e, index)} /> {prod.name}
                                                         </div>
                                                     ))}
 
                                                 </Col>
-                                               
+
 
 
                                             </Row>
@@ -167,7 +163,7 @@ const CreateAppSliderImage = ({ createAppSliderImage, getCategories, getCompanie
                                     </CardBody>
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
-                                        <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
+                                            <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -189,13 +185,19 @@ CreateAppSliderImage.propTypes = {
     createAppSliderImage: PropTypes.func.isRequired,
     getCategories: PropTypes.func.isRequired,
     getCompanies: PropTypes.func.isRequired,
+    getProducts: PropTypes.func.isRequired,
+
     company: PropTypes.object.isRequired,
     category: PropTypes.object.isRequired,
+    product: PropTypes.object.isRequired,
+
 }
 
 const mapStateToProps = state => ({
     company: state.company,
     category: state.category,
-  });
-  
-export default connect(mapStateToProps, { createAppSliderImage, getCategories, getCompanies })(CreateAppSliderImage);
+    product: state.product,
+
+});
+
+export default connect(mapStateToProps, { createAppSliderImage, getCategories, getCompanies, getProducts })(CreateAppSliderImage);

@@ -82,7 +82,9 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
         }
     };
 
-
+    const deleteImage = () => {
+        setProduct({ ...product, imageUrl: null });
+    }
     const handleSelectCategory = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         console.log(e.target.value);
@@ -303,7 +305,14 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                         <Col xxl={3} md={6}>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                                <Input type="file" className="form-control" onChange={handleFileChange} id="title" placeholder="URL Slug" />
+                                                                {
+                                                                    product.imageUrl ? (
+                                                                        <div className="img-wrap">
+                                                                            <span className="close" onClick={() => deleteImage()}>&times;</span>
+                                                                            <img src={`${process.env.REACT_APP_API_URL}/${product.imageUrl}`} width="100%" />
+                                                                        </div>
+                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                }
                                                             </div>
                                                         </Col>
                                                         <Col xxl={3} md={6}>
