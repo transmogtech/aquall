@@ -7,11 +7,11 @@ import companies8 from "../../assets/images/companies/img-8.png";
 import avatar2 from "../../assets/images/users/avatar-2.jpg";
 import avatar3 from "../../assets/images/users/avatar-3.jpg";
 
-import "swiper/css";
-import "swiper/css/pagination";
+//import "swiper/css";
+//import "swiper/css/pagination";
 
 // import required modules
-import { Autoplay, Mousewheel } from "swiper/modules";
+//import { Autoplay, Mousewheel } from "swiper/modules";
 
 const ReviewSlider = () => {
   return (
@@ -25,7 +25,7 @@ const ReviewSlider = () => {
         delay: 2000,
         disableOnInteraction: false,
       }}
-      modules={[Autoplay, Mousewheel]}
+  //    modules={[Autoplay, Mousewheel]}
       className="mySwiper vertical-swiper"
       style={{ height: "246px" }}
     >
