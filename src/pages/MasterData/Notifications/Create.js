@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
@@ -13,13 +13,15 @@ import { getProducts } from '../../../actions/product';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const CreateNotification = ({ createNotification, getCategories, getCompanies,getProducts, category: { categories }, company: { companies }, product: { products } }) => {
+const CreateNotification = ({ createNotification, getCategories, getCompanies, getProducts, category: { categories }, company: { companies }, product: { products } }) => {
+
+
 
     useEffect(() => {
         getCategories();
-        getCompanies();
-        getProducts();
-    });
+        // getCompanies();
+        // getProducts();
+    }, []); // eslint-disable-line
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
 
@@ -27,6 +29,17 @@ const CreateNotification = ({ createNotification, getCategories, getCompanies,ge
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const onCategoryChange = async (e) => {
+        const companyArr = await getCompanies({ categoryId: e.target.value });
+        setFormData({ ...formData, categoryId: e.target.value });
+        // console.log(companyArr);
+    };
+
+    const onCompanyChange = async (e) => {
+        const productArr = await getProducts({ companyId: e.target.value });
+        setFormData({ ...formData, companyId: e.target.value });
+        // console.log(companyArr);
+    };
 
     const handleSubmit = () => {
         createNotification(formData);
@@ -61,7 +74,7 @@ const CreateNotification = ({ createNotification, getCategories, getCompanies,ge
                                                             className="form-select"
                                                             data-choices
                                                             name="categoryId"
-                                                            onChange={e => onChange(e)}
+                                                            onChange={e => onCategoryChange(e)}
                                                         >
                                                             <option value="">Select Category</option>
                                                             {
@@ -82,7 +95,7 @@ const CreateNotification = ({ createNotification, getCategories, getCompanies,ge
                                                             className="form-select"
                                                             data-choices
                                                             name="companyId"
-                                                            onChange={e => onChange(e)}
+                                                            onChange={e => onCompanyChange(e)}
                                                         >
                                                             <option value="">Select Company</option>
                                                             {
@@ -137,9 +150,9 @@ const CreateNotification = ({ createNotification, getCategories, getCompanies,ge
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
 
-                                        <button type="submit" className="btn btn-secondary">
-                                                        Save
-                                                    </button>
+                                            <button type="submit" className="btn btn-secondary">
+                                                Save
+                                            </button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -175,8 +188,8 @@ const mapStateToProps = state => ({
     product: state.product,
     category: state.category,
     company: state.company,
-  });
-  
+});
 
 
-export default connect(mapStateToProps, {createNotification, getProducts, getCategories, getCompanies})(CreateNotification);
+
+export default connect(mapStateToProps, { createNotification, getProducts, getCategories, getCompanies })(CreateNotification);

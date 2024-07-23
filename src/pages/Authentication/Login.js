@@ -28,42 +28,42 @@ const Login = ({ setAlert, login, isAuthenticated }) => {
 
     const { email, password } = formData;
 
-    const onChange = e => 
-        setFormData({...formData, [e.target.name] : e.target.value});
+    const onChange = e =>
+        setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const onSubmit = e => {
         e.preventDefault();
-        if(email === ""){
+        if (email === "") {
             setAlert("Please enter email address", "danger");
         }
-        else if(password === ""){
+        else if (password === "") {
             setAlert("Please enter password", "danger");
-        }else{
+        } else {
             login(email, password);
         }
 
     }
-  
+
+    if (isAuthenticated && token) {
+        return <Navigate to="/dashboard" />
+    }
 
     document.title = "Login | Aquall -  Admin";
 
-    if(isAuthenticated || token){
-        return <Navigate to="/dashboard" />
-    }
     return (
         <React.Fragment>
             <ParticlesAuth>
                 <div className="auth-page-content">
                     <Container>
-                     
+
                         <Row className="justify-content-center">
                             <Col md={8} lg={6} xl={5}>
                                 <Card className="mt-4">
                                     <CardBody className="p-4">
                                         <div className="text-center mt-2">
-                                        <Link to="/" className="d-inline-block auth-logo">
-                                            <img src={logoLight} alt="" height="120" />
-                                        </Link>
+                                            <Link to="/" className="d-inline-block auth-logo">
+                                                <img src={logoLight} alt="" height="120" />
+                                            </Link>
                                         </div>
                                         <div className="p-2 mt-4">
                                             <Form
@@ -82,11 +82,11 @@ const Login = ({ setAlert, login, isAuthenticated }) => {
                                                         placeholder="Enter email"
                                                         type="email"
                                                         onChange={onChange}
-                                                        // onBlur={validation.handleBlur}
-                                                        // value={validation.values.email || ""}
-                                                        // invalid={
-                                                        //     validation.touched.email && validation.errors.email ? true : false
-                                                        // }
+                                                    // onBlur={validation.handleBlur}
+                                                    // value={validation.values.email || ""}
+                                                    // invalid={
+                                                    //     validation.touched.email && validation.errors.email ? true : false
+                                                    // }
                                                     />
                                                     {/* {validation.touched.email && validation.errors.email ? (
                                                         <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
@@ -106,11 +106,11 @@ const Login = ({ setAlert, login, isAuthenticated }) => {
                                                             className="form-control pe-5"
                                                             placeholder="Enter Password"
                                                             onChange={onChange}
-                                                            // onChange={validation.handleChange}
-                                                            // onBlur={validation.handleBlur}
-                                                            // invalid={
-                                                            //     validation.touched.password && validation.errors.password ? true : false
-                                                            // }
+                                                        // onChange={validation.handleChange}
+                                                        // onBlur={validation.handleBlur}
+                                                        // invalid={
+                                                        //     validation.touched.password && validation.errors.password ? true : false
+                                                        // }
                                                         />
                                                         {/* {validation.touched.password && validation.errors.password ? (
                                                             <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
@@ -150,4 +150,4 @@ Login.propTypes = {
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
 });
-export default connect(mapStateToProps, { setAlert, login})(Login);
+export default connect(mapStateToProps, { setAlert, login })(Login);

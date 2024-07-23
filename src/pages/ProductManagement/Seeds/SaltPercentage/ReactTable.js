@@ -86,7 +86,7 @@ const DataTable = ({ changeStatusSaltPercentage, deleteSaltPercentage, getSaltPe
         enableColumnFilter: false,
       },
       {
-        header: "Title",
+        header: "Salt Percentage",
         accessorKey: "name",
         enableColumnFilter: false,
       },
@@ -103,9 +103,9 @@ const DataTable = ({ changeStatusSaltPercentage, deleteSaltPercentage, getSaltPe
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to={`/edit/salt-percentage/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to={`/edit/salt-percentage/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -143,7 +143,7 @@ const DataTable = ({ changeStatusSaltPercentage, deleteSaltPercentage, getSaltPe
       />
     </React.Fragment >
 
-    
+
   );
 };
 

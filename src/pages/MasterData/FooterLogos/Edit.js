@@ -1,122 +1,154 @@
-import React, {useState}  from 'react';
+import React, { useState, useEffect } from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
-import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
+import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { updateFooterLogo } from '../../../actions/footerLogo';
+import { updateFooterLogo, getFooterLogo } from '../../../actions/footerLogo';
+
+import { getCompanies } from '../../../actions/company';
 import { useNavigate, useParams } from "react-router-dom";
 import PropTypes from 'prop-types';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import Select from "react-select";
 
+import Loader from '../../../Components/Common/Loader';
 
 
-const EditFooterLogo = ({updateFooterLogo}) => {
-    let {id } = useParams();
+const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company: { companies } }) => {
+    let { id } = useParams();
+    const [footerlogo, setFooterlogo] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedCompany, setSelectedCompany] = useState(null);
+    const [formData, setFormData] = useState();
 
-    const footerlogos = useSelector(state => state.footerLogo.footerlogos);
-    const footerlogo = footerlogos.find(footerlogo => footerlogo._id === id);
+
+    useEffect(() => {
+        getCompanies();
+        const fetchtData = async () => {
+            const response = await getFooterLogo(id);
+            setFooterlogo(response);
+            setFormData({ ...formData, company: response.company._id, priority: response.priority });
+            setSelectedCompany(response.company.name);
+        }
+        fetchtData();
+        setLoading(false);
+
+    }, []); // eslint-disable-line
+
+
+
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
-    const [selectedCompany, setSelectedCompany] = useState(footerlogo.company);
 
+
+    const deleteImage = () => {
+        setFooterlogo({ ...footerlogo, logo: null });
+    }
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    
-const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-        // console.log(e.target.files);
-        setFormData({...formData, logo: e.target.files[0] });
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            // console.log(e.target.files);
+            setFormData({ ...formData, logo: e.target.files[0] });
+        }
+    };
+
+
+    function handleSelectCompany(selectedCompany) {
+
+        setFormData({ ...formData, company: selectedCompany.value });
+
+        setSelectedCompany(selectedCompany.label);
     }
-  };
-
-  
-  function handleSelectCompany(selectedCompany) {
-
-    setFormData({...formData, company: selectedCompany.value });
-
-    setSelectedCompany(selectedCompany.label);
-}
 
 
-  const company = [
-    { value: "01", label: "APEX FROZEN LIMITED" },
-    { value: "02", label: "KRISHNA CHEMICALS" },
-    { value: "03", label: "Vannamei" },
-];
+    const Company = [];
+
+    companies.forEach(company => {
+        Company.push({ value: company._id, label: company.name });
+    });
 
     const handleSubmit = () => {
         updateFooterLogo(id, formData);
 
         navigate('/footer-logos');
     }
-    document.title = "Edit Category | Aquall Admin";
+    document.title = "Edit Footer Logo | Aquall Admin";
     return (
         <React.Fragment>
-            <UiContent />
-            <div className="page-content">
+            {
+                loading ? (<Loader />) : (
+                    <>
+                        <UiContent />
+                        <div className="page-content">
 
-                <Container fluid>
-                    <BreadCrumb title="Edit Category" pageTitle="Category Management" />
-                    <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Edit Category" />
+                            <Container fluid>
+                                <BreadCrumb title="Edit Footer Logo" pageTitle="Footer Logo Management" />
+                                <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+                                    <Row>
+                                        <Col lg={12}>
+                                            <Card>
+                                                <PreviewCardHeader title="Edit Footer Logo  " />
 
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-                                            <Row className="gy-4">
+                                                <CardBody className="card-body">
+                                                    <div className="live-preview">
+                                                        <Row className="gy-4">
 
 
-                                            <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="title" className="form-label">Company</Label>
-                                                        <Select value={{label: selectedCompany}} onChange={handleSelectCompany} options={company} />
+                                                            <Col xxl={3} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="title" className="form-label">Company</Label>
+                                                                    <Select value={{ label: selectedCompany }} onChange={handleSelectCompany} options={Company} />
+                                                                </div>
+                                                            </Col>
+
+                                                            <Col xxl={3} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Logo</Label>
+
+                                                                    {footerlogo.logo ? (
+                                                                        <div class="img-wrap">
+                                                                            <span class="close" onClick={() => deleteImage()}>&times;</span>
+                                                                            <img src={`${process.env.REACT_APP_API_URL}/${footerlogo.logo}`} width="50" />
+                                                                        </div>
+                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />}
+                                                                </div>
+                                                            </Col>
+
+                                                            <Col xxl={3} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Priority</Label>
+                                                                    <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" placeholder="Priority" defaultValue={footerlogo.priority} />
+                                                                </div>
+                                                            </Col>
+
+                                                        </Row>
+
                                                     </div>
-                                                </Col>
 
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Logo</Label>
-                                                        <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                </CardBody>
+
+                                                <CardFooter>
+                                                    <div className="d-flex align-items-start gap-3 mt-4">
+                                                        <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                                     </div>
-                                                </Col>
+                                                </CardFooter>
+                                            </Card>
+                                        </Col>
 
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Priority</Label>
-                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" placeholder="Priority" defaultValue={footerlogo.priority} />
-                                                    </div>
-                                                </Col>
+                                    </Row>
 
-                                            </Row>
+                                </Form>
+                            </Container>
 
-                                        </div>
-
-                                    </CardBody>
-                               
-                                    <CardFooter>
-                                        <div className="d-flex align-items-start gap-3 mt-4">
-                                            <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
-                                        </div>
-                                    </CardFooter>
-                                </Card>
-                            </Col>
-
-                        </Row>
-
-                    </Form>
-                </Container>
-
-            </div>
-
+                        </div>
+                    </>)}
         </React.Fragment>
     );
 }
@@ -124,6 +156,13 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 
 EditFooterLogo.propTypes = {
     updateFooterLogo: PropTypes.func.isRequired,
+    getFooterLogo: PropTypes.func.isRequired,
+    company: PropTypes.object.isRequired,
+
 }
 
-export default connect(null, {updateFooterLogo})(EditFooterLogo);
+
+const mapStateToProps = state => ({
+    company: state.company,
+});
+export default connect(mapStateToProps, { updateFooterLogo, getFooterLogo, getCompanies })(EditFooterLogo);

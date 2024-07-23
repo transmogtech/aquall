@@ -9,7 +9,7 @@ export const createArea = (formData) => async dispatch => {
 
 
   try {
-    if(localStorage.getItem('token')){
+    if (localStorage.getItem('token')) {
       setAuthorization(localStorage.getItem('token'));
     }
 
@@ -33,117 +33,118 @@ export const createArea = (formData) => async dispatch => {
   }
 }
 
-  export const getAreas =  () => async dispatch => {
+export const getAreas = (formData) => async dispatch => {
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get('/areas');
-      dispatch({
-        type: GET_AREAS,
-        payload: res.areas
-      });
-    } catch (err) {
-      dispatch({
-        type: AREA_ERROR
-      });
-    }
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get('/areas', { params: formData });
+    dispatch({
+      type: GET_AREAS,
+      payload: res.areas
+    });
+  } catch (err) {
+    dispatch({
+      type: AREA_ERROR
+    });
+  }
+}
+
+
+export const getArea = (id) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get(`/areas/${id}`);
+    dispatch({
+      type: GET_AREA,
+      payload: res
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+    dispatch({
+      type: AREA_ERROR
+    });
+  }
+}
+
+
+export const deleteArea = id => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.delete(`/areas/${id}`);
+    dispatch({
+      type: DELETE_AREA,
+      payload: id
+    });
+
+    dispatch(setAlert('Area deleted successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: AREA_ERROR
+    });
+  }
+}
+
+
+export const changeStatusArea = (id, status) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const getArea =  (id) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get(`/areas/${id}`);
-      dispatch({
-        type: GET_AREA,
-        payload: res
-      });
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: AREA_ERROR
-      });
-    }
+  try {
+    const res = await axios.post(`/areas/status/${id}`, { status: status }, config);
+    dispatch({
+      type: CHANGE_STATUS_AREA,
+      payload: res
+    });
+
+    dispatch(setAlert('Area status changed successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: AREA_ERROR
+    });
+  }
+}
+
+
+export const updateArea = (id, formData) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const deleteArea =  id => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
     }
-    try {
-      const res = await axios.delete(`/areas/${id}`);
-      dispatch({
-        type: DELETE_AREA,
-        payload: id
-      });
+  };
 
-      dispatch(setAlert('Area deleted successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: AREA_ERROR
-      });
-    }
+  try {
+    const res = await axios.patch(`/areas/${id}`, formData, config);
+    dispatch({
+      type: UPDATE_AREA,
+      payload: res
+    });
+
+    dispatch(setAlert('Area updated successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: AREA_ERROR
+    });
   }
-
-  
-  export const changeStatusArea =  (id, status) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.post(`/areas/status/${id}`, { status: status}, config);
-      dispatch({
-        type: CHANGE_STATUS_AREA,
-        payload: res
-      });
-
-      dispatch(setAlert('Area status changed successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: AREA_ERROR
-      });
-    }
-  }
-
-  
-  export const updateArea =  (id, formData) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.patch(`/areas/${id}`, formData, config);
-      dispatch({
-        type: UPDATE_AREA,
-        payload: res
-      });
-
-      dispatch(setAlert('Area updated successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: AREA_ERROR
-      });
-    }
-  }
+}

@@ -102,7 +102,7 @@ const DataTable = ({ changeStatusPlStage, deletePlStage, getPlStages, plStage: {
         enableColumnFilter: false,
       },
       {
-        header: "Title",
+        header: "PL Stage",
         accessorKey: "name",
         enableColumnFilter: false,
       },
@@ -119,9 +119,9 @@ const DataTable = ({ changeStatusPlStage, deletePlStage, getPlStages, plStage: {
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to={`/edit/pl-stage/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to={`/edit/pl-stage/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -159,7 +159,7 @@ const DataTable = ({ changeStatusPlStage, deletePlStage, getPlStages, plStage: {
       />
     </React.Fragment >
 
-    
+
   );
 };
 

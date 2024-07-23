@@ -9,7 +9,7 @@ export const createCategory = (formData) => async dispatch => {
 
 
   try {
-    if(localStorage.getItem('token')){
+    if (localStorage.getItem('token')) {
       setAuthorization(localStorage.getItem('token'));
     }
 
@@ -33,117 +33,118 @@ export const createCategory = (formData) => async dispatch => {
   }
 }
 
-  export const getCategories =  () => async dispatch => {
+export const getCategories = () => async dispatch => {
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get('/categories');
-      dispatch({
-        type: GET_CATEGORIES,
-        payload: res.categories
-      });
-    } catch (err) {
-      dispatch({
-        type: CATEGORY_ERROR
-      });
-    }
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get('/categories');
+    dispatch({
+      type: GET_CATEGORIES,
+      payload: res.categories
+    });
+  } catch (err) {
+    dispatch({
+      type: CATEGORY_ERROR
+    });
+  }
+}
+
+
+export const getCategory = (id) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get(`/categories/${id}`);
+    dispatch({
+      type: GET_CATEGORY,
+      payload: res
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+    dispatch({
+      type: CATEGORY_ERROR
+    });
+  }
+}
+
+
+export const deleteCategory = id => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.delete(`/categories/${id}`);
+    dispatch({
+      type: DELETE_CATEGORY,
+      payload: id
+    });
+
+    dispatch(setAlert('Category deleted successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: CATEGORY_ERROR
+    });
+  }
+}
+
+
+export const changeStatusCategory = (id, status) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const getCategory =  (id) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get(`/categories/${id}`);
-      dispatch({
-        type: GET_CATEGORY,
-        payload: res
-      });
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: CATEGORY_ERROR
-      });
-    }
+  try {
+    const res = await axios.post(`/categories/status/${id}`, { status: status }, config);
+    dispatch({
+      type: CHANGE_STATUS_CATEGORY,
+      payload: res
+    });
+
+    dispatch(setAlert('Category status changed successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: CATEGORY_ERROR
+    });
+  }
+}
+
+
+export const updateCategory = (id, formData) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const deleteCategory =  id => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
     }
-    try {
-      const res = await axios.delete(`/categories/${id}`);
-      dispatch({
-        type: DELETE_CATEGORY,
-        payload: id
-      });
+  };
 
-      dispatch(setAlert('Category deleted successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: CATEGORY_ERROR
-      });
-    }
+  try {
+    const res = await axios.patch(`/categories/${id}`, formData, config);
+    dispatch({
+      type: UPDATE_CATEGORY,
+      payload: res
+    });
+
+    dispatch(setAlert('Category updated successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: CATEGORY_ERROR
+    });
   }
-
-  
-  export const changeStatusCategory =  (id, status) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.post(`/categories/status/${id}`, { status: status}, config);
-      dispatch({
-        type: CHANGE_STATUS_CATEGORY,
-        payload: res
-      });
-
-      dispatch(setAlert('Category status changed successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: CATEGORY_ERROR
-      });
-    }
-  }
-
-  
-  export const updateCategory =  (id, formData) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.patch(`/categories/${id}`, formData, config);
-      dispatch({
-        type: UPDATE_CATEGORY,
-        payload: res
-      });
-
-      dispatch(setAlert('Category updated successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: CATEGORY_ERROR
-      });
-    }
-  }
+}

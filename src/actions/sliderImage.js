@@ -9,7 +9,7 @@ export const createSliderImage = (formData) => async dispatch => {
 
 
   try {
-    if(localStorage.getItem('token')){
+    if (localStorage.getItem('token')) {
       setAuthorization(localStorage.getItem('token'));
     }
 
@@ -33,117 +33,118 @@ export const createSliderImage = (formData) => async dispatch => {
   }
 }
 
-  export const getSliderImages =  () => async dispatch => {
+export const getSliderImages = () => async dispatch => {
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get('/slider-images');
-      dispatch({
-        type: GET_SLIDER_IMAGES,
-        payload: res.sliderimages
-      });
-    } catch (err) {
-      dispatch({
-        type: SLIDER_IMAGE_ERROR
-      });
-    }
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get('/slider-images');
+    dispatch({
+      type: GET_SLIDER_IMAGES,
+      payload: res.sliderimages
+    });
+  } catch (err) {
+    dispatch({
+      type: SLIDER_IMAGE_ERROR
+    });
+  }
+}
+
+
+export const getSliderImage = (id) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get(`/slider-images/${id}`);
+    dispatch({
+      type: GET_SLIDER_IMAGE,
+      payload: res
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+    dispatch({
+      type: SLIDER_IMAGE_ERROR
+    });
+  }
+}
+
+
+export const deleteSliderImage = id => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.delete(`/slider-images/${id}`);
+    dispatch({
+      type: DELETE_SLIDER_IMAGE,
+      payload: id
+    });
+
+    dispatch(setAlert('SliderImage deleted successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: SLIDER_IMAGE_ERROR
+    });
+  }
+}
+
+
+export const changeStatusSliderImage = (id, status, comment) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const getSliderImage =  (id) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get(`/slider-images/${id}`);
-      dispatch({
-        type: GET_SLIDER_IMAGE,
-        payload: res
-      });
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: SLIDER_IMAGE_ERROR
-      });
-    }
+  try {
+    const res = await axios.post(`/slider-images/status/${id}`, { status: status, comment: comment }, config);
+    dispatch({
+      type: CHANGE_STATUS_SLIDER_IMAGE,
+      payload: res
+    });
+
+    dispatch(setAlert('SliderImage status changed successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: SLIDER_IMAGE_ERROR
+    });
+  }
+}
+
+
+export const updateSliderImage = (id, formData) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const deleteSliderImage =  id => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data'
     }
-    try {
-      const res = await axios.delete(`/slider-images/${id}`);
-      dispatch({
-        type: DELETE_SLIDER_IMAGE,
-        payload: id
-      });
+  };
 
-      dispatch(setAlert('SliderImage deleted successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: SLIDER_IMAGE_ERROR
-      });
-    }
+  try {
+    const res = await axios.patch(`/slider-images/${id}`, formData, config);
+    dispatch({
+      type: UPDATE_SLIDER_IMAGE,
+      payload: res
+    });
+
+    dispatch(setAlert('SliderImage updated successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: SLIDER_IMAGE_ERROR
+    });
   }
-
-  
-  export const changeStatusSliderImage =  (id, status, comment) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-       }
-    };
-
-    try {
-      const res = await axios.post(`/slider-images/status/${id}`, { status: status, comment: comment}, config);
-      dispatch({
-        type: CHANGE_STATUS_SLIDER_IMAGE,
-        payload: res
-      });
-
-      dispatch(setAlert('SliderImage status changed successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: SLIDER_IMAGE_ERROR
-      });
-    }
-  }
-
-  
-  export const updateSliderImage =  (id, formData) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    };
-
-    try {
-      const res = await axios.patch(`/slider-images/${id}`, formData, config);
-      dispatch({
-        type: UPDATE_SLIDER_IMAGE,
-        payload: res
-      });
-
-      dispatch(setAlert('SliderImage updated successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: SLIDER_IMAGE_ERROR
-      });
-    }
-  }
+}

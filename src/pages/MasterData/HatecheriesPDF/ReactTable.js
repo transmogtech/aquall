@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import TableContainer from '../../../Components/Common/TableContainerReactTable';
 import { Link } from 'react-router-dom';
-import {  Button, Col, Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
+import { Button, Col, Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
 import { connect } from 'react-redux';
 import Loader from '../../../Components/Common/Loader';
 import PropTypes from 'prop-types';
@@ -22,12 +22,12 @@ const DataTable = ({ getHatecheriesPdfs, updateHatecheriesPdf, hatecheriesPdf: {
   }, []);
 
 
-  hatecheriespdfs.forEach(row => searchTable.push({ id: row._id, action: row._id, pdf: row.pdf, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  hatecheriespdfs.forEach(row => searchTable.push({ id: row._id, action: row._id, download_link: row.pdf, pdf: row.pdf, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-        // console.log(e.target.files);
-        setSelectedFile( e.target.files[0]);
+      // console.log(e.target.files);
+      setSelectedFile(e.target.files[0]);
     }
   };
 
@@ -45,7 +45,7 @@ const DataTable = ({ getHatecheriesPdfs, updateHatecheriesPdf, hatecheriesPdf: {
 
   const columns = useMemo(
     () => [
-           
+
       {
         header: "File",
         accessorKey: "pdf",
@@ -59,8 +59,21 @@ const DataTable = ({ getHatecheriesPdfs, updateHatecheriesPdf, hatecheriesPdf: {
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-         
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>
+            </div>
+          );
+        },
+      },
+      {
+        header: "Downaload",
+        accessorKey: "download_link",
+        enableColumnFilter: false,
+
+        cell: (cell) => {
+          return (
+            <div>
+
+              <Link target='_blank' to={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} className="btn btn-sm btn-danger"><i className='las la-download'></i></Link>
             </div>
           );
         },
@@ -71,7 +84,7 @@ const DataTable = ({ getHatecheriesPdfs, updateHatecheriesPdf, hatecheriesPdf: {
 
   return (
     <React.Fragment >
-     {loading ? (
+      {loading ? (
         <Loader />
       ) : (
         <TableContainer
@@ -79,7 +92,7 @@ const DataTable = ({ getHatecheriesPdfs, updateHatecheriesPdf, hatecheriesPdf: {
           data={(searchTable || [])}
         />
       )}
-  <EditPdf
+      <EditPdf
         show={updateModal}
         onCloseClick={() => setUpdateModal(false)}
         onClick={handleUpdate}
@@ -87,7 +100,7 @@ const DataTable = ({ getHatecheriesPdfs, updateHatecheriesPdf, hatecheriesPdf: {
       />
     </React.Fragment >
 
-    
+
   );
 };
 

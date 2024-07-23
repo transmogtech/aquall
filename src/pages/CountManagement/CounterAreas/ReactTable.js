@@ -12,7 +12,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusCountArea, deleteCountArea, getCountAreas, updateCountArea } from '../../../actions/countArea';
 import EditModal from './Edit';
 
-const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas,updateCountArea, countArea: { countareas, loading } }) => {
+const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas, updateCountArea, countArea: { countareas, loading } }) => {
 
   const [id, setId] = useState(null);
   const searchTable = [];
@@ -44,7 +44,7 @@ const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas,updat
   };
 
   const handleSubmit = () => {
-    updateCountArea(id, {"title": defaultValue});
+    updateCountArea(id, { "title": defaultValue });
     setEditCountArea(false);
   }
 
@@ -94,9 +94,9 @@ const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas,updat
         accessorKey: "created",
         enableColumnFilter: false,
       },
-      
+
       {
-        header: "Title",
+        header: "Area",
         accessorKey: "title",
         enableColumnFilter: false,
       },
@@ -113,9 +113,9 @@ const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas,updat
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -160,7 +160,7 @@ const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas,updat
       />
     </React.Fragment >
 
-    
+
   );
 };
 

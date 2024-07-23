@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import UiContent from "../../Components/Common/UiContent";
 
 //import Components
@@ -14,13 +14,19 @@ import { getCultureTypes } from "../../actions/cultureType";
 import { getFeedTypes } from "../../actions/feedType";
 import { getPeddlerTypes } from "../../actions/peddlerType";
 import { getHPSizes } from "../../actions/hpSizes";
-import { updateProduct } from '../../actions/product';
+import { updateProduct, getProduct } from '../../actions/product';
 import PropTypes from 'prop-types';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
+import Loader from '../../Components/Common/Loader';
 
-const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategories, getCultureTypes, getFeedTypes, getPeddlerTypes, getHPSizes, updateProduct, plStage: { plstages }, saltPercentage: { saltpercentages }, company: { companies }, category: { categories }, cultureType: { culturetypes }, feedType: { feedtypes }, peddlerType: { peddlertypes }, hpSize: { hpsizes } }) => {
+const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategories, getCultureTypes, getFeedTypes, getPeddlerTypes, getHPSizes, updateProduct, getProduct, plStage: { plstages }, saltPercentage: { saltpercentages }, company: { companies }, category: { categories }, cultureType: { culturetypes }, feedType: { feedtypes }, peddlerType: { peddlertypes }, hpSize: { hpsizes } }) => {
 
-    const { id } =useParams();
+    const { id } = useParams();
+    const [product, setProduct] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const [showHideFields, setShowHideFields] = useState(null);
+    const [gstFields, setGSTFields] = useState(false);
     useEffect(() => {
         getPlStages();
         getSaltPercentages();
@@ -30,6 +36,14 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
         getFeedTypes();
         getPeddlerTypes();
         getHPSizes();
+        const fetchtData = async () => {
+            const response = await getProduct(id);
+            setProduct(response);
+            setShowHideFields(response.categoryId._id);
+            setGSTFields(response.gstPercentage ? true : false);
+        }
+        fetchtData();
+        setLoading(false);
     }, []);
 
     const Categories = [];
@@ -41,9 +55,6 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
     const PeddlerTypes = [];
     const HpSizes = [];
 
-    const products = useSelector(state => state.product.products);
-    const product = products.find(product => product._id === id);
-
     plstages.forEach(row => PlStages.push({ value: row._id, label: row.name }));
     saltpercentages.forEach(row => SaltPercentages.push({ value: row._id, label: row.name }));
     companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
@@ -53,8 +64,6 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
     peddlertypes.forEach(row => PeddlerTypes.push({ value: row._id, label: row.name }));
     hpsizes.forEach(row => HpSizes.push({ value: row._id, label: row.title }));
 
-    const [showHideFields, setShowHideFields] = useState(product.categoryId._id);
-    const [gstFields, setGSTFields] = useState(product.gstPercentage ? true : false);
     const [formData, setFormData] = useState();
     const [image, setImage] = useState(null);
     const navigate = useNavigate();
@@ -69,12 +78,12 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
         if (e.target.files) {
             setImage(e.target.files[0]);
             // console.log(e.target.files);
-            setFormData({...formData, imageUrl: e.target.files[0] });
+            setFormData({ ...formData, imageUrl: e.target.files[0] });
         }
-      };
-    
+    };
 
-      const handleSelectCategory = (e) => {
+
+    const handleSelectCategory = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         console.log(e.target.value);
 
@@ -94,331 +103,333 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
     document.title = "Create Product | Aquall Admin";
     return (
         <React.Fragment>
-            <UiContent />
-            <div className="page-content">
+            {
+                loading ? (<Loader />) : (<Fragment>
+                    <UiContent />
+                    <div className="page-content">
 
-                <Container fluid>
-                    <BreadCrumb title="Create Product" pageTitle="Product Management" />
-                    <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Create Product" />
+                        <Container fluid>
+                            <BreadCrumb title="Create Product" pageTitle="Product Management" />
+                            <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+                                <Row>
+                                    <Col lg={12}>
+                                        <Card>
+                                            <PreviewCardHeader title="Create Product" />
 
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-                                            <Row className="gy-4">
+                                            <CardBody className="card-body">
+                                                <div className="live-preview">
+                                                    <Row className="gy-4">
 
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Category</Label>
-                                                        <select
-                                                            className="form-select"
-                                                            data-choices
-                                                            name="categoryId"
-                                                            onChange={e => handleSelectCategory(e)}
-                                                            defaultValue={product.categoryId._id}
-                                                        >
-                                                            <option value="">Select Category</option>
-                                                            {
-                                                                Categories.map((item, index) => {
-                                                                    return (
-                                                                        <option key={index} value={item.value} selected={item.value == product.categoryId._id}>{item.label}</option>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Company</Label>
-                                                        <select
-                                                            className="form-select"
-                                                            data-choices
-                                                            name="companyId"
-                                                            onChange={e => onChange(e)}
-                                                        >
-                                                            <option value="">Select Company</option>
-                                                            {
-                                                                Companies.map((item, index) => {
-                                                                    return (
-                                                                        <option key={index} value={item.value} selected={item.value == product.companyId._id}>{item.label}</option>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
-                                                </Col>
+                                                        <Col xxl={3} md={6}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Category</Label>
+                                                                <select
+                                                                    className="form-select"
+                                                                    data-choices
+                                                                    name="categoryId"
+                                                                    onChange={e => handleSelectCategory(e)}
+                                                                    defaultValue={product?.categoryId?._id}
+                                                                >
+                                                                    <option value="">Select Category</option>
+                                                                    {
+                                                                        Categories.map((item, index) => {
+                                                                            return (
+                                                                                <option key={index} value={item.value} selected={item.value == product.categoryId?._id}>{item.label}</option>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </Col>
+                                                        <Col xxl={3} md={6}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Company</Label>
+                                                                <select
+                                                                    className="form-select"
+                                                                    data-choices
+                                                                    name="companyId"
+                                                                    onChange={e => onChange(e)}
+                                                                >
+                                                                    <option value="">Select Company</option>
+                                                                    {
+                                                                        Companies.map((item, index) => {
+                                                                            return (
+                                                                                <option key={index} value={item.value} selected={item.value == product.companyId?._id}>{item.label}</option>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </Col>
 
-                                                {["6646461c3f25f68d99341a7a"].indexOf(showHideFields) > -1 &&
-                                                    <Col xxl={3} md={6} id='saltPercentDiv'>
-                                                        <div>
-                                                            <Label htmlFor="basiInput" className="form-label">Hp Size</Label>
-                                                            <select
-                                                            className="form-select"
-                                                            data-choices
-                                                            name="hpsizeId"
-                                                            onChange={e => onChange(e)}
-                                                        >
-                                                            <option value="">Select HP Size</option>
-                                                            {
-                                                                HpSizes.map((item, index) => {
-                                                                    return (
-                                                                        <option key={index} value={item.value} selected={item.value == product.hpsizeId._id}>{item.label}</option>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </select>
-                                                        </div>
-                                                    </Col>}
+                                                        {["6646461c3f25f68d99341a7a"].indexOf(showHideFields) > -1 &&
+                                                            <Col xxl={3} md={6} id='saltPercentDiv'>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Hp Size</Label>
+                                                                    <select
+                                                                        className="form-select"
+                                                                        data-choices
+                                                                        name="hpsizeId"
+                                                                        onChange={e => onChange(e)}
+                                                                    >
+                                                                        <option value="">Select HP Size</option>
+                                                                        {
+                                                                            HpSizes.map((item, index) => {
+                                                                                return (
+                                                                                    <option key={index} value={item.value} selected={item.value == product.hpsizeId._id}>{item.label}</option>
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </Col>}
 
-                                                {["664645eb3f25f68d99341a71", "664645fb3f25f68d99341a74", "6646460f3f25f68d99341a77"].indexOf(showHideFields) > -1 && 
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
-                                                        <select
-                                                            className="form-select"
-                                                            data-choices
-                                                            name="culturetypeId"
-                                                            onChange={e => onChange(e)}
-                                                        >
-                                                            <option value="">Select Culture Type</option>
-                                                            {
-                                                                CultureTypes.map((item, index) => {
-                                                                    return (
-                                                                        <option key={index} value={item.value} selected={item.value == product.culturetypeId._id}>{item.label}</option>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
-                                                </Col>
-                                                }
-                                               
-                                                {showHideFields === '664645fb3f25f68d99341a74' && <Col xxl={3} md={6} >
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">PL Stage</Label>
-                                                        <select
-                                                            className="form-select"
-                                                            data-choices
-                                                            name="plstageId"
-                                                            onChange={e => onChange(e)}
-                                                        >
-                                                            <option value="">Select PL Stage</option>
-                                                            {
-                                                                PlStages.map((item, index) => {
-                                                                    return (
-                                                                        <option key={index} value={item.value} selected={item.value == product.plstageId._id}>{item.label}</option>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
-                                                </Col>}
+                                                        {["664645eb3f25f68d99341a71", "664645fb3f25f68d99341a74", "6646460f3f25f68d99341a77"].indexOf(showHideFields) > -1 &&
+                                                            <Col xxl={3} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
+                                                                    <select
+                                                                        className="form-select"
+                                                                        data-choices
+                                                                        name="culturetypeId"
+                                                                        onChange={e => onChange(e)}
+                                                                    >
+                                                                        <option value="">Select Culture Type</option>
+                                                                        {
+                                                                            CultureTypes.map((item, index) => {
+                                                                                return (
+                                                                                    <option key={index} value={item.value} selected={item.value == product.culturetypeId._id}>{item.label}</option>
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </Col>
+                                                        }
 
-
-                                                {showHideFields === '664645fb3f25f68d99341a74' &&
-                                                    <Col xxl={3} md={6} id='saltPercentDiv'>
-                                                        <div>
-                                                            <Label htmlFor="basiInput" className="form-label">Salt Percentage</Label>
-                                                            <select
-                                                            className="form-select"
-                                                            data-choices
-                                                            name="saltpercentageId"
-                                                            onChange={e => onChange(e)}
-                                                        >
-                                                            <option value="">Select Salt Percentage</option>
-                                                            {
-                                                                SaltPercentages.map((item, index) => {
-                                                                    return (
-                                                                        <option key={index} value={item.value} selected={item.value == product.saltpercentageId._id}>{item.label}</option>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </select>
-                                                        </div>
-                                                    </Col>}
-                                                
-                                                {showHideFields === '664645eb3f25f68d99341a71' && <Col xxl={3} md={6} id='feedTypeDiv'>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Feed Type</Label>
-                                                        <select
-                                                            className="form-select"
-                                                            data-choices
-                                                            name="feedtypeId"
-                                                            onChange={e => onChange(e)}
-                                                        >
-                                                            <option value="">Select Feed Type</option>
-                                                            {
-                                                                FeedTypes.map((item, index) => {
-                                                                    return (
-                                                                        <option key={index} value={item.value} selected={item.value == product.feedtypeId._id}>{item.label}</option>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
-                                                </Col>}
-
-                                                {showHideFields === '6646461c3f25f68d99341a7a' && <Col xxl={3} md={6} id='peddlerDiv'>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Peddler Type</Label>
-                                                        <select
-                                                            className="form-select"
-                                                            data-choices
-                                                            name="peddlertypeId"
-                                                            onChange={e => onChange(e)}
-                                                        >
-                                                            <option value="">Select Peddler Type</option>
-                                                            {
-                                                                PeddlerTypes.map((item, index) => {
-                                                                    return (
-                                                                        <option key={index} value={item.value} selected={item.value == product.peddlertypeId._id}>{item.label}</option>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
-                                                </Col>}
-
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Product Name</Label>
-                                                        <Input type="text" className="form-control" onChange={e => onChange(e)} name="name" placeholder="Product Name" defaultValue={product.name} />
-                                                    </div>
-                                                </Col>
-
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                        <Input type="file" className="form-control" onChange={handleFileChange}  id="title" placeholder="URL Slug"  />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Price</Label>
-                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="price"  defaultValue={product.price}  />
-                                                    </div>
-                                                </Col>
-                                                    <Col xxl={3} md={6}>
-                                                        <div>
-                                                            <Label htmlFor="basiInput" className="form-label">Volume</Label>
-                                                            <Input type="number" className="form-control" onChange={e => onChange(e)} name="volume" defaultValue={product.volume}  />
-                                                        </div>
-                                                    </Col>
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        {showHideFields == '664645fb3f25f68d99341a74' ? <Label htmlFor="basiInput" className="form-label">Bonus</Label> : <Label htmlFor="basiInput" className="form-label">Discount %</Label>}
-                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="discount" defaultValue={product.discount}  />
-                                                    </div>
-                                                </Col>
-                                                {
-                                                    showHideFields === '664645fb3f25f68d99341a74' &&
-                                                    <Col xxl={6} md={6} id='saltPercentDiv'>
-                                                        <div>
-                                                            <Label htmlFor="basiInput" className="form-label">Location</Label>
-                                                            <Input type="text" className="form-control" onChange={e => onChange(e)} name="location" defaultValue={product.location}  />
-                                                        </div>
-                                                    </Col>
-
-                                                }
-                                                {
-                                                    showHideFields === '664645fb3f25f68d99341a74' &&
-                                                    <Col xxl={12} md={12} id='saltPercentDiv'>
-                                                        <div>
-                                                            <Label htmlFor="basiInput" className="form-label">Broodrs</Label>
-                                                            <textarea name='broodrs' onChange={e => onChange(e)}  defaultValue={product.broodrs} className='form-control'></textarea>
-                                                        </div>
-                                                    </Col>
-
-                                                }
-                                                <Col xxl={12} md={12}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Description</Label>
-                                                        <textarea name='description' onChange={e => onChange(e)} defaultValue={product.description}  className='form-control'></textarea>
-                                                    </div>
-                                                </Col>
-                                            </Row>
-
-                                            <Row>
-                                                <Col xxl={3} md={3} className='mt-5'>
-                                                    <div className='form-check form-switch'>
-
-                                                        <Input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onChange={() => { handleGstOptionChange(); }} checked={gstFields} />
-                                                        <Label className="form-check-label" htmlFor="flexSwitchCheckDefault">GST
-                                                        </Label>
-                                                    </div>
-                                                </Col>
-                                                {gstFields === true && <Col xxl={9} md={9} id='gstDiv'>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">GST Percentage</Label>
-                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="gstPercentage" defaultValue={product.gstPercentage}  />
-                                                    </div>
-                                                </Col>}
-                                            </Row>
-                                        </div>
-
-                                    </CardBody>
-
-                                </Card>
-                            </Col>
-
-                        </Row>
-
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Meta Data" />
-
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-
-                                            <Row className="gy-4">
-
-                                                <Col xxl={12} md={12}>
-                                                    <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Title</Label>
-                                                        <textarea className="form-control" placeholder="Meta Title" onChange={e => onChange(e)} name="metaTitle" defaultValue={product.metaTitle}  rows="3"></textarea>
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={12} md={12}>
-                                                    <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Description</Label>
-                                                        <textarea className="form-control" placeholder="Meta Description" onChange={e => onChange(e)} name="metaKeywords" defaultValue={product.metaKeywords}  rows="3"></textarea>
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={12} md={12}>
-                                                    <div>
-                                                        <Label htmlFor="description" className="form-label">Meta Keywords</Label>
-                                                        <textarea className="form-control" placeholder="Meta Keywords" onChange={e => onChange(e)} name="metaDescription" defaultValue={product.metaDescription}  rows="3"></textarea>
-                                                    </div>
-                                                </Col>
+                                                        {showHideFields === '664645fb3f25f68d99341a74' && <Col xxl={3} md={6} >
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">PL Stage</Label>
+                                                                <select
+                                                                    className="form-select"
+                                                                    data-choices
+                                                                    name="plstageId"
+                                                                    onChange={e => onChange(e)}
+                                                                >
+                                                                    <option value="">Select PL Stage</option>
+                                                                    {
+                                                                        PlStages.map((item, index) => {
+                                                                            return (
+                                                                                <option key={index} value={item.value} selected={item.value == product.plstageId._id}>{item.label}</option>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </Col>}
 
 
-                                            </Row>
+                                                        {showHideFields === '664645fb3f25f68d99341a74' &&
+                                                            <Col xxl={3} md={6} id='saltPercentDiv'>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Salt Percentage</Label>
+                                                                    <select
+                                                                        className="form-select"
+                                                                        data-choices
+                                                                        name="saltpercentageId"
+                                                                        onChange={e => onChange(e)}
+                                                                    >
+                                                                        <option value="">Select Salt Percentage</option>
+                                                                        {
+                                                                            SaltPercentages.map((item, index) => {
+                                                                                return (
+                                                                                    <option key={index} value={item.value} selected={item.value == product.saltpercentageId._id}>{item.label}</option>
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </Col>}
 
-                                        </div>
+                                                        {showHideFields === '664645eb3f25f68d99341a71' && <Col xxl={3} md={6} id='feedTypeDiv'>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Feed Type</Label>
+                                                                <select
+                                                                    className="form-select"
+                                                                    data-choices
+                                                                    name="feedtypeId"
+                                                                    onChange={e => onChange(e)}
+                                                                >
+                                                                    <option value="">Select Feed Type</option>
+                                                                    {
+                                                                        FeedTypes.map((item, index) => {
+                                                                            return (
+                                                                                <option key={index} value={item.value} selected={item.value == product.feedtypeId?._id}>{item.label}</option>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </Col>}
 
-                                    </CardBody>
-                                    <CardFooter>
-                                        <div className="d-flex align-items-start gap-3 mt-4">
+                                                        {showHideFields === '6646461c3f25f68d99341a7a' && <Col xxl={3} md={6} id='peddlerDiv'>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Peddler Type</Label>
+                                                                <select
+                                                                    className="form-select"
+                                                                    data-choices
+                                                                    name="peddlertypeId"
+                                                                    onChange={e => onChange(e)}
+                                                                >
+                                                                    <option value="">Select Peddler Type</option>
+                                                                    {
+                                                                        PeddlerTypes.map((item, index) => {
+                                                                            return (
+                                                                                <option key={index} value={item.value} selected={item.value == product.peddlertypeId._id}>{item.label}</option>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </Col>}
 
-                                        <button type="submit" className="btn btn-secondary">
+                                                        <Col xxl={3} md={6}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Product Name</Label>
+                                                                <Input type="text" className="form-control" onChange={e => onChange(e)} name="name" placeholder="Product Name" defaultValue={product.name} />
+                                                            </div>
+                                                        </Col>
+
+                                                        <Col xxl={3} md={6}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Image</Label>
+                                                                <Input type="file" className="form-control" onChange={handleFileChange} id="title" placeholder="URL Slug" />
+                                                            </div>
+                                                        </Col>
+                                                        <Col xxl={3} md={6}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Price</Label>
+                                                                <Input type="number" className="form-control" onChange={e => onChange(e)} name="price" defaultValue={product.price} />
+                                                            </div>
+                                                        </Col>
+                                                        <Col xxl={3} md={6}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Volume</Label>
+                                                                <Input type="number" className="form-control" onChange={e => onChange(e)} name="volume" defaultValue={product.volume} />
+                                                            </div>
+                                                        </Col>
+                                                        <Col xxl={3} md={6}>
+                                                            <div>
+                                                                {showHideFields == '664645fb3f25f68d99341a74' ? <Label htmlFor="basiInput" className="form-label">Bonus</Label> : <Label htmlFor="basiInput" className="form-label">Discount %</Label>}
+                                                                <Input type="number" className="form-control" onChange={e => onChange(e)} name="discount" defaultValue={product.discount} />
+                                                            </div>
+                                                        </Col>
+                                                        {
+                                                            showHideFields === '664645fb3f25f68d99341a74' &&
+                                                            <Col xxl={6} md={6} id='saltPercentDiv'>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Location</Label>
+                                                                    <Input type="text" className="form-control" onChange={e => onChange(e)} name="location" defaultValue={product.location} />
+                                                                </div>
+                                                            </Col>
+
+                                                        }
+                                                        {
+                                                            showHideFields === '664645fb3f25f68d99341a74' &&
+                                                            <Col xxl={12} md={12} id='saltPercentDiv'>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Broodrs</Label>
+                                                                    <textarea name='broodrs' onChange={e => onChange(e)} defaultValue={product.broodrs} className='form-control'></textarea>
+                                                                </div>
+                                                            </Col>
+
+                                                        }
+                                                        <Col xxl={12} md={12}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Description</Label>
+                                                                <textarea name='description' onChange={e => onChange(e)} defaultValue={product.description} className='form-control'></textarea>
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+
+                                                    <Row>
+                                                        <Col xxl={3} md={3} className='mt-5'>
+                                                            <div className='form-check form-switch'>
+
+                                                                <Input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onChange={() => { handleGstOptionChange(); }} checked={gstFields} />
+                                                                <Label className="form-check-label" htmlFor="flexSwitchCheckDefault">GST
+                                                                </Label>
+                                                            </div>
+                                                        </Col>
+                                                        {gstFields === true && <Col xxl={9} md={9} id='gstDiv'>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">GST Percentage</Label>
+                                                                <Input type="number" className="form-control" onChange={e => onChange(e)} name="gstPercentage" defaultValue={product.gstPercentage} />
+                                                            </div>
+                                                        </Col>}
+                                                    </Row>
+                                                </div>
+
+                                            </CardBody>
+
+                                        </Card>
+                                    </Col>
+
+                                </Row>
+
+                                <Row>
+                                    <Col lg={12}>
+                                        <Card>
+                                            <PreviewCardHeader title="Meta Data" />
+
+                                            <CardBody className="card-body">
+                                                <div className="live-preview">
+
+                                                    <Row className="gy-4">
+
+                                                        <Col xxl={12} md={12}>
+                                                            <div>
+                                                                <Label htmlFor="description" className="form-label">Meta Title</Label>
+                                                                <textarea className="form-control" placeholder="Meta Title" onChange={e => onChange(e)} name="metaTitle" defaultValue={product.metaTitle} rows="3"></textarea>
+                                                            </div>
+                                                        </Col>
+                                                        <Col xxl={12} md={12}>
+                                                            <div>
+                                                                <Label htmlFor="description" className="form-label">Meta Description</Label>
+                                                                <textarea className="form-control" placeholder="Meta Description" onChange={e => onChange(e)} name="metaKeywords" defaultValue={product.metaKeywords} rows="3"></textarea>
+                                                            </div>
+                                                        </Col>
+                                                        <Col xxl={12} md={12}>
+                                                            <div>
+                                                                <Label htmlFor="description" className="form-label">Meta Keywords</Label>
+                                                                <textarea className="form-control" placeholder="Meta Keywords" onChange={e => onChange(e)} name="metaDescription" defaultValue={product.metaDescription} rows="3"></textarea>
+                                                            </div>
+                                                        </Col>
+
+
+                                                    </Row>
+
+                                                </div>
+
+                                            </CardBody>
+                                            <CardFooter>
+                                                <div className="d-flex align-items-start gap-3 mt-4">
+
+                                                    <button type="submit" className="btn btn-secondary">
                                                         Save
                                                     </button>
-                                        </div>
-                                    </CardFooter>
-                                </Card>
-                            </Col>
+                                                </div>
+                                            </CardFooter>
+                                        </Card>
+                                    </Col>
 
-                        </Row>
-                    </Form>
-                </Container>
+                                </Row>
+                            </Form>
+                        </Container>
 
-            </div>
+                    </div>
 
-
+                </Fragment>)}
         </React.Fragment>
     );
 }
@@ -433,6 +444,7 @@ EditProduct.propTypes = {
     getPlStages: PropTypes.func.isRequired,
     getSaltPercentages: PropTypes.func.isRequired,
     getHPSizes: PropTypes.func.isRequired,
+    getProduct: PropTypes.func.isRequired,
     company: PropTypes.object.isRequired,
     category: PropTypes.object.isRequired,
     plStage: PropTypes.object.isRequired,
@@ -453,8 +465,8 @@ const mapStateToProps = state => ({
     feedType: state.feedType,
     peddlerType: state.peddlerType,
     hpSize: state.hpSize,
-  });
-  
+});
 
 
-export default connect(mapStateToProps, {updateProduct, getCategories, getCompanies, getCultureTypes, getFeedTypes, getPeddlerTypes, getPlStages, getSaltPercentages, getHPSizes})(EditProduct);
+
+export default connect(mapStateToProps, { updateProduct, getCategories, getCompanies, getCultureTypes, getFeedTypes, getPeddlerTypes, getPlStages, getSaltPercentages, getHPSizes, getProduct })(EditProduct);

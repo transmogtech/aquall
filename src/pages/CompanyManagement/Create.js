@@ -33,9 +33,9 @@ const CreateCompany = ({ getCategories, createCompany, category: { categories } 
         setSelectedCategory(selectedCategory.label);
 
     }
-    const Categories   = [];
+    const Categories = [];
 
-    categories.forEach(row => Categories.push({ value: row._id, label: row.title}));
+    categories.forEach(row => Categories.push({ value: row._id, label: row.title }));
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -43,10 +43,10 @@ const CreateCompany = ({ getCategories, createCompany, category: { categories } 
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setFormData({...formData, logo: e.target.files[0] });
+            setFormData({ ...formData, logo: e.target.files[0] });
         }
-      };
-    
+    };
+
     const handleSubmit = () => {
 
 
@@ -73,23 +73,23 @@ const CreateCompany = ({ getCategories, createCompany, category: { categories } 
                                     <CardBody className="card-body">
                                         <div className="live-preview">
                                             <Row className="gy-4">
-
+                                                <Col xxl={4} md={4}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">Company Name</Label>
+                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" />
+                                                    </div>
+                                                </Col>
                                                 <Col xxl={4} md={4}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Category</Label>
                                                         <Select value={{ label: selectedCategory }} onChange={handleSelectCategory} options={Categories} />
                                                     </div>
                                                 </Col>
-                                                <Col xxl={4} md={4}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" />
-                                                    </div>
-                                                </Col>
+
 
                                                 <Col xxl={4} md={4}>
                                                     <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Logo</Label>
+                                                        <Label htmlFor="basiInput" className="form-label">Company Logo</Label>
                                                         <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
                                                     </div>
                                                 </Col>
@@ -136,7 +136,7 @@ CreateCompany.propTypes = {
 
 const mapStateToProps = state => ({
     category: state.category,
-  });
+});
 
 export default connect(mapStateToProps, { createCompany, getCategories })(CreateCompany);
 

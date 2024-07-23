@@ -23,7 +23,7 @@ const DataTable = ({ changeStatusFooterLogo, deleteFooterLogo, getFooterLogos, f
   }, []);
 
 
-  footerlogos.forEach(row => searchTable.push({ id: row._id, priority: row.priority, logo: row.logo, company: row.company, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  footerlogos.forEach(row => searchTable.push({ id: row._id, priority: row.priority, logo: row.logo, company: row.company.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
 
 
 

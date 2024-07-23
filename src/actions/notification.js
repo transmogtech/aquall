@@ -9,7 +9,7 @@ export const createNotification = (formData) => async dispatch => {
 
 
   try {
-    if(localStorage.getItem('token')){
+    if (localStorage.getItem('token')) {
       setAuthorization(localStorage.getItem('token'));
     }
 
@@ -33,117 +33,118 @@ export const createNotification = (formData) => async dispatch => {
   }
 }
 
-  export const getNotifications =  () => async dispatch => {
+export const getNotifications = () => async dispatch => {
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get('/notifications');
-      dispatch({
-        type: GET_NOTIFICATIONS,
-        payload: res.notifications
-      });
-    } catch (err) {
-      dispatch({
-        type: NOTIFICATION_ERROR
-      });
-    }
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get('/notifications');
+    dispatch({
+      type: GET_NOTIFICATIONS,
+      payload: res.notifications
+    });
+  } catch (err) {
+    dispatch({
+      type: NOTIFICATION_ERROR
+    });
+  }
+}
+
+
+export const getNotification = (id) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get(`/notifications/${id}`);
+    dispatch({
+      type: GET_NOTIFICATION,
+      payload: res
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+    dispatch({
+      type: NOTIFICATION_ERROR
+    });
+  }
+}
+
+
+export const deleteNotification = id => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.delete(`/notifications/${id}`);
+    dispatch({
+      type: DELETE_NOTIFICATION,
+      payload: id
+    });
+
+    dispatch(setAlert('Notification deleted successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: NOTIFICATION_ERROR
+    });
+  }
+}
+
+
+export const changeStatusNotification = (id, status) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const getNotification =  (id) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get(`/notifications/${id}`);
-      dispatch({
-        type: GET_NOTIFICATION,
-        payload: res
-      });
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: NOTIFICATION_ERROR
-      });
-    }
+  try {
+    const res = await axios.post(`/notifications/status/${id}`, { status: status }, config);
+    dispatch({
+      type: CHANGE_STATUS_NOTIFICATION,
+      payload: res
+    });
+
+    dispatch(setAlert('Notification status changed successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: NOTIFICATION_ERROR
+    });
+  }
+}
+
+
+export const updateNotification = (id, formData) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const deleteNotification =  id => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
     }
-    try {
-      const res = await axios.delete(`/notifications/${id}`);
-      dispatch({
-        type: DELETE_NOTIFICATION,
-        payload: id
-      });
+  };
 
-      dispatch(setAlert('Notification deleted successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: NOTIFICATION_ERROR
-      });
-    }
+  try {
+    const res = await axios.patch(`/notifications/${id}`, formData, config);
+    dispatch({
+      type: UPDATE_NOTIFICATION,
+      payload: res
+    });
+
+    dispatch(setAlert('Notification updated successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: NOTIFICATION_ERROR
+    });
   }
-
-  
-  export const changeStatusNotification =  (id, status) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.post(`/notifications/status/${id}`, { status: status}, config);
-      dispatch({
-        type: CHANGE_STATUS_NOTIFICATION,
-        payload: res
-      });
-
-      dispatch(setAlert('Notification status changed successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: NOTIFICATION_ERROR
-      });
-    }
-  }
-
-  
-  export const updateNotification =  (id, formData) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.patch(`/notifications/${id}`, formData, config);
-      dispatch({
-        type: UPDATE_NOTIFICATION,
-        payload: res
-      });
-
-      dispatch(setAlert('Notification updated successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: NOTIFICATION_ERROR
-      });
-    }
-  }
+}

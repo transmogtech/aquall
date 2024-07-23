@@ -12,7 +12,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusHPSize, deleteHPSize, getHPSizes, updateHPSize } from '../../../actions/hpSizes';
 import EditModal from './Edit';
 
-const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes,updateHPSize, hpSize: { hpsizes, loading } }) => {
+const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes, updateHPSize, hpSize: { hpsizes, loading } }) => {
 
   const [id, setId] = useState(null);
   const searchTable = [];
@@ -30,11 +30,11 @@ const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes,updateHPSize, 
   const [editHpSize, setEditHpSize] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
 
-  function toggle_edit(id) {
-    setEditHpSize(!editHpSize);
-    const hp_size = hpsizes.find(hpsize => hpsize._id === id);
+  async function toggle_edit(id) {
+    await hpsizes.find(hpsize => hpsize._id === id ? setDefaultValue(hpsize.title) : '');
+
     setId(id);
-    setDefaultValue(hp_size.title);
+    setEditHpSize(!editHpSize);
 
   }
 
@@ -94,7 +94,7 @@ const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes,updateHPSize, 
         accessorKey: "id",
         enableColumnFilter: false,
       },
-      
+
       {
         header: "Title",
         accessorKey: "title",
@@ -113,9 +113,9 @@ const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes,updateHPSize, 
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -160,7 +160,7 @@ const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes,updateHPSize, 
       />
     </React.Fragment >
 
-    
+
   );
 };
 

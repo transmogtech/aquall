@@ -9,7 +9,7 @@ export const createLanguage = (formData) => async dispatch => {
 
 
   try {
-    if(localStorage.getItem('token')){
+    if (localStorage.getItem('token')) {
       setAuthorization(localStorage.getItem('token'));
     }
 
@@ -33,117 +33,118 @@ export const createLanguage = (formData) => async dispatch => {
   }
 }
 
-  export const getLanguages =  () => async dispatch => {
+export const getLanguages = () => async dispatch => {
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get('/languages');
-      dispatch({
-        type: GET_LANGUAGES,
-        payload: res.languages
-      });
-    } catch (err) {
-      dispatch({
-        type: LANGUAGE_ERROR
-      });
-    }
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get('/languages');
+    dispatch({
+      type: GET_LANGUAGES,
+      payload: res.languages
+    });
+  } catch (err) {
+    dispatch({
+      type: LANGUAGE_ERROR
+    });
+  }
+}
+
+
+export const getLanguage = (id) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get(`/languages/${id}`);
+    dispatch({
+      type: GET_LANGUAGE,
+      payload: res
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+    dispatch({
+      type: LANGUAGE_ERROR
+    });
+  }
+}
+
+
+export const deleteLanguage = id => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.delete(`/languages/${id}`);
+    dispatch({
+      type: DELETE_LANGUAGE,
+      payload: id
+    });
+
+    dispatch(setAlert('Language deleted successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: LANGUAGE_ERROR
+    });
+  }
+}
+
+
+export const changeStatusLanguage = (id, status) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const getLanguage =  (id) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get(`/languages/${id}`);
-      dispatch({
-        type: GET_LANGUAGE,
-        payload: res
-      });
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: LANGUAGE_ERROR
-      });
-    }
+  try {
+    const res = await axios.post(`/languages/status/${id}`, { status: status }, config);
+    dispatch({
+      type: CHANGE_STATUS_LANGUAGE,
+      payload: res
+    });
+
+    dispatch(setAlert('Language status changed successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: LANGUAGE_ERROR
+    });
+  }
+}
+
+
+export const updateLanguage = (id, formData) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const deleteLanguage =  id => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
     }
-    try {
-      const res = await axios.delete(`/languages/${id}`);
-      dispatch({
-        type: DELETE_LANGUAGE,
-        payload: id
-      });
+  };
 
-      dispatch(setAlert('Language deleted successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: LANGUAGE_ERROR
-      });
-    }
+  try {
+    const res = await axios.patch(`/languages/${id}`, formData, config);
+    dispatch({
+      type: UPDATE_LANGUAGE,
+      payload: res
+    });
+
+    dispatch(setAlert('Language updated successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: LANGUAGE_ERROR
+    });
   }
-
-  
-  export const changeStatusLanguage =  (id, status) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.post(`/languages/status/${id}`, { status: status}, config);
-      dispatch({
-        type: CHANGE_STATUS_LANGUAGE,
-        payload: res
-      });
-
-      dispatch(setAlert('Language status changed successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: LANGUAGE_ERROR
-      });
-    }
-  }
-
-  
-  export const updateLanguage =  (id, formData) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.patch(`/languages/${id}`, formData, config);
-      dispatch({
-        type: UPDATE_LANGUAGE,
-        payload: res
-      });
-
-      dispatch(setAlert('Language updated successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: LANGUAGE_ERROR
-      });
-    }
-  }
+}

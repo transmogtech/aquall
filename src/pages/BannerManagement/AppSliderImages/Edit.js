@@ -13,16 +13,30 @@ import { getCompanies } from '../../../actions/company';
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
 import Loader from '../../../Components/Common/Loader';
-const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies, category: { categories, loading }, company: { companies }}) => {
+const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies, getAppSliderImage, category: { categories }, company: { companies } }) => {
 
     const { id } = useParams();
+    const [appsliderimage, setAppSliderImage] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedCompany, setSelectedCompany] = useState(null);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
     useEffect(() => {
         getCategories();
         getCompanies();
+        const fetchtData = async () => {
+            const response = await getAppSliderImage(id);
+            setAppSliderImage(response);
+            setSelectedProduct(response.products);
+            setSelectedCompany(response.companyId.name);
+            setSelectedCategory(response.categoryId.title);
+        }
+        fetchtData();
+        setLoading(false);
     }, []);
 
-    const appsliderimages = useSelector(state => state.appSliderImage.appsliderimages);
-    const appsliderimage = appsliderimages.find(appsliderimage => appsliderimage._id === id);
 
 
     const navigate = useNavigate();
@@ -40,15 +54,12 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
         { value: "05", label: "motor" },
     ];
 
-    const [selectedCategory, setSelectedCategory] = useState(appsliderimage.categoryId.title);
-    const [selectedCompany, setSelectedCompany] = useState(appsliderimage.companyId.name);
-    const [selectedProduct, setSelectedProduct] = useState(appsliderimage.products);
-    
+
     const Categories = [];
     const Companies = [];
-    categories.forEach(row => Categories.push({ value: row._id, label: row.title}));
+    categories.forEach(row => Categories.push({ value: row._id, label: row.title }));
 
-    companies.forEach(row => Companies.push({ value: row._id, label: row.name}));
+    companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -76,7 +87,7 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
 
         if (checked) {
 
-        values.push(e.target.value);
+            values.push(e.target.value);
         } else {
             values.splice(values.indexOf(value), 1);
         }
@@ -89,103 +100,103 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
 
     const handleSubmit = () => {
 
-       updateAppSliderImage(id, formData);
+        updateAppSliderImage(id, formData);
 
         navigate('/app-slider-images');
     }
 
-    
+
     document.title = "Edit App Slider Image | Aquall Admin";
     return (
         <React.Fragment>
-            { loading ? (<Loader /> ): ( <Fragment>
-            <UiContent />
-            <div className="page-content">
+            {loading ? (<Loader />) : (<Fragment>
+                <UiContent />
+                <div className="page-content">
 
-                <Container fluid>
-                    <BreadCrumb title="Edit App Slider Image" pageTitle="App Slider Image Management" />
-                    <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Edit App Slider Image" />
+                    <Container fluid>
+                        <BreadCrumb title="Edit App Slider Image" pageTitle="App Slider Image Management" />
+                        <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+                            <Row>
+                                <Col lg={12}>
+                                    <Card>
+                                        <PreviewCardHeader title="Edit App Slider Image" />
 
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-                                            <Row className="gy-4">
+                                        <CardBody className="card-body">
+                                            <div className="live-preview">
+                                                <Row className="gy-4">
 
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Category</Label>
-                                                        <Select value={{ label: selectedCategory }} onChange={handleSelectCategory} options={Categories} />
-                                                    </div>
-                                                </Col>
-
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Company</Label>
-                                                        <Select value={{ label: selectedCompany }} onChange={handleSelectCompany} options={Companies} />
-                                                    </div>
-                                                </Col>
-
-
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                        <Input type="file" className="form-control" id="title" placeholder="URL Slug" onChange={handleFileChange} />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Discount %</Label>
-                                                        <Input type="number" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} defaultValue={appsliderimage.discount} />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">URL</Label>
-                                                        <Input type="text" className="form-control" name="url" placeholder="URL" onChange={e => onChange(e)} defaultValue={appsliderimage.url} />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Priority</Label>
-                                                        <Input type="text" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} defaultValue={appsliderimage.priority} />
-                                                    </div>
-                                                </Col>
-                                                <Col md={12}>
-                                                    <h6 className="form-label">Products</h6>
-                                                    {product.map((prod, index) => (
-                                                        <div className="form-check-inline" key={index}>
-                                                            <Input type='checkbox' className='form-check-input' value={prod.value} 
-                                                            defaultChecked={appsliderimage.products.includes(prod.value)}
-                                                            onChange={e => handleProductChange(e, index)} /> {prod.label}
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Category</Label>
+                                                            <Select value={{ label: selectedCategory }} onChange={handleSelectCategory} options={Categories} />
                                                         </div>
-                                                    ))}
+                                                    </Col>
 
-                                                </Col>
-                                               
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Company</Label>
+                                                            <Select value={{ label: selectedCompany }} onChange={handleSelectCompany} options={Companies} />
+                                                        </div>
+                                                    </Col>
 
 
-                                            </Row>
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Image</Label>
+                                                            <Input type="file" className="form-control" id="title" placeholder="URL Slug" onChange={handleFileChange} />
+                                                        </div>
+                                                    </Col>
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Discount %</Label>
+                                                            <Input type="number" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} defaultValue={appsliderimage.discount} />
+                                                        </div>
+                                                    </Col>
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">URL</Label>
+                                                            <Input type="text" className="form-control" name="url" placeholder="URL" onChange={e => onChange(e)} defaultValue={appsliderimage.url} />
+                                                        </div>
+                                                    </Col>
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Priority</Label>
+                                                            <Input type="text" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} defaultValue={appsliderimage.priority} />
+                                                        </div>
+                                                    </Col>
+                                                    <Col md={12}>
+                                                        <h6 className="form-label">Products</h6>
+                                                        {product.map((prod, index) => (
+                                                            <div className="form-check-inline" key={index}>
+                                                                <Input type='checkbox' className='form-check-input' value={prod.value}
+                                                                    // defaultChecked={appsliderimage.products.includes(prod.value)}
+                                                                    onChange={e => handleProductChange(e, index)} /> {prod.label}
+                                                            </div>
+                                                        ))}
 
-                                        </div>
+                                                    </Col>
 
-                                    </CardBody>
-                                    <CardFooter>
-                                        <div className="d-flex align-items-start gap-3 mt-4">
-                                        <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
-                                        </div>
-                                    </CardFooter>
-                                </Card>
-                            </Col>
 
-                        </Row>
 
-                    </Form>
-                </Container>
+                                                </Row>
 
-            </div>
+                                            </div>
+
+                                        </CardBody>
+                                        <CardFooter>
+                                            <div className="d-flex align-items-start gap-3 mt-4">
+                                                <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
+                                            </div>
+                                        </CardFooter>
+                                    </Card>
+                                </Col>
+
+                            </Row>
+
+                        </Form>
+                    </Container>
+
+                </div>
             </Fragment>)}
 
         </React.Fragment>
@@ -196,6 +207,7 @@ EditAppSliderImage.propTypes = {
     updateAppSliderImage: PropTypes.func.isRequired,
     getCategories: PropTypes.func.isRequired,
     getCompanies: PropTypes.func.isRequired,
+    getAppSliderImage: PropTypes.func.isRequired,
     company: PropTypes.object.isRequired,
     category: PropTypes.object.isRequired
 }
@@ -203,6 +215,6 @@ EditAppSliderImage.propTypes = {
 const mapStateToProps = state => ({
     company: state.company,
     category: state.category
-  });
-  
-export default connect(mapStateToProps, { updateAppSliderImage, getCategories, getCompanies })(EditAppSliderImage);
+});
+
+export default connect(mapStateToProps, { updateAppSliderImage, getCategories, getCompanies, getAppSliderImage })(EditAppSliderImage);

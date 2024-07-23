@@ -9,15 +9,17 @@ import { setAuthorization } from '../helpers/api_helper';
 
 export const loadUser = () => async dispatch => {
 
-  if(localStorage.getItem('token')){
+  if (localStorage.getItem('token')) {
     setAuthorization(localStorage.getItem('token'));
   }
   try {
     const res = await axios.get('/user/auth');
+
     dispatch({
       type: USER_LOADED,
       payload: res
     });
+    return res;
   } catch (err) {
     dispatch({
       type: AUTH_ERROR
@@ -45,8 +47,8 @@ export const login = (email, password) => async dispatch => {
 
     dispatch(loadUser());
   } catch (err) {
-        // if(errors) {
-      dispatch(setAlert("Invalid credentials", "danger"));
+    // if(errors) {
+    dispatch(setAlert("Invalid credentials", "danger"));
     // }
     dispatch({
       type: LOGIN_FAIL
@@ -54,6 +56,6 @@ export const login = (email, password) => async dispatch => {
   }
 };
 
-export const logout = () => dispatch =>{
-  dispatch({type: LOGOUT});
+export const logout = () => dispatch => {
+  dispatch({ type: LOGOUT });
 }

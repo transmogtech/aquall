@@ -1,154 +1,230 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
-import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
+import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Select from "react-select";
+import { getCountTypes } from '../../../actions/countType';
+import { getCultureTypes } from '../../../actions/cultureType';
+import { getCountAreas } from '../../../actions/countArea';
+import { updateCount, getCount } from '../../../actions/count';
+import PropTypes from "prop-types";
+import { connect } from 'react-redux';
+import Loader from '../../../Components/Common/Loader';
 
+const CreateCount = ({ getCountTypes, getCultureTypes, getCountAreas, updateCount, getCount, countType: { counttypes }, cultureType: { culturetypes }, countArea: { countareas } }) => {
 
-const EditCount = () => {
+    const { id } = useParams();
+    const [count, setCount] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-
-    
-    const [selectedCultureType, setSelectedCultureType] = useState(false);
+    const [selectedCultureType, setSelectedCultureType] = useState(null);
     const [selectedCountArea, setSelectedCountArea] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
 
+    const CountPercent = [
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" }
+    ];
+
+    const [counter, setCounter] = useState(CountPercent);
+
+    useEffect(() => {
+        getCountTypes();
+        getCultureTypes();
+        getCountAreas();
+        const fetchtData = async () => {
+            const response = await getCount(id);
+            setCount(response);
+            setSelectedCategory(response.categoryId.title);
+            setSelectedCountArea(response.countareaId.title);
+            setSelectedCultureType(response.culturetypeId.title);
+            // console.log(response.counts[2].count);
+            setCounter(response.counts);
+        }
+        fetchtData();
+        setLoading(false);
+
+    }, []);
+
+
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState();
+
+    const CountType = [];
+    const CountArea = [];
+    const CultuteType = [];
+    counttypes.forEach(row => CountType.push({ value: row._id, label: row.title }));
+    countareas.forEach(row => CountArea.push({ value: row._id, label: row.title }));
+    culturetypes.forEach(row => CultuteType.push({ value: row._id, label: row.title }));
 
     function handleSelectCultureType(selectedCultureType) {
-        setSelectedCultureType(selectedCultureType);
+        setFormData({ ...formData, culturetypeId: selectedCultureType.value });
+
+        setSelectedCultureType(selectedCultureType.label);
     }
 
 
     function handleSelectCountArea(selectedCountArea) {
-        setSelectedCountArea(selectedCountArea);
+        setFormData({ ...formData, countareaId: selectedCountArea.value });
+
+        setSelectedCountArea(selectedCountArea.label);
     }
 
     function handleSelectedCategory(selectedCategory) {
-        setSelectedCategory(selectedCategory);
+        setFormData({ ...formData, categoryId: selectedCategory.value });
+
+        setSelectedCategory(selectedCategory.label);
     }
 
+
+    const handleCounterChange = (e, index) => {
+
+        const values = [...counter];
+        const updatedValue = e.target.name;
+        values[index][updatedValue] = e.target.value;
+        setCounter(values);
+        setFormData({ ...formData, counts: counter });
+
+    };
 
     const handleSubmit = () => {
+
+
+        updateCount(id, formData);
+
+        navigate('/counts');
     }
 
 
 
-    const categories = [
-        {value: "01", label: "Seed"},
-        {value: "02", label: "Feed"},
-        {value: "03", label: "Chemical"},
-        {value: "04", label: "Aerators"},
-        {value: "05", label: "Test Kit"},
-        {value: "06", label: "Other"},
-    ];
-
-    const CountArea = [
-        {value: "01", label: "ONGOLE"},
-        {value: "02", label: "VIZAG"},
-        {value: "03", label: "ANDHRAPRDESH"},
-    ];
-
-    
-    const cats = [
-        { value: "01", label: "Shrimp" },
-        { value: "02", label: "Fish" },
-    ];
-
-    
-    const CountPercent = [20,30,40,50,60,70,80,90,100];
-
-    document.title = "Edit Count | Aquall Admin";
+    document.title = "Create Count | Aquall Admin";
     return (
         <React.Fragment>
-            <UiContent />
-            <div className="page-content">
+            {
+                loading ? (<Loader />) : (<Fragment>
+                    <UiContent />
+                    <div className="page-content">
 
-                <Container fluid>
-                    <BreadCrumb title="Edit Count" pageTitle="Count Management" />
-                    <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Edit Count" />
+                        <Container fluid>
+                            <BreadCrumb title="Create Count" pageTitle="Count Management" />
+                            <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+                                <Row>
+                                    <Col lg={12}>
+                                        <Card>
+                                            <PreviewCardHeader title="Create Count" />
 
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-                                            <Row className="gy-4">
+                                            <CardBody className="card-body">
+                                                <div className="live-preview">
+                                                    <Row className="gy-4">
 
-                                            <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Category</Label>
-                                                        <Select value={selectedCategory} onChange={() => { handleSelectedCategory(); }} options={cats} />
-                                                    </div>
-                                                </Col>
+                                                        <Col xxl={3} md={6}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Category</Label>
+                                                                <Select value={{ label: selectedCategory }} onChange={handleSelectedCategory} options={CountType} />
+                                                            </div>
+                                                        </Col>
+                                                        <Col xxl={3} md={6}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
+                                                                <Select value={{ label: selectedCultureType }} onChange={handleSelectCultureType} options={CultuteType} />
+                                                            </div>
+                                                        </Col>
 
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
-                                                        <Select value={selectedCultureType} onChange={() => { handleSelectCultureType(); }} options={categories} />
-                                                    </div>
-                                                </Col>
-
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Count Area</Label>
-                                                        <Select value={selectedCountArea} onChange={() => { handleSelectCountArea(); }} options={CountArea} />
-                                                    </div>
-                                                </Col>
-                                            </Row>
-
-
-                                            <Row className="gy-4 mt-3">
-
-{
-  CountPercent.map((count) => (
-<Col xxl={4} md={4} className='mt-3'>
-
-  
-    <div className="form-check">
-                <Input className="form-check-input" type="checkbox" value="" id="flexCheckCheckedRightDisabled" />
-                <Label className="form-check-label" for="flexCheckCheckedRightDisabled">
-                    {count} Count
-                </Label>
-            </div>
-            <Input name='count' className='form-control' />
-</Col>
-  ))
-}
+                                                        <Col xxl={3} md={6}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Count Area</Label>
+                                                                <Select value={{ label: selectedCountArea }} onChange={handleSelectCountArea} options={CountArea} />
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
 
 
-</Row>
-                                        </div>
+                                                    <Row className="gy-4 mt-3">
 
-                                    </CardBody>
-
-
-                                    <CardFooter>
-                                        <div className="d-flex align-items-start gap-3 mt-4">
-
-                                            <Link to="/Counts" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link>
-                                        </div>
-                                    </CardFooter>
-                                </Card>
-                            </Col>
-
-                        </Row>
+                                                        {
+                                                            counter.map((count, index) => (
 
 
+                                                                < Col xxl={6} md={6} className='mt-3' key={index} >
+                                                                    <h6 className=''>Count {index + 1}</h6>
+                                                                    <Row className="gy-4 mt-3 border-top">
+                                                                        <Col xxl={6} md={6} className='mt-3 mb-3 '>
+                                                                            <Input name='count' className='form-control' placeholder={`Count${count.count}`} defaultValue={count.count} onChange={e => handleCounterChange(e, index)} />
+                                                                        </Col>
+
+                                                                        <Col xxl={6} md={6} className='mt-3 mb-3'>
+
+                                                                            <Input name='volume' className='form-control' defaultValue={count.volume} placeholder={`Volume${count.volume}`} onChange={e => handleCounterChange(e, index)} />
+                                                                        </Col>
+
+                                                                    </Row>
+                                                                </Col>
+
+                                                            ))
+                                                        }
+                                                    </Row>
 
 
-                    </Form>
-                </Container>
+                                                </div>
 
-            </div>
+                                            </CardBody>
 
 
-        </React.Fragment>
+                                            <CardFooter>
+                                                <div className="d-flex align-items-start gap-3 mt-4">
+
+                                                    <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
+                                                </div>
+                                            </CardFooter>
+                                        </Card>
+                                    </Col>
+
+                                </Row>
+
+
+
+
+                            </Form>
+                        </Container>
+
+                    </div>
+                </Fragment>)
+            }
+
+        </React.Fragment >
     );
 }
 
-export default EditCount;
+
+CreateCount.propTypes = {
+    getCountAreas: PropTypes.func.isRequired,
+    getCountTypes: PropTypes.func.isRequired,
+    updateCount: PropTypes.func.isRequired,
+    getCount: PropTypes.func.isRequired,
+    getCultureTypes: PropTypes.func.isRequired,
+    countType: PropTypes.object.isRequired,
+    countArea: PropTypes.object.isRequired,
+    cultureType: PropTypes.object.isRequired,
+
+}
+
+const mapStateToProps = state => ({
+    countType: state.countType,
+    countArea: state.countArea,
+    cultureType: state.cultureType,
+});
+
+
+export default connect(mapStateToProps, { updateCount, getCount, getCountAreas, getCountTypes, getCultureTypes })(CreateCount);

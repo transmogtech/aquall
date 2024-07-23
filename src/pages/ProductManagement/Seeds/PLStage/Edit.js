@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import UiContent from "../../../../Components/Common/UiContent";
 
 //import Components
@@ -12,22 +12,29 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getCultureTypes } from '../../../../actions/cultureType';
 import { updatePlStage, getPlStage } from '../../../../actions/plStages';
+import Loader from '../../../../Components/Common/Loader';
 
 
-const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage, plStage: {plstage}, company: { companies }, cultureType: { culturetypes} }) => {
-  const { id } = useParams();
-
+const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage, company: { companies }, cultureType: { culturetypes } }) => {
+    const { id } = useParams();
+    const [plstage, setPlStage] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedCultureType, setSelectedCultureType] = useState(null);
+    const [selectedCompany, setSelectedCompany] = useState(null);
 
     useEffect(() => {
         getCultureTypes();
         getCompanies();
         getPlStage(id);
+        const fetchtData = async () => {
+            const response = await getPlStage(id);
+            setPlStage(response);
+            setSelectedCultureType(response.culturetypeId.title);
+            setSelectedCompany(response.companyId.name);
+        }
+        fetchtData();
+        setLoading(false);
     }, []);
-
-
-
-    const [selectedCultureType, setSelectedCultureType] = useState(plstage.culturetypeId.title);
-    const [selectedCompany, setSelectedCompany] = useState(plstage.companyId.name);
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
 
@@ -48,11 +55,11 @@ const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage,
     }
 
 
-    const CultureTypes   = [];
-    const Companies   = [];
+    const CultureTypes = [];
+    const Companies = [];
 
-    culturetypes.forEach(row => CultureTypes.push({ value: row._id, label: row.title}));
-    companies.forEach(row => Companies.push({ value: row._id, label: row.name}));
+    culturetypes.forEach(row => CultureTypes.push({ value: row._id, label: row.title }));
+    companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -70,66 +77,67 @@ const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage,
     document.title = "Create PL Stage| Aquall Admin";
     return (
         <React.Fragment>
-            <UiContent />
-            <div className="page-content">
+            {
+                loading ? (<Loader />) : (<Fragment><UiContent />
+                    <div className="page-content">
 
-                <Container fluid>
-                    <BreadCrumb title="Create PL Stage" pageTitle="PL Stage Management" />
-                    <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Create PL Stage" />
+                        <Container fluid>
+                            <BreadCrumb title="Create PL Stage" pageTitle="PL Stage Management" />
+                            <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+                                <Row>
+                                    <Col lg={12}>
+                                        <Card>
+                                            <PreviewCardHeader title="Create PL Stage" />
 
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-                                            <Row className="gy-4">
+                                            <CardBody className="card-body">
+                                                <div className="live-preview">
+                                                    <Row className="gy-4">
 
-                                                <Col xxl={4} md={4}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
-                                                        <Select value={{ label: selectedCultureType }} onChange={handleSelectedCultureType} options={CultureTypes} />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={4} md={4}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Company</Label>
-                                                        <Select value={{ label: selectedCompany }} onChange={handleSelectedCompany} options={Companies} />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={4} md={4}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={plstage.name} />
-                                                    </div>
-                                                </Col>
+                                                        <Col xxl={4} md={4}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
+                                                                <Select value={{ label: selectedCultureType }} onChange={handleSelectedCultureType} options={CultureTypes} />
+                                                            </div>
+                                                        </Col>
+                                                        <Col xxl={4} md={4}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Company</Label>
+                                                                <Select value={{ label: selectedCompany }} onChange={handleSelectedCompany} options={Companies} />
+                                                            </div>
+                                                        </Col>
+                                                        <Col xxl={4} md={4}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Name</Label>
+                                                                <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={plstage.name} />
+                                                            </div>
+                                                        </Col>
 
-                                            </Row>
+                                                    </Row>
 
-                                        </div>
+                                                </div>
 
-                                    </CardBody>
+                                            </CardBody>
 
-                                    <CardFooter>
-                                        <div className="d-flex align-items-start gap-3 mt-4">
+                                            <CardFooter>
+                                                <div className="d-flex align-items-start gap-3 mt-4">
 
-                                            <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
-                                        </div>
-                                    </CardFooter>
-                                </Card>
-                            </Col>
+                                                    <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
+                                                </div>
+                                            </CardFooter>
+                                        </Card>
+                                    </Col>
 
-                        </Row>
-
-
-
-
-                    </Form>
-                </Container>
-
-            </div>
+                                </Row>
 
 
+
+
+                            </Form>
+                        </Container>
+
+                    </div>
+
+                </Fragment>)}
         </React.Fragment>
     );
 }
@@ -142,7 +150,6 @@ EditPlStage.propTypes = {
     getPlStage: PropTypes.func.isRequired,
     company: PropTypes.object.isRequired,
     cultureType: PropTypes.object.isRequired,
-    plStage: PropTypes.object.isRequired,
 
 }
 
@@ -150,8 +157,7 @@ EditPlStage.propTypes = {
 const mapStateToProps = state => ({
     cultureType: state.cultureType,
     company: state.company,
-    plStage: state.plStage,
-  });
+});
 
 export default connect(mapStateToProps, { updatePlStage, getCultureTypes, getCompanies, getPlStage })(EditPlStage);
 

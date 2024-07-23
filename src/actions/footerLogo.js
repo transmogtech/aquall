@@ -9,7 +9,7 @@ export const createFooterLogo = (formData) => async dispatch => {
 
 
   try {
-    if(localStorage.getItem('token')){
+    if (localStorage.getItem('token')) {
       setAuthorization(localStorage.getItem('token'));
     }
 
@@ -33,117 +33,118 @@ export const createFooterLogo = (formData) => async dispatch => {
   }
 }
 
-  export const getFooterLogos =  () => async dispatch => {
+export const getFooterLogos = () => async dispatch => {
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get('/footer-logos');
-      dispatch({
-        type: GET_FOOTER_LOGOS,
-        payload: res.footerlogos
-      });
-    } catch (err) {
-      dispatch({
-        type: FOOTER_LOGO_ERROR
-      });
-    }
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get('/footer-logos');
+    dispatch({
+      type: GET_FOOTER_LOGOS,
+      payload: res.footerlogos
+    });
+  } catch (err) {
+    dispatch({
+      type: FOOTER_LOGO_ERROR
+    });
+  }
+}
+
+
+export const getFooterLogo = (id) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get(`/footer-logos/${id}`);
+    dispatch({
+      type: GET_FOOTER_LOGO,
+      payload: res
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+    dispatch({
+      type: FOOTER_LOGO_ERROR
+    });
+  }
+}
+
+
+export const deleteFooterLogo = id => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.delete(`/footer-logos/${id}`);
+    dispatch({
+      type: DELETE_FOOTER_LOGO,
+      payload: id
+    });
+
+    dispatch(setAlert('Footer Logo deleted successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: FOOTER_LOGO_ERROR
+    });
+  }
+}
+
+
+export const changeStatusFooterLogo = (id, status) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const getFooterLogo =  (id) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get(`/footer-logos/${id}`);
-      dispatch({
-        type: GET_FOOTER_LOGO,
-        payload: res
-      });
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: FOOTER_LOGO_ERROR
-      });
-    }
+  try {
+    const res = await axios.post(`/footer-logos/status/${id}`, { status: status }, config);
+    dispatch({
+      type: CHANGE_STATUS_FOOTER_LOGO,
+      payload: res
+    });
+
+    dispatch(setAlert('Footer Logo status changed successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: FOOTER_LOGO_ERROR
+    });
+  }
+}
+
+
+export const updateFooterLogo = (id, formData) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const deleteFooterLogo =  id => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data'
     }
-    try {
-      const res = await axios.delete(`/footer-logos/${id}`);
-      dispatch({
-        type: DELETE_FOOTER_LOGO,
-        payload: id
-      });
+  };
 
-      dispatch(setAlert('Footer Logo deleted successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: FOOTER_LOGO_ERROR
-      });
-    }
+  try {
+    const res = await axios.patch(`/footer-logos/${id}`, formData, config);
+    dispatch({
+      type: UPDATE_FOOTER_LOGO,
+      payload: res
+    });
+
+    dispatch(setAlert('Footer Logo updated successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: FOOTER_LOGO_ERROR
+    });
   }
-
-  
-  export const changeStatusFooterLogo =  (id, status) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.post(`/footer-logos/status/${id}`, { status: status}, config);
-      dispatch({
-        type: CHANGE_STATUS_FOOTER_LOGO,
-        payload: res
-      });
-
-      dispatch(setAlert('Footer Logo status changed successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: FOOTER_LOGO_ERROR
-      });
-    }
-  }
-
-  
-  export const updateFooterLogo =  (id, formData) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    };
-
-    try {
-      const res = await axios.patch(`/footer-logos/${id}`, formData, config);
-      dispatch({
-        type: UPDATE_FOOTER_LOGO,
-        payload: res
-      });
-
-      dispatch(setAlert('Footer Logo updated successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: FOOTER_LOGO_ERROR
-      });
-    }
-  }
+}

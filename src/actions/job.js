@@ -9,7 +9,7 @@ export const createJob = (formData) => async dispatch => {
 
 
   try {
-    if(localStorage.getItem('token')){
+    if (localStorage.getItem('token')) {
       setAuthorization(localStorage.getItem('token'));
     }
 
@@ -33,117 +33,118 @@ export const createJob = (formData) => async dispatch => {
   }
 }
 
-  export const getJobs =  () => async dispatch => {
+export const getJobs = () => async dispatch => {
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get('/jobs');
-      dispatch({
-        type: GET_JOBS,
-        payload: res.jobs
-      });
-    } catch (err) {
-      dispatch({
-        type: JOB_ERROR
-      });
-    }
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get('/jobs');
+    dispatch({
+      type: GET_JOBS,
+      payload: res.jobs
+    });
+  } catch (err) {
+    dispatch({
+      type: JOB_ERROR
+    });
+  }
+}
+
+
+export const getJob = (id) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get(`/jobs/${id}`);
+    dispatch({
+      type: GET_JOB,
+      payload: res
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+    dispatch({
+      type: JOB_ERROR
+    });
+  }
+}
+
+
+export const deleteJob = id => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.delete(`/jobs/${id}`);
+    dispatch({
+      type: DELETE_JOB,
+      payload: id
+    });
+
+    dispatch(setAlert('Job deleted successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: JOB_ERROR
+    });
+  }
+}
+
+
+export const changeStatusJob = (id, status) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const getJob =  (id) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get(`/jobs/${id}`);
-      dispatch({
-        type: GET_JOB,
-        payload: res
-      });
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: JOB_ERROR
-      });
-    }
+  try {
+    const res = await axios.post(`/jobs/status/${id}`, { status: status }, config);
+    dispatch({
+      type: CHANGE_STATUS_JOB,
+      payload: res
+    });
+
+    dispatch(setAlert('Job status changed successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: JOB_ERROR
+    });
+  }
+}
+
+
+export const updateJob = (id, formData) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const deleteJob =  id => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
     }
-    try {
-      const res = await axios.delete(`/jobs/${id}`);
-      dispatch({
-        type: DELETE_JOB,
-        payload: id
-      });
+  };
 
-      dispatch(setAlert('Job deleted successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: JOB_ERROR
-      });
-    }
+  try {
+    const res = await axios.patch(`/jobs/${id}`, formData, config);
+    dispatch({
+      type: UPDATE_JOB,
+      payload: res
+    });
+
+    dispatch(setAlert('Job updated successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: JOB_ERROR
+    });
   }
-
-  
-  export const changeStatusJob =  (id, status) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.post(`/jobs/status/${id}`, { status: status}, config);
-      dispatch({
-        type: CHANGE_STATUS_JOB,
-        payload: res
-      });
-
-      dispatch(setAlert('Job status changed successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: JOB_ERROR
-      });
-    }
-  }
-
-  
-  export const updateJob =  (id, formData) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.patch(`/jobs/${id}`, formData, config);
-      dispatch({
-        type: UPDATE_JOB,
-        payload: res
-      });
-
-      dispatch(setAlert('Job updated successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: JOB_ERROR
-      });
-    }
-  }
+}

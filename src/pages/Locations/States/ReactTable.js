@@ -63,7 +63,7 @@ const DataTable = ({ getStates, deleteState, changeStatusState, state: { states,
   const columns = useMemo(
     () => [
       {
-        
+
         header: "Created On",
         cell: (cell) => {
           return (
@@ -74,7 +74,7 @@ const DataTable = ({ getStates, deleteState, changeStatusState, state: { states,
         enableColumnFilter: false,
       },
       {
-        header: "Title",
+        header: "State",
         accessorKey: "title",
         enableColumnFilter: false,
       },

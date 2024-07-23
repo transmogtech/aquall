@@ -9,7 +9,7 @@ export const createCompany = (formData) => async dispatch => {
 
 
   try {
-    if(localStorage.getItem('token')){
+    if (localStorage.getItem('token')) {
       setAuthorization(localStorage.getItem('token'));
     }
 
@@ -33,117 +33,118 @@ export const createCompany = (formData) => async dispatch => {
   }
 }
 
-  export const getCompanies =  () => async dispatch => {
+export const getCompanies = (formData = '') => async dispatch => {
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get('/companies');
-      dispatch({
-        type: GET_COMPANIES,
-        payload: res.companies
-      });
-    } catch (err) {
-      dispatch({
-        type: COMPANY_ERROR
-      });
-    }
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get('/companies', { params: formData });
+    dispatch({
+      type: GET_COMPANIES,
+      payload: res.companies
+    });
+  } catch (err) {
+    dispatch({
+      type: COMPANY_ERROR
+    });
+  }
+}
+
+
+export const getCompany = (id) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get(`/companies/${id}`);
+    dispatch({
+      type: GET_COMPANY,
+      payload: res
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+    dispatch({
+      type: COMPANY_ERROR
+    });
+  }
+}
+
+
+export const deleteCompany = id => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.delete(`/companies/${id}`);
+    dispatch({
+      type: DELETE_COMPANY,
+      payload: id
+    });
+
+    dispatch(setAlert('Company deleted successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: COMPANY_ERROR
+    });
+  }
+}
+
+
+export const changeStatusCompany = (id, status, comment) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const getCompany =  (id) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get(`/companies/${id}`);
-      dispatch({
-        type: GET_COMPANY,
-        payload: res
-      });
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: COMPANY_ERROR
-      });
-    }
+  try {
+    const res = await axios.post(`/companies/status/${id}`, { status: status, comment: comment }, config);
+    dispatch({
+      type: CHANGE_STATUS_COMPANY,
+      payload: res
+    });
+
+    dispatch(setAlert('Company status changed successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: COMPANY_ERROR
+    });
+  }
+}
+
+
+export const updateCompany = (id, formData) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const deleteCompany =  id => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data'
     }
-    try {
-      const res = await axios.delete(`/companies/${id}`);
-      dispatch({
-        type: DELETE_COMPANY,
-        payload: id
-      });
+  };
 
-      dispatch(setAlert('Company deleted successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: COMPANY_ERROR
-      });
-    }
+  try {
+    const res = await axios.patch(`/companies/${id}`, formData, config);
+    dispatch({
+      type: UPDATE_COMPANY,
+      payload: res
+    });
+
+    dispatch(setAlert('Company updated successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: COMPANY_ERROR
+    });
   }
-
-  
-  export const changeStatusCompany =  (id, status, comment) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-       }
-    };
-
-    try {
-      const res = await axios.post(`/companies/status/${id}`, { status: status, comment: comment}, config);
-      dispatch({
-        type: CHANGE_STATUS_COMPANY,
-        payload: res
-      });
-
-      dispatch(setAlert('Company status changed successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: COMPANY_ERROR
-      });
-    }
-  }
-
-  
-  export const updateCompany =  (id, formData) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    };
-
-    try {
-      const res = await axios.patch(`/companies/${id}`, formData, config);
-      dispatch({
-        type: UPDATE_COMPANY,
-        payload: res
-      });
-
-      dispatch(setAlert('Company updated successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: COMPANY_ERROR
-      });
-    }
-  }
+}

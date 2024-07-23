@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import UiContent from "../../../../Components/Common/UiContent";
 
 //import Components
@@ -12,22 +12,31 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getHPSizes } from '../../../../actions/hpSizes';
 import { updatePeddlerType, getPeddlerType } from '../../../../actions/peddlerType';
+import Loader from '../../../../Components/Common/Loader';
 
 
-const EditPeddlerType = ({ getHPSizes, getCompanies, updatePeddlerType, getPeddlerType, peddlerType: {peddlertype}, company: { companies }, hpSize: { hpsizes} }) => {
-  const { id } = useParams();
+const EditPeddlerType = ({ getHPSizes, getCompanies, updatePeddlerType, getPeddlerType, company: { companies }, hpSize: { hpsizes } }) => {
+    const { id } = useParams();
+    const [peddlertype, setPeddlerType] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const [selectedHpSize, setSelectedHpSize] = useState(null);
+    const [selectedCompany, setSelectedCompany] = useState(null);
 
     useEffect(() => {
         getHPSizes();
         getCompanies();
-        getPeddlerType(id);
+        const fetchtData = async () => {
+            const response = await getPeddlerType(id);
+            setPeddlerType(response);
+            setSelectedHpSize(response.hpsizeId.title);
+            setSelectedCompany(response.companyId.name);
+        }
+        fetchtData();
+        setLoading(false);
     }, []);
 
 
-    console.log(peddlertype);
-
-    const [selectedHpSize, setSelectedHpSize] = useState(peddlertype.hpsizeId.title);
-    const [selectedCompany, setSelectedCompany] = useState(peddlertype.companyId.name);
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
 
@@ -48,11 +57,11 @@ const EditPeddlerType = ({ getHPSizes, getCompanies, updatePeddlerType, getPeddl
     }
 
 
-    const HpSizes   = [];
-    const Companies   = [];
+    const HpSizes = [];
+    const Companies = [];
 
-    hpsizes.forEach(row => HpSizes.push({ value: row._id, label: row.title}));
-    companies.forEach(row => Companies.push({ value: row._id, label: row.name}));
+    hpsizes.forEach(row => HpSizes.push({ value: row._id, label: row.title }));
+    companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -67,69 +76,71 @@ const EditPeddlerType = ({ getHPSizes, getCompanies, updatePeddlerType, getPeddl
     }
 
 
-    document.title = "Create PL Stage| Aquall Admin";
+    document.title = "Create Peddler Type| Aquall Admin";
     return (
         <React.Fragment>
-            <UiContent />
-            <div className="page-content">
+            {
+                loading ? (<Loader />) : (<Fragment>
+                    <UiContent />
+                    <div className="page-content">
 
-                <Container fluid>
-                    <BreadCrumb title="Create PL Stage" pageTitle="PL Stage Management" />
-                    <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Create PL Stage" />
+                        <Container fluid>
+                            <BreadCrumb title="Create Peddler Type" pageTitle="Peddler Type Management" />
+                            <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+                                <Row>
+                                    <Col lg={12}>
+                                        <Card>
+                                            <PreviewCardHeader title="Create Peddler Type" />
 
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-                                            <Row className="gy-4">
+                                            <CardBody className="card-body">
+                                                <div className="live-preview">
+                                                    <Row className="gy-4">
 
-                                                <Col xxl={4} md={4}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
-                                                        <Select value={{ label: selectedHpSize }} onChange={handleSelectedHpSize} options={HpSizes} />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={4} md={4}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Company</Label>
-                                                        <Select value={{ label: selectedCompany }} onChange={handleSelectedCompany} options={Companies} />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={4} md={4}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={peddlertype.name} />
-                                                    </div>
-                                                </Col>
+                                                        <Col xxl={4} md={4}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
+                                                                <Select value={{ label: selectedHpSize }} onChange={handleSelectedHpSize} options={HpSizes} />
+                                                            </div>
+                                                        </Col>
+                                                        <Col xxl={4} md={4}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Company</Label>
+                                                                <Select value={{ label: selectedCompany }} onChange={handleSelectedCompany} options={Companies} />
+                                                            </div>
+                                                        </Col>
+                                                        <Col xxl={4} md={4}>
+                                                            <div>
+                                                                <Label htmlFor="basiInput" className="form-label">Name</Label>
+                                                                <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={peddlertype.name} />
+                                                            </div>
+                                                        </Col>
 
-                                            </Row>
+                                                    </Row>
 
-                                        </div>
+                                                </div>
 
-                                    </CardBody>
+                                            </CardBody>
 
-                                    <CardFooter>
-                                        <div className="d-flex align-items-start gap-3 mt-4">
+                                            <CardFooter>
+                                                <div className="d-flex align-items-start gap-3 mt-4">
 
-                                            <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
-                                        </div>
-                                    </CardFooter>
-                                </Card>
-                            </Col>
+                                                    <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
+                                                </div>
+                                            </CardFooter>
+                                        </Card>
+                                    </Col>
 
-                        </Row>
-
-
-
-
-                    </Form>
-                </Container>
-
-            </div>
+                                </Row>
 
 
+
+
+                            </Form>
+                        </Container>
+
+                    </div>
+
+                </Fragment>)}
         </React.Fragment>
     );
 }
@@ -142,7 +153,6 @@ EditPeddlerType.propTypes = {
     getPeddlerType: PropTypes.func.isRequired,
     company: PropTypes.object.isRequired,
     hpSize: PropTypes.object.isRequired,
-    peddlerType: PropTypes.object.isRequired,
 
 }
 
@@ -150,8 +160,7 @@ EditPeddlerType.propTypes = {
 const mapStateToProps = state => ({
     hpSize: state.hpSize,
     company: state.company,
-    peddlerType: state.peddlerType,
-  });
+});
 
 export default connect(mapStateToProps, { updatePeddlerType, getHPSizes, getCompanies, getPeddlerType })(EditPeddlerType);
 

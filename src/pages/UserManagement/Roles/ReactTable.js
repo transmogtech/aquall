@@ -30,20 +30,20 @@ const DataTable = ({ changeStatusUserRole, deleteUserRole, getUserRoles, updateU
   const [defaultValue, setDefaultValue] = useState(null);
   const [formData, setFormData] = useState(null);
 
-  function toggle_edit(id) {
-    setEditCultureType(!editCultureType);
+  async function toggle_edit(id) {
     setId(id);
 
-    const userrole = userroles.find(userrole => userrole._id === id);
+    await userroles.find(userrole => userrole._id === id ? setDefaultValue(userrole) : []);
     // console.log(userrole);
 
-    setDefaultValue(userrole);
+
+    setEditCultureType(!editCultureType);
 
   }
 
 
   const onChange = (e) => {
-    setFormData ({...formData, [e.target.name]: e.target.value});
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = () => {
@@ -97,7 +97,7 @@ const DataTable = ({ changeStatusUserRole, deleteUserRole, getUserRoles, updateU
         accessorKey: "created",
         enableColumnFilter: false,
       },
-      
+
       {
         header: "Title",
         accessorKey: "title",
@@ -121,9 +121,9 @@ const DataTable = ({ changeStatusUserRole, deleteUserRole, getUserRoles, updateU
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -168,7 +168,7 @@ const DataTable = ({ changeStatusUserRole, deleteUserRole, getUserRoles, updateU
       />
     </React.Fragment >
 
-    
+
   );
 };
 

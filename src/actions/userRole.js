@@ -9,7 +9,7 @@ export const createUserRole = (formData) => async dispatch => {
 
 
   try {
-    if(localStorage.getItem('token')){
+    if (localStorage.getItem('token')) {
       setAuthorization(localStorage.getItem('token'));
     }
 
@@ -33,117 +33,118 @@ export const createUserRole = (formData) => async dispatch => {
   }
 }
 
-  export const getUserRoles =  () => async dispatch => {
+export const getUserRoles = () => async dispatch => {
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get('/user-roles');
-      dispatch({
-        type: GET_USER_ROLES,
-        payload: res.userroles
-      });
-    } catch (err) {
-      dispatch({
-        type: USER_ROLE_ERROR
-      });
-    }
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get('/user-roles');
+    dispatch({
+      type: GET_USER_ROLES,
+      payload: res.userroles
+    });
+  } catch (err) {
+    dispatch({
+      type: USER_ROLE_ERROR
+    });
+  }
+}
+
+
+export const getUserRole = (id) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get(`/user-roles/${id}`);
+    dispatch({
+      type: GET_USER_ROLE,
+      payload: res
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+    dispatch({
+      type: USER_ROLE_ERROR
+    });
+  }
+}
+
+
+export const deleteUserRole = id => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.delete(`/user-roles/${id}`);
+    dispatch({
+      type: DELETE_USER_ROLE,
+      payload: id
+    });
+
+    dispatch(setAlert('User Role deleted successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: USER_ROLE_ERROR
+    });
+  }
+}
+
+
+export const changeStatusUserRole = (id, status) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const getUserRole =  (id) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get(`/user-roles/${id}`);
-      dispatch({
-        type: GET_USER_ROLE,
-        payload: res
-      });
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: USER_ROLE_ERROR
-      });
-    }
+  try {
+    const res = await axios.post(`/user-roles/status/${id}`, { status: status }, config);
+    dispatch({
+      type: CHANGE_STATUS_USER_ROLE,
+      payload: res
+    });
+
+    dispatch(setAlert('User Role status changed successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: USER_ROLE_ERROR
+    });
+  }
+}
+
+
+export const updateUserRole = (id, formData) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const deleteUserRole =  id => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
     }
-    try {
-      const res = await axios.delete(`/user-roles/${id}`);
-      dispatch({
-        type: DELETE_USER_ROLE,
-        payload: id
-      });
+  };
 
-      dispatch(setAlert('User Role deleted successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: USER_ROLE_ERROR
-      });
-    }
+  try {
+    const res = await axios.patch(`/user-roles/${id}`, formData, config);
+    dispatch({
+      type: UPDATE_USER_ROLE,
+      payload: res
+    });
+
+    dispatch(setAlert('User Role updated successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: USER_ROLE_ERROR
+    });
   }
-
-  
-  export const changeStatusUserRole =  (id, status) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.post(`/user-roles/status/${id}`, { status: status}, config);
-      dispatch({
-        type: CHANGE_STATUS_USER_ROLE,
-        payload: res
-      });
-
-      dispatch(setAlert('User Role status changed successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: USER_ROLE_ERROR
-      });
-    }
-  }
-
-  
-  export const updateUserRole =  (id, formData) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.patch(`/user-roles/${id}`, formData, config);
-      dispatch({
-        type: UPDATE_USER_ROLE,
-        payload: res
-      });
-
-      dispatch(setAlert('User Role updated successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: USER_ROLE_ERROR
-      });
-    }
-  }
+}

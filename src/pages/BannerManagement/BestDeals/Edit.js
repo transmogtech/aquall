@@ -7,22 +7,36 @@ import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } f
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { useParams, useNavigate } from 'react-router-dom';
 import Select from "react-select";
-import { updateBestDeal } from '../../../actions/bestDeal';
+import { updateBestDeal, getBestDeal } from '../../../actions/bestDeal';
 import { getCategories } from '../../../actions/category';
 import { getCompanies } from '../../../actions/company';
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
 import Loader from '../../../Components/Common/Loader';
-const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, category: { categories, loading }, company: { companies }}) => {
+const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getBestDeal, category: { categories }, company: { companies } }) => {
 
     const { id } = useParams();
+    const [bestdeal, setBestDeal] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedCompany, setSelectedCompany] = useState(null);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
     useEffect(() => {
         getCategories();
         getCompanies();
+        const fetchtData = async () => {
+            const response = await getBestDeal(id);
+            setBestDeal(response);
+            setSelectedProduct(response.products);
+            setSelectedCompany(response.companyId.name);
+            setSelectedCategory(response.categoryId.title);
+        }
+        fetchtData();
+        setLoading(false);
     }, []);
 
-    const bestdeals = useSelector(state => state.bestDeal.bestdeals);
-    const bestdeal = bestdeals.find(bestdeal => bestdeal._id === id);
 
 
     const navigate = useNavigate();
@@ -40,15 +54,12 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, category: {
         { value: "05", label: "motor" },
     ];
 
-    const [selectedCategory, setSelectedCategory] = useState(bestdeal.categoryId.title);
-    const [selectedCompany, setSelectedCompany] = useState(bestdeal.companyId.name);
-    const [selectedProduct, setSelectedProduct] = useState(bestdeal.products);
-    
+
     const Categories = [];
     const Companies = [];
-    categories.forEach(row => Categories.push({ value: row._id, label: row.title}));
+    categories.forEach(row => Categories.push({ value: row._id, label: row.title }));
 
-    companies.forEach(row => Companies.push({ value: row._id, label: row.name}));
+    companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -76,7 +87,7 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, category: {
 
         if (checked) {
 
-        values.push(e.target.value);
+            values.push(e.target.value);
         } else {
             values.splice(values.indexOf(value), 1);
         }
@@ -89,103 +100,103 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, category: {
 
     const handleSubmit = () => {
 
-       updateBestDeal(id, formData);
+        updateBestDeal(id, formData);
 
         navigate('/best-deals');
     }
 
-    
+
     document.title = "Edit Best Deal | Aquall Admin";
     return (
         <React.Fragment>
-            { loading ? (<Loader /> ): ( <Fragment>
-            <UiContent />
-            <div className="page-content">
+            {loading ? (<Loader />) : (<Fragment>
+                <UiContent />
+                <div className="page-content">
 
-                <Container fluid>
-                    <BreadCrumb title="Edit Best Deal" pageTitle="App Banner Image Management" />
-                    <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Edit Best Deal" />
+                    <Container fluid>
+                        <BreadCrumb title="Edit Best Deal" pageTitle="App Banner Image Management" />
+                        <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+                            <Row>
+                                <Col lg={12}>
+                                    <Card>
+                                        <PreviewCardHeader title="Edit Best Deal" />
 
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-                                            <Row className="gy-4">
+                                        <CardBody className="card-body">
+                                            <div className="live-preview">
+                                                <Row className="gy-4">
 
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Category</Label>
-                                                        <Select value={{ label: selectedCategory }} onChange={handleSelectCategory} options={Categories} />
-                                                    </div>
-                                                </Col>
-
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Company</Label>
-                                                        <Select value={{ label: selectedCompany }} onChange={handleSelectCompany} options={Companies} />
-                                                    </div>
-                                                </Col>
-
-
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                        <Input type="file" className="form-control" id="title" placeholder="URL Slug" onChange={handleFileChange} />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Discount %</Label>
-                                                        <Input type="number" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} defaultValue={bestdeal.discount} />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">URL</Label>
-                                                        <Input type="text" className="form-control" name="url" placeholder="URL" onChange={e => onChange(e)} defaultValue={bestdeal.url} />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Priority</Label>
-                                                        <Input type="text" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} defaultValue={bestdeal.priority} />
-                                                    </div>
-                                                </Col>
-                                                <Col md={12}>
-                                                    <h6 className="form-label">Products</h6>
-                                                    {product.map((prod, index) => (
-                                                        <div className="form-check-inline" key={index}>
-                                                            <Input type='checkbox' className='form-check-input' value={prod.value} 
-                                                            defaultChecked={bestdeal.products.includes(prod.value)}
-                                                            onChange={e => handleProductChange(e, index)} /> {prod.label}
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Category</Label>
+                                                            <Select value={{ label: selectedCategory }} onChange={handleSelectCategory} options={Categories} />
                                                         </div>
-                                                    ))}
+                                                    </Col>
 
-                                                </Col>
-                                               
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Company</Label>
+                                                            <Select value={{ label: selectedCompany }} onChange={handleSelectCompany} options={Companies} />
+                                                        </div>
+                                                    </Col>
 
 
-                                            </Row>
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Image</Label>
+                                                            <Input type="file" className="form-control" id="title" placeholder="URL Slug" onChange={handleFileChange} />
+                                                        </div>
+                                                    </Col>
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Discount %</Label>
+                                                            <Input type="number" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} defaultValue={bestdeal.discount} />
+                                                        </div>
+                                                    </Col>
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">URL</Label>
+                                                            <Input type="text" className="form-control" name="url" placeholder="URL" onChange={e => onChange(e)} defaultValue={bestdeal.url} />
+                                                        </div>
+                                                    </Col>
+                                                    <Col xxl={4} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Priority</Label>
+                                                            <Input type="text" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} defaultValue={bestdeal.priority} />
+                                                        </div>
+                                                    </Col>
+                                                    <Col md={12}>
+                                                        <h6 className="form-label">Products</h6>
+                                                        {product.map((prod, index) => (
+                                                            <div className="form-check-inline" key={index}>
+                                                                <Input type='checkbox' className='form-check-input' value={prod.value}
+                                                                    // defaultChecked={bestdeal.products.includes(prod.value)}
+                                                                    onChange={e => handleProductChange(e, index)} /> {prod.label}
+                                                            </div>
+                                                        ))}
 
-                                        </div>
+                                                    </Col>
 
-                                    </CardBody>
-                                    <CardFooter>
-                                        <div className="d-flex align-items-start gap-3 mt-4">
-                                        <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
-                                        </div>
-                                    </CardFooter>
-                                </Card>
-                            </Col>
 
-                        </Row>
 
-                    </Form>
-                </Container>
+                                                </Row>
 
-            </div>
+                                            </div>
+
+                                        </CardBody>
+                                        <CardFooter>
+                                            <div className="d-flex align-items-start gap-3 mt-4">
+                                                <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
+                                            </div>
+                                        </CardFooter>
+                                    </Card>
+                                </Col>
+
+                            </Row>
+
+                        </Form>
+                    </Container>
+
+                </div>
             </Fragment>)}
 
         </React.Fragment>
@@ -196,6 +207,7 @@ EditBestDeal.propTypes = {
     updateBestDeal: PropTypes.func.isRequired,
     getCategories: PropTypes.func.isRequired,
     getCompanies: PropTypes.func.isRequired,
+    getBestDeal: PropTypes.func.isRequired,
     company: PropTypes.object.isRequired,
     category: PropTypes.object.isRequired
 }
@@ -203,6 +215,6 @@ EditBestDeal.propTypes = {
 const mapStateToProps = state => ({
     company: state.company,
     category: state.category
-  });
-  
-export default connect(mapStateToProps, { updateBestDeal, getCategories, getCompanies })(EditBestDeal);
+});
+
+export default connect(mapStateToProps, { updateBestDeal, getCategories, getCompanies, getBestDeal })(EditBestDeal);

@@ -7,7 +7,7 @@ import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Bu
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import Select from "react-select";
-import { updateUser, getUsers } from '../../../actions/user';
+import { updateUser, getUser } from '../../../actions/user';
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
 import { getStates } from '../../../actions/state';
@@ -15,33 +15,27 @@ import { getDistricts } from '../../../actions/district';
 import { getAreas } from '../../../actions/area';
 import { getPincodes } from '../../../actions/pincode';
 import { getUserRoles } from '../../../actions/userRole';
+import Loader from '../../../Components/Common/Loader';
 
-const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, getUserRoles, getUsers }) => {
+const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, getUserRoles, getUser }) => {
 
     const { id } = useParams();
+    const [user, setUser] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        getStates();
-        getDistricts();
-        getAreas();
-        getPincodes();
-        getUserRoles();
-        getUsers();
-    }, []);
-
-    const users = useSelector(state => state.user.users);
-    const user = users.find(user => user._id === id);
 
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
-    const [selectedState, setSelectedState] = useState(user.stateId.title);
+    const [selectedState, setSelectedState] = useState(null);
     const [options, setOptions] = useState([]);
     const [areas, setAreas] = useState([]);
     const [pincodes, setPincodes] = useState([]);
-    const [selectedDistrict, setSelectedDistrict] = useState(user.districtId.title);
-    const [selectedArea, setSelectedArea] = useState(user.areaId.title);
-    const [selectedPincode, setSelectedPincode] = useState(user.pincodeId.title);
-    const [selectedUserRole, setSelectedUserRole] = useState(user.userroleId.title);
+    const [selectedDistrict, setSelectedDistrict] = useState(null);
+    const [selectedArea, setSelectedArea] = useState(null);
+    const [selectedPincode, setSelectedPincode] = useState(null);
+    const [selectedUserRole, setSelectedUserRole] = useState(null);
+
+
     const Districts = [];
     const Areas = [];
     const Pincodes = [];
@@ -56,6 +50,27 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
     const states = useSelector(state => state.state.states);
     const pincodeData = useSelector(state => state.pincode.pincodes);
     const userroles = useSelector(state => state.userRole.userroles);
+
+    useEffect(() => {
+        getStates();
+        getDistricts();
+        getAreas();
+        getPincodes();
+        getUserRoles();
+        const userData = async () => {
+            const response = await getUser(id);
+            console.log(response);
+            setUser(response);
+            setSelectedState(response.stateId.title);
+            setSelectedDistrict(response.districtId.title);
+            setSelectedArea(response.areaId.title);
+            setSelectedPincode(response.pincodeId?.title);
+            setSelectedUserRole(response.userroleId.title);
+        }
+        userData();
+        setLoading(false);
+    }, []);
+
 
 
     const onChange = (e) => {
@@ -143,104 +158,108 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
     document.title = "Create User | Aquall Admin";
     return (
         <React.Fragment>
-            <UiContent />
-            <div className="page-content">
+            {
+                loading ? (<Loader />) : (
+                    <>
+                        <UiContent />
+                        <div className="page-content">
 
-                <Container fluid>
-                    <BreadCrumb title="Create User" pageTitle="User Management" />
-                    <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Create User" />
+                            <Container fluid>
+                                <BreadCrumb title="Create User" pageTitle="User Management" />
+                                <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+                                    <Row>
+                                        <Col lg={12}>
+                                            <Card>
+                                                <PreviewCardHeader title="Create User" />
 
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-                                            <Row className="gy-4">
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                        <Input type="text" className="form-control" name="name" onChange={e => onChange(e)} placeholder="Name" defaultValue={user.name} />
+                                                <CardBody className="card-body">
+                                                    <div className="live-preview">
+                                                        <Row className="gy-4">
+                                                            <Col xxl={4} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Name</Label>
+                                                                    <Input type="text" className="form-control" name="name" onChange={e => onChange(e)} placeholder="Name" defaultValue={user.name} />
+                                                                </div>
+                                                            </Col>
+                                                            <Col xxl={4} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Email Address</Label>
+                                                                    <Input type="email" className="form-control" name="email" onChange={e => onChange(e)} placeholder="Email Address" readOnly defaultValue={user.email} />
+                                                                </div>
+                                                            </Col>
+                                                            <Col xxl={4} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Mobile Number</Label>
+                                                                    <Input type="number" className="form-control" name="mobile" onChange={e => onChange(e)} placeholder="Mobile Number" readOnly defaultValue={user.mobile} />
+                                                                </div>
+                                                            </Col>
+
+                                                            <Col xxl={4} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">User Role</Label>
+                                                                    <Select value={{ label: selectedUserRole }} onChange={handleSelectUserRole} options={UserRoles} placeholder="User Role" />
+
+                                                                </div>
+                                                            </Col>
+
+                                                            <Col xxl={4} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">State</Label>
+                                                                    <Select value={{ label: selectedState }} onChange={handleSelectState} options={States} />
+                                                                </div>
+                                                            </Col>
+
+
+                                                            <Col xxl={4} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">District</Label>
+                                                                    <Select value={{ label: selectedDistrict }} onChange={handleSelectDistrict} options={options} />
+                                                                </div>
+                                                            </Col>
+
+                                                            <Col xxl={4} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Area</Label>
+                                                                    <Select value={{ label: selectedArea }} onChange={handleSelectArea} options={areas} />
+                                                                </div>
+                                                            </Col>
+                                                            <Col xxl={4} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Pincode</Label>
+                                                                    <Select value={{ label: selectedPincode }} onChange={handleSelectPincode} options={pincodes} />
+                                                                </div>
+                                                            </Col>
+
+
+
+
+                                                        </Row>
+
                                                     </div>
-                                                </Col>
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Email Address</Label>
-                                                        <Input type="email" className="form-control" name="email" onChange={e => onChange(e)} placeholder="Email Address" readOnly defaultValue={user.email}  />
+
+                                                </CardBody>
+                                                <CardFooter>
+                                                    <div className="d-flex align-items-start gap-3 mt-4">
+
+                                                        <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
                                                     </div>
-                                                </Col>
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Mobile Number</Label>
-                                                        <Input type="number" className="form-control" name="mobile" onChange={e => onChange(e)} placeholder="Mobile Number" readOnly defaultValue={user.mobile}  />
-                                                    </div>
-                                                </Col>
+                                                </CardFooter>
+                                            </Card>
+                                        </Col>
 
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">User Role</Label>
-                                                        <Select value={{ label: selectedUserRole }} onChange={handleSelectUserRole} options={UserRoles} placeholder="User Role" />
-
-                                                    </div>
-                                                </Col>
-
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">State</Label>
-                                                        <Select value={{ label: selectedState }} onChange={handleSelectState} options={States} />
-                                                    </div>
-                                                </Col>
-
-
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">District</Label>
-                                                        <Select value={{ label: selectedDistrict }} onChange={handleSelectDistrict} options={options} />
-                                                    </div>
-                                                </Col>
-
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Area</Label>
-                                                        <Select value={{ label: selectedArea }} onChange={handleSelectArea} options={areas} />
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Pincode</Label>
-                                                        <Select value={{ label: selectedPincode }} onChange={handleSelectPincode} options={pincodes} />
-                                                    </div>
-                                                </Col>
-
-
-
-
-                                            </Row>
-
-                                        </div>
-
-                                    </CardBody>
-                                    <CardFooter>
-                                        <div className="d-flex align-items-start gap-3 mt-4">
-
-                                            <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
-                                        </div>
-                                    </CardFooter>
-                                </Card>
-                            </Col>
-
-                        </Row>
+                                    </Row>
 
 
 
 
 
-                    </Form>
-                </Container>
+                                </Form>
+                            </Container>
 
-            </div>
-
-
+                        </div>
+                    </>
+                )
+            }
         </React.Fragment>
     );
 }
@@ -253,6 +272,7 @@ EditUser.propTypes = {
     getAreas: PropTypes.func.isRequired,
     getPincodes: PropTypes.func.isRequired,
     getUserRoles: PropTypes.func.isRequired,
+    getUser: PropTypes.func.isRequired,
     state: PropTypes.object.isRequired,
 
 }
@@ -262,4 +282,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { updateUser, getStates, getDistricts, getAreas, getPincodes, getUserRoles, getUsers })(EditUser);
+export default connect(mapStateToProps, { updateUser, getStates, getDistricts, getAreas, getPincodes, getUserRoles, getUser })(EditUser);

@@ -9,7 +9,7 @@ export const createYoutubeVideo = (formData) => async dispatch => {
 
 
   try {
-    if(localStorage.getItem('token')){
+    if (localStorage.getItem('token')) {
       setAuthorization(localStorage.getItem('token'));
     }
 
@@ -33,117 +33,118 @@ export const createYoutubeVideo = (formData) => async dispatch => {
   }
 }
 
-  export const getYoutubeVideos =  () => async dispatch => {
+export const getYoutubeVideos = () => async dispatch => {
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get('/youtube-videos');
-      dispatch({
-        type: GET_YOUTUBE_VIDEOS,
-        payload: res.youtubevideos
-      });
-    } catch (err) {
-      dispatch({
-        type: YOUTUBE_VIDEO_ERROR
-      });
-    }
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get('/youtube-videos');
+    dispatch({
+      type: GET_YOUTUBE_VIDEOS,
+      payload: res.youtubevideos
+    });
+  } catch (err) {
+    dispatch({
+      type: YOUTUBE_VIDEO_ERROR
+    });
+  }
+}
+
+
+export const getYoutubeVideo = (id) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.get(`/youtube-videos/${id}`);
+    dispatch({
+      type: GET_YOUTUBE_VIDEO,
+      payload: res
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+    dispatch({
+      type: YOUTUBE_VIDEO_ERROR
+    });
+  }
+}
+
+
+export const deleteYoutubeVideo = id => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
+  }
+  try {
+    const res = await axios.delete(`/youtube-videos/${id}`);
+    dispatch({
+      type: DELETE_YOUTUBE_VIDEO,
+      payload: id
+    });
+
+    dispatch(setAlert('YoutubeVideo deleted successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: YOUTUBE_VIDEO_ERROR
+    });
+  }
+}
+
+
+export const changeStatusYoutubeVideo = (id, status) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const getYoutubeVideo =  (id) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-    try {
-      const res = await axios.get(`/youtube-videos/${id}`);
-      dispatch({
-        type: GET_YOUTUBE_VIDEO,
-        payload: res
-      });
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: YOUTUBE_VIDEO_ERROR
-      });
-    }
+  try {
+    const res = await axios.post(`/youtube-videos/status/${id}`, { status: status }, config);
+    dispatch({
+      type: CHANGE_STATUS_YOUTUBE_VIDEO,
+      payload: res
+    });
+
+    dispatch(setAlert('YoutubeVideo status changed successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: YOUTUBE_VIDEO_ERROR
+    });
+  }
+}
+
+
+export const updateYoutubeVideo = (id, formData) => async dispatch => {
+
+  if (localStorage.getItem('token')) {
+    setAuthorization(localStorage.getItem('token'));
   }
 
-  
-  export const deleteYoutubeVideo =  id => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
     }
-    try {
-      const res = await axios.delete(`/youtube-videos/${id}`);
-      dispatch({
-        type: DELETE_YOUTUBE_VIDEO,
-        payload: id
-      });
+  };
 
-      dispatch(setAlert('YoutubeVideo deleted successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: YOUTUBE_VIDEO_ERROR
-      });
-    }
+  try {
+    const res = await axios.patch(`/youtube-videos/${id}`, formData, config);
+    dispatch({
+      type: UPDATE_YOUTUBE_VIDEO,
+      payload: res
+    });
+
+    dispatch(setAlert('YoutubeVideo updated successfully', 'success'));
+  } catch (err) {
+    dispatch({
+      type: YOUTUBE_VIDEO_ERROR
+    });
   }
-
-  
-  export const changeStatusYoutubeVideo =  (id, status) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.post(`/youtube-videos/status/${id}`, { status: status}, config);
-      dispatch({
-        type: CHANGE_STATUS_YOUTUBE_VIDEO,
-        payload: res
-      });
-
-      dispatch(setAlert('YoutubeVideo status changed successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: YOUTUBE_VIDEO_ERROR
-      });
-    }
-  }
-
-  
-  export const updateYoutubeVideo =  (id, formData) => async dispatch => {
-
-    if(localStorage.getItem('token')){
-      setAuthorization(localStorage.getItem('token'));
-    }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const res = await axios.patch(`/youtube-videos/${id}`, formData, config);
-      dispatch({
-        type: UPDATE_YOUTUBE_VIDEO,
-        payload: res
-      });
-
-      dispatch(setAlert('YoutubeVideo updated successfully','success'));
-    } catch (err) {
-      dispatch({
-        type: YOUTUBE_VIDEO_ERROR
-      });
-    }
-  }
+}

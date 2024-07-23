@@ -12,7 +12,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusCultureType, deleteCultureType, getCultureTypes, updateCultureType } from '../../../actions/cultureType';
 import EditModal from './Edit';
 
-const DataTable = ({ changeStatusCultureType, deleteCultureType, getCultureTypes,updateCultureType, cultureType: { culturetypes, loading } }) => {
+const DataTable = ({ changeStatusCultureType, deleteCultureType, getCultureTypes, updateCultureType, cultureType: { culturetypes, loading } }) => {
   const [id, setId] = useState(null);
   const searchTable = [];
   const [deleteModal, setDeleteModal] = useState(false);
@@ -29,14 +29,13 @@ const DataTable = ({ changeStatusCultureType, deleteCultureType, getCultureTypes
   const [editCultureType, setEditCultureType] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
 
-  function toggle_edit(id) {
-    setEditCultureType(!editCultureType);
+  async function toggle_edit(id) {
     setId(id);
 
-    const culturetype = culturetypes.find(culturetype => culturetype._id === id);
-    // console.log(culturetype);
+    await culturetypes.find(culturetype => culturetype._id === id ? setDefaultValue(culturetype.title) : '');
+    setEditCultureType(!editCultureType);
 
-    setDefaultValue(culturetype.title);
+
 
   }
 
@@ -96,7 +95,7 @@ const DataTable = ({ changeStatusCultureType, deleteCultureType, getCultureTypes
         accessorKey: "id",
         enableColumnFilter: false,
       },
-      
+
       {
         header: "Title",
         accessorKey: "title",
@@ -115,9 +114,9 @@ const DataTable = ({ changeStatusCultureType, deleteCultureType, getCultureTypes
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -162,7 +161,7 @@ const DataTable = ({ changeStatusCultureType, deleteCultureType, getCultureTypes
       />
     </React.Fragment >
 
-    
+
   );
 };
 
