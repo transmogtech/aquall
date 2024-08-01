@@ -175,6 +175,15 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
                                                 <CardBody className="card-body">
                                                     <div className="live-preview">
                                                         <Row className="gy-4">
+
+                                                            <Col xxl={4} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">User Role</Label>
+                                                                    <Select value={{ label: selectedUserRole }} onChange={handleSelectUserRole} options={UserRoles} placeholder="User Role" />
+
+                                                                </div>
+                                                            </Col>
+
                                                             <Col xxl={4} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Name</Label>
@@ -191,14 +200,6 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Mobile Number</Label>
                                                                     <Input type="number" className="form-control" name="mobile" onChange={e => onChange(e)} placeholder="Mobile Number" readOnly defaultValue={user.mobile} />
-                                                                </div>
-                                                            </Col>
-
-                                                            <Col xxl={4} md={6}>
-                                                                <div>
-                                                                    <Label htmlFor="basiInput" className="form-label">User Role</Label>
-                                                                    <Select value={{ label: selectedUserRole }} onChange={handleSelectUserRole} options={UserRoles} placeholder="User Role" />
-
                                                                 </div>
                                                             </Col>
 

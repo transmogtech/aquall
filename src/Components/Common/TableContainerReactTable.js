@@ -28,7 +28,7 @@ const Filter = ({
     <>
       <DebouncedInput
         type="text"
-        value= {(columnFilterValue ?? '') }
+        value={(columnFilterValue ?? '')}
         onChange={value => column.setFilterValue(value)}
         placeholder="Search..."
         className="w-36 border shadow rounded"
@@ -124,7 +124,7 @@ const TableContainer = ({
   useEffect(() => {
     (customPageSize) && setPageSize((customPageSize));
   }, [customPageSize, setPageSize]);
-  
+
   return (
     <Fragment>
       {isGlobalFilter && <Row className="mb-3">
@@ -207,7 +207,7 @@ const TableContainer = ({
           </div>
         </div>
         <div className="col-sm-auto">
-          <ul className="pagination pagination-separated pagination-md justify-content-center justify-content-sm-start mb-0">
+          <ul className="pagination pagination-separated pagination-md justify-content-center align-item-center mb-0 flex-wrap">
             <li className={!getCanPreviousPage() ? "page-item disabled" : "page-item"}>
               <Link to="#" className="page-link" onClick={previousPage}>Previous</Link>
             </li>

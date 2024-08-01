@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        hpsizes: [...state.hpsizes, payload]
+        hpsizes: [payload, ...state.hpsizes]
       };
 
 

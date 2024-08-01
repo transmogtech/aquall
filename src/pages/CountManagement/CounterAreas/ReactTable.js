@@ -25,7 +25,7 @@ const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas, upda
   }, []);
 
 
-  countareas.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  countareas.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editCountArea, setEditCountArea] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -133,7 +133,7 @@ const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas, upda
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}

@@ -9,7 +9,7 @@ import moment from 'moment/moment';
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { changeStatusPeddlerType, deletePeddlerType, getPeddlerTypes } from '../../../../actions/peddlerType';
 
-const DataTable = ({  changeStatusPeddlerType, deletePeddlerType, getPeddlerTypes, peddlerType: { peddlertypes, loading } }) => {
+const DataTable = ({ changeStatusPeddlerType, deletePeddlerType, getPeddlerTypes, peddlerType: { peddlertypes, loading } }) => {
 
   const [id, setId] = useState(null);
   const searchTable = [];
@@ -22,7 +22,7 @@ const DataTable = ({  changeStatusPeddlerType, deletePeddlerType, getPeddlerType
   }, []);
 
 
-  peddlertypes.forEach(row => searchTable.push({ id: row._id, HpSize: row.hpsizeId.title, company: row.companyId.name, name: row.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  peddlertypes.forEach(row => searchTable.push({ id: row._id, HpSize: row.hpsizeId.title, company: row.companyId.name, name: row.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editPlStage, setEditPlStage] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -101,9 +101,9 @@ const DataTable = ({  changeStatusPeddlerType, deletePeddlerType, getPeddlerType
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to={`/edit/peddler-type/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to={`/edit/peddler-type/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -121,7 +121,7 @@ const DataTable = ({  changeStatusPeddlerType, deletePeddlerType, getPeddlerType
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}
@@ -141,7 +141,7 @@ const DataTable = ({  changeStatusPeddlerType, deletePeddlerType, getPeddlerType
       />
     </React.Fragment >
 
-    
+
   );
 };
 
@@ -158,4 +158,4 @@ const mapStateToProps = state => ({
   peddlerType: state.peddlerType,
 });
 
-export default connect(mapStateToProps, {changeStatusPeddlerType, deletePeddlerType, getPeddlerTypes })(DataTable);
+export default connect(mapStateToProps, { changeStatusPeddlerType, deletePeddlerType, getPeddlerTypes })(DataTable);

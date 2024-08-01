@@ -66,16 +66,16 @@ const Navdata = () => {
     isDashboard,
     isApps,
     isNews,
-isMasterData,
-isUsers,
-isJob,
-isBanner,
-isCompany,
-isProducts,
-isOrder,
-isRequests,
-isCounts,
-isSeeds
+    isMasterData,
+    isUsers,
+    isJob,
+    isBanner,
+    isCompany,
+    isProducts,
+    isOrder,
+    isRequests,
+    isCounts,
+    isSeeds
   ]);
 
   const menuItems = [
@@ -96,7 +96,7 @@ isSeeds
         updateIconSidebar(e);
       },
     },
-    
+
     {
       id: "news",
       label: "News Management",
@@ -167,6 +167,19 @@ isSeeds
           parentId: "locations",
         },
       ],
+    },
+    {
+      id: "companies",
+      label: "Company Management",
+      icon: "las la-building      ",
+      link: "/companies",
+      stateVariables: isCompany,
+      click: function (e) {
+        e.preventDefault();
+        setIsCompany(!isCompany);
+        setIscurrentState("Company Management");
+        updateIconSidebar(e);
+      },
     },
     {
       id: "master-data",
@@ -250,7 +263,7 @@ isSeeds
           link: "/users",
           parentId: "users",
         },
-       
+
         {
           id: "user-roles",
           label: "User Roles",
@@ -286,7 +299,7 @@ isSeeds
         },
       ],
     },
-    
+
     {
       id: "banners",
       label: "Banner Management",
@@ -356,20 +369,8 @@ isSeeds
         },
       ],
     },
-    {
-      id: "companies",
-      label: "Company Management",
-      icon: "las la-building      ",
-      link: "/companies",
-      stateVariables: isCompany,
-      click: function (e) {
-        e.preventDefault();
-        setIsCompany(!isCompany);
-        setIscurrentState("Company Management");
-        updateIconSidebar(e);
-      },
-    },
-     
+
+
     {
       id: "products",
       label: "Products Management",
@@ -383,7 +384,7 @@ isSeeds
       },
       stateVariables: isProducts,
       subItems: [
-       
+
         {
           id: "salt-percentage",
           label: "Salt Percentage",

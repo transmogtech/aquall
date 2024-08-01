@@ -23,7 +23,7 @@ const SearchTable = ({ getNewsList, deleteNews, changeStatusNews, news: { newsLi
   }, [getNewsList]);
 
 
-  newsList.forEach(row => searchTable.push({ id: row._id, title: row.title, image: row.imageUrl, action: row._id, language: row.language, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  newsList.forEach(row => searchTable.push({ id: row._id, title: row.title, image: row.imageUrl, action: row._id, language: row.language.title, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss') }));
 
 
   function tog_grid(id) {
@@ -125,9 +125,17 @@ const SearchTable = ({ getNewsList, deleteNews, changeStatusNews, news: { newsLi
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          className="custom-header-css"
+          divClass="table-responsive table-card mb-2"
+          tableClass="align-middle table-nowrap"
+          theadClass="table-light"
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
+
+
+
+
       )}
       <DeleteModal
         show={deleteModal}

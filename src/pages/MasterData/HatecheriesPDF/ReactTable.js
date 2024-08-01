@@ -22,7 +22,7 @@ const DataTable = ({ getHatecheriesPdfs, updateHatecheriesPdf, hatecheriesPdf: {
   }, []);
 
 
-  hatecheriespdfs.forEach(row => searchTable.push({ id: row._id, action: row._id, download_link: row.pdf, pdf: row.pdf, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  hatecheriespdfs.forEach(row => searchTable.push({ id: row._id, action: row._id, download_link: row.pdf, pdf: row.pdf, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -45,7 +45,17 @@ const DataTable = ({ getHatecheriesPdfs, updateHatecheriesPdf, hatecheriesPdf: {
 
   const columns = useMemo(
     () => [
+      {
 
+        header: "Created On",
+        cell: (cell) => {
+          return (
+            <span className="">{cell.getValue()}</span>
+          );
+        },
+        accessorKey: "created",
+        enableColumnFilter: false,
+      },
       {
         header: "File",
         accessorKey: "pdf",

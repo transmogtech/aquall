@@ -12,7 +12,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusCountType, deleteCountType, getCountTypes, updateCountType } from '../../../actions/countType';
 import EditModal from './Edit';
 
-const DataTable = ({ changeStatusCountType, deleteCountType, getCountTypes,updateCountType, countType: { counttypes, loading } }) => {
+const DataTable = ({ changeStatusCountType, deleteCountType, getCountTypes, updateCountType, countType: { counttypes, loading } }) => {
 
   const [id, setId] = useState(null);
   const searchTable = [];
@@ -25,7 +25,7 @@ const DataTable = ({ changeStatusCountType, deleteCountType, getCountTypes,updat
   }, []);
 
 
-  counttypes.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  counttypes.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editCountType, setEditCountType] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -44,7 +44,7 @@ const DataTable = ({ changeStatusCountType, deleteCountType, getCountTypes,updat
   };
 
   const handleSubmit = () => {
-    updateCountType(id, {"title": defaultValue});
+    updateCountType(id, { "title": defaultValue });
     setEditCountType(false);
   }
 
@@ -94,7 +94,7 @@ const DataTable = ({ changeStatusCountType, deleteCountType, getCountTypes,updat
         accessorKey: "created",
         enableColumnFilter: false,
       },
-      
+
       {
         header: "Title",
         accessorKey: "title",
@@ -113,9 +113,9 @@ const DataTable = ({ changeStatusCountType, deleteCountType, getCountTypes,updat
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to='#!' onClick={() => toggle_edit(cell.getValue())} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -133,7 +133,7 @@ const DataTable = ({ changeStatusCountType, deleteCountType, getCountTypes,updat
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}
@@ -160,7 +160,7 @@ const DataTable = ({ changeStatusCountType, deleteCountType, getCountTypes,updat
       />
     </React.Fragment >
 
-    
+
   );
 };
 

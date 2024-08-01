@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        productrequests: [...state.productrequests, payload]
+        productrequests: [payload, ...state.productrequests]
       };
 
 

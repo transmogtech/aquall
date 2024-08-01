@@ -25,7 +25,7 @@ const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes, updateHPSize,
   }, []);
 
 
-  hpsizes.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  hpsizes.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editHpSize, setEditHpSize] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -85,13 +85,13 @@ const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes, updateHPSize,
   const columns = useMemo(
     () => [
       {
-        header: "ID",
+        header: "Created On",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span>{cell.getValue()}</span>
           );
         },
-        accessorKey: "id",
+        accessorKey: "created",
         enableColumnFilter: false,
       },
 
@@ -133,7 +133,7 @@ const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes, updateHPSize,
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}

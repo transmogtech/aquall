@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        footerlogos: [...state.footerlogos, payload]
+        footerlogos: [payload, ...state.footerlogos]
       };
 
 

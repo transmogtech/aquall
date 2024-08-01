@@ -22,15 +22,15 @@ const DataTable = ({ getUsers, deleteUser, changeStatusUser, user: { users, load
   }, []);
 
 
-  users.forEach(row => searchTable.push({ 
-    id: row._id, 
-    name: row.name, 
-    email: row.email, 
-    mobile: row.mobile, 
-    action: row._id, 
-    avatar: row.avatar, 
-    status: row.status, 
-    created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') 
+  users.forEach(row => searchTable.push({
+    id: row._id,
+    name: row.name,
+    email: row.email,
+    mobile: row.mobile,
+    action: row._id,
+    avatar: row.avatar,
+    status: row.status,
+    created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss')
   }));
 
 
@@ -72,7 +72,7 @@ const DataTable = ({ getUsers, deleteUser, changeStatusUser, user: { users, load
   const columns = useMemo(
     () => [
       {
-        
+
         header: "Created On",
         cell: (cell) => {
           return (
@@ -87,7 +87,7 @@ const DataTable = ({ getUsers, deleteUser, changeStatusUser, user: { users, load
         accessorKey: "name",
         enableColumnFilter: false,
       },
-      
+
       {
         header: "Email",
         accessorKey: "email",
@@ -98,7 +98,7 @@ const DataTable = ({ getUsers, deleteUser, changeStatusUser, user: { users, load
         accessorKey: "mobile",
         enableColumnFilter: false,
       },
-     
+
       {
         header: "Status",
         accessorKey: "status",
@@ -136,14 +136,14 @@ const DataTable = ({ getUsers, deleteUser, changeStatusUser, user: { users, load
 
   return (
     <React.Fragment >
-       {loading ? (
+      {loading ? (
         <Loader />
       ) : (
         <TableContainer
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}
@@ -163,7 +163,7 @@ const DataTable = ({ getUsers, deleteUser, changeStatusUser, user: { users, load
       />
     </React.Fragment >
 
-    
+
   );
 };
 

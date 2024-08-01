@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        counttypes: [...state.counttypes, payload]
+        counttypes: [payload, ...state.counttypes]
       };
 
 

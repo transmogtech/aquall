@@ -7,7 +7,7 @@ import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Bu
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { Link } from 'react-router-dom';
 import Select from "react-select";
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { createUser } from '../../../actions/user';
 import PropTypes from 'prop-types';
@@ -18,9 +18,9 @@ import { getAreas } from '../../../actions/area';
 import { getPincodes } from '../../../actions/pincode';
 import { getUserRoles } from '../../../actions/userRole';
 
-const CreateUser = ({createUser, getStates, getDistricts, getAreas, getPincodes, getUserRoles}) => {
+const CreateUser = ({ createUser, getStates, getDistricts, getAreas, getPincodes, getUserRoles }) => {
 
-    
+
 
     useEffect(() => {
         getStates();
@@ -28,9 +28,9 @@ const CreateUser = ({createUser, getStates, getDistricts, getAreas, getPincodes,
         getAreas();
         getPincodes();
         getUserRoles();
-      }, []);
-      
-    
+    }, []);
+
+
 
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
@@ -42,11 +42,11 @@ const CreateUser = ({createUser, getStates, getDistricts, getAreas, getPincodes,
     const [selectedArea, setSelectedArea] = useState(['']);
     const [selectedPincode, setSelectedPincode] = useState(['']);
     const [selectedUserRole, setSelectedUserRole] = useState(['']);
-    const Districts   = [];
-    const Areas   = [];
-    const Pincodes   = [];
-    const States   = [];
-    const UserRoles   = [];
+    const Districts = [];
+    const Areas = [];
+    const Pincodes = [];
+    const States = [];
+    const UserRoles = [];
 
 
 
@@ -62,75 +62,75 @@ const CreateUser = ({createUser, getStates, getDistricts, getAreas, getPincodes,
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    
+
     function handleSelectState(selectedState) {
 
-        setFormData({...formData, stateId: selectedState.value });
+        setFormData({ ...formData, stateId: selectedState.value });
 
         setSelectedState(selectedState.label);
 
 
         districtsData.forEach(district => {
             if (district.stateId._id === selectedState.value) {
-                Districts.push({ value: district._id, label: district.title});
+                Districts.push({ value: district._id, label: district.title });
             }
-          });
+        });
 
-          setOptions(Districts);
+        setOptions(Districts);
 
 
     }
 
     function handleSelectDistrict(selectedDistrict) {
-        setFormData({...formData, districtId: selectedDistrict.value });
+        setFormData({ ...formData, districtId: selectedDistrict.value });
 
         setSelectedDistrict(selectedDistrict.label);
 
-        
+
         areaData.forEach(area => {
             if (area.districtId._id === selectedDistrict.value) {
-                Areas.push({ value: area._id, label: area.title});
+                Areas.push({ value: area._id, label: area.title });
             }
-          });
+        });
 
-          setAreas(Areas);
+        setAreas(Areas);
     }
 
-    
+
     function handleSelectArea(selectedArea) {
-        setFormData({...formData, areaId: selectedArea.value });
+        setFormData({ ...formData, areaId: selectedArea.value });
 
         setSelectedArea(selectedArea.label);
-    
-    pincodeData.forEach(pincode => {
-        if (pincode.areaId._id === selectedArea.value) {
-            Pincodes.push({ value: pincode._id, label: pincode.title});
-        }
-      });
 
-      setPincodes(Pincodes);
+        pincodeData.forEach(pincode => {
+            if (pincode.areaId._id === selectedArea.value) {
+                Pincodes.push({ value: pincode._id, label: pincode.title });
+            }
+        });
+
+        setPincodes(Pincodes);
 
     }
-    
+
     function handleSelectPincode(selectedPincode) {
-        setFormData({...formData, pincodeId: selectedPincode.value });
+        setFormData({ ...formData, pincodeId: selectedPincode.value });
 
         setSelectedPincode(selectedPincode.label);
     }
 
 
-    
+
     function handleSelectUserRole(selectedUserRole) {
-        setFormData({...formData, userroleId: selectedUserRole.value });
+        setFormData({ ...formData, userroleId: selectedUserRole.value });
 
         setSelectedUserRole(selectedUserRole.label);
     }
 
 
 
-      states.forEach(row => States.push({ value: row._id, label: row.title}));
-      userroles.forEach(row => UserRoles.push({ value: row._id, label: row.title}));
-    
+    states.forEach(row => States.push({ value: row._id, label: row.title }));
+    userroles.forEach(row => UserRoles.push({ value: row._id, label: row.title }));
+
 
     const handleSubmit = () => {
 
@@ -157,7 +157,15 @@ const CreateUser = ({createUser, getStates, getDistricts, getAreas, getPincodes,
                                     <CardBody className="card-body">
                                         <div className="live-preview">
                                             <Row className="gy-4">
-                                            <Col xxl={4} md={6}>
+                                                <Col xxl={4} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">User Role</Label>
+                                                        <Select value={{ label: selectedUserRole }} onChange={handleSelectUserRole} options={UserRoles} placeholder="User Role" />
+
+                                                    </div>
+                                                </Col>
+
+                                                <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Name</Label>
                                                         <Input type="text" className="form-control" name="name" onChange={e => onChange(e)} placeholder="Name" />
@@ -187,18 +195,11 @@ const CreateUser = ({createUser, getStates, getDistricts, getAreas, getPincodes,
                                                         <Input type="password" className="form-control" name="confirm_password" onChange={e => onChange(e)} placeholder="Confirm Password" />
                                                     </div>
                                                 </Col>
-                                                <Col xxl={4} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">User Role</Label>
-                                                        <Select value={{label: selectedUserRole}} onChange={ handleSelectUserRole } options={UserRoles} placeholder="User Role" />
-
-                                                    </div>
-                                                </Col>
 
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">State</Label>
-                                                        <Select value={{label: selectedState}} onChange={ handleSelectState } options={States} />
+                                                        <Select value={{ label: selectedState }} onChange={handleSelectState} options={States} />
                                                     </div>
                                                 </Col>
 
@@ -206,24 +207,24 @@ const CreateUser = ({createUser, getStates, getDistricts, getAreas, getPincodes,
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">District</Label>
-                                                        <Select value={{label: selectedDistrict}} onChange={ handleSelectDistrict } options={options} />
+                                                        <Select value={{ label: selectedDistrict }} onChange={handleSelectDistrict} options={options} />
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Area</Label>
-                                                        <Select value={{label: selectedArea}} onChange={  handleSelectArea  } options={areas} />
+                                                        <Select value={{ label: selectedArea }} onChange={handleSelectArea} options={areas} />
                                                     </div>
                                                 </Col>
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Pincode</Label>
-                                                        <Select value={{label: selectedPincode}} onChange={  handleSelectPincode  } options={pincodes} />
+                                                        <Select value={{ label: selectedPincode }} onChange={handleSelectPincode} options={pincodes} />
                                                     </div>
                                                 </Col>
 
-                                               
+
 
 
                                             </Row>
@@ -234,7 +235,7 @@ const CreateUser = ({createUser, getStates, getDistricts, getAreas, getPincodes,
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
 
-                                        <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
+                                            <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -242,7 +243,7 @@ const CreateUser = ({createUser, getStates, getDistricts, getAreas, getPincodes,
 
                         </Row>
 
-                     
+
 
 
 
@@ -270,7 +271,7 @@ CreateUser.propTypes = {
 
 const mapStateToProps = state => ({
     state: state.state,
-  });
-  
+});
 
-export default connect(mapStateToProps, {createUser, getStates, getDistricts, getAreas, getPincodes, getUserRoles})(CreateUser);
+
+export default connect(mapStateToProps, { createUser, getStates, getDistricts, getAreas, getPincodes, getUserRoles })(CreateUser);

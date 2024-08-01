@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        bannerimages: [...state.bannerimages, payload]
+        bannerimages: [payload, ...state.bannerimages]
       };
 
 

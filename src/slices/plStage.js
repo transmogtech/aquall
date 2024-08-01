@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        plstages: [...state.plstages, payload]
+        plstages: [payload, ...state.plstages]
       };
 
 

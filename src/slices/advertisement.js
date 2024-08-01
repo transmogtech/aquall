@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        advertisements: [...state.advertisements, payload]
+        advertisements: [payload, ...state.advertisements]
       };
 
 

@@ -39,7 +39,7 @@ const CreateDistrict = ({ createDistrict, getStates, state: { states } }) => {
         setFormData({ ...formData, stateId: selectedState.value });
         console.log(selectedState.value);
 
-        setSelectedState(selectedState.value);
+        setSelectedState(selectedState.label);
     }
 
     // const states  = [
@@ -75,7 +75,7 @@ const CreateDistrict = ({ createDistrict, getStates, state: { states } }) => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">State</Label>
-                                                        <Select value={selectedState} onChange={handleSelectState} options={States} name='stateId' id='stateId' />
+                                                        <Select placeholder="Select State" value={{ label: selectedState }} onChange={handleSelectState} options={States} name='stateId' id='stateId' />
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>

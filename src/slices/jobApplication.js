@@ -16,7 +16,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        jobapplications: [...state.jobapplications, payload]
+        jobapplications: [payload, ...state.jobapplications]
       };
 
 

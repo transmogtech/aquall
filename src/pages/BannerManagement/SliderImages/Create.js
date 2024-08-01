@@ -3,7 +3,7 @@ import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
-import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
+import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, FormFeedback } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { createSliderImage } from '../../../actions/sliderImage';
 import { useNavigate } from "react-router-dom";
@@ -12,22 +12,38 @@ import { connect } from 'react-redux';
 
 const CreateSliderImage = ({ createSliderImage }) => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({ url: '', image: '', priority: '' });
+
+    const [error, setError] = useState({});
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    
-const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-        // console.log(e.target.files);
-        setFormData({...formData, image: e.target.files[0] });
-    }
-  };
 
-  
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            // console.log(e.target.files);
+            setFormData({ ...formData, image: e.target.files[0] });
+        }
+    };
+
+
+
+
     const handleSubmit = () => {
+
+        if (!formData.url) {
+            setError({ ...error, url: 'Please enter a url' });
+            return false;
+        }
+
+        if (!formData.image) {
+            setError({ ...error, image: 'Please select an image' });
+            return false;
+        }
+
+
         createSliderImage(formData);
 
         navigate('/slider-images');
@@ -56,7 +72,12 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="title" className="form-label">URL</Label>
-                                                        <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" placeholder="URL" />
+                                                        <Input type="text" className="form-control" onChange={e => { onChange(e); }} name="url" id="url" placeholder="URL" />
+                                                        {error && error.url ? (
+                                                            <div class="text-danger">
+                                                                {error.url}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -64,6 +85,11 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
                                                         <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                        {error && error.image ? (
+                                                            <div class="text-danger">
+                                                                {error.image}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 

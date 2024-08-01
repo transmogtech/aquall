@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { v4 as uuid } from "uuid";
 
-const CreateOrder = ({ getProducts, getUsers, createOrder, product: { products }, user: { users }}) => {
+const CreateOrder = ({ getProducts, getUsers, createOrder, product: { products }, user: { users } }) => {
 
     useEffect(() => {
         getProducts();
@@ -26,26 +26,26 @@ const CreateOrder = ({ getProducts, getUsers, createOrder, product: { products }
     products.forEach(row => Products.push({ value: row._id, label: row.name }));
     users.forEach(row => Customers.push({ value: row._id, label: row.name }));
 
-    
-  const statusOptions = [
-    { label: "Status", value: "" },
-    { label: "Pending", value: "Pending" },
-    { label: "Inprogress", value: "Inprogress" },
-    { label: "Cancelled", value: "Cancelled" },
-    { label: "Pickups", value: "Pickups" },
-    { label: "Returns", value: "Returns" },
-    { label: "Delivered", value: "Delivered" },
-  ];
 
-  
-  const orderpayement = [
-           { label: "Mastercard", value: "Mastercard" },
+    const statusOptions = [
+        { label: "Status", value: "" },
+        { label: "Pending", value: "Pending" },
+        { label: "Inprogress", value: "Inprogress" },
+        { label: "Cancelled", value: "Cancelled" },
+        { label: "Pickups", value: "Pickups" },
+        { label: "Returns", value: "Returns" },
+        { label: "Delivered", value: "Delivered" },
+    ];
+
+
+    const orderpayement = [
+        { label: "Mastercard", value: "Mastercard" },
         { label: "Paypal", value: "Paypal" },
         { label: "Visa", value: "Visa" },
         { label: "COD", value: "COD" },
-    
-  ];
-  const unique_id = uuid();
+
+    ];
+    const unique_id = uuid();
 
     const [formData, setFormData] = useState({ orderId: unique_id });
     const navigate = useNavigate();
@@ -140,7 +140,7 @@ const CreateOrder = ({ getProducts, getUsers, createOrder, product: { products }
                                                             name="paymentMethod"
                                                             onChange={e => onChange(e)}
                                                         >
-                                                            <option value="">Select Customer</option>
+                                                            <option value="">Select Payment Method</option>
                                                             {
                                                                 orderpayement.map((item, index) => {
                                                                     return (
@@ -161,7 +161,7 @@ const CreateOrder = ({ getProducts, getUsers, createOrder, product: { products }
                                                             name="status"
                                                             onChange={e => onChange(e)}
                                                         >
-                                                            <option value="">Select Customer</option>
+                                                            <option value="">Select Status</option>
                                                             {
                                                                 statusOptions.map((item, index) => {
                                                                     return (
@@ -172,21 +172,21 @@ const CreateOrder = ({ getProducts, getUsers, createOrder, product: { products }
                                                         </select>
                                                     </div>
                                                 </Col>
-                                              
-                                             
+
+
                                             </Row>
 
-                                          
+
                                         </div>
 
                                     </CardBody>
 
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
-                                        
-                                        <button type="submit" className="btn btn-secondary">
-                                                        Save
-                                                    </button>
+
+                                            <button type="submit" className="btn btn-secondary">
+                                                Save
+                                            </button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -215,8 +215,8 @@ CreateOrder.propTypes = {
 const mapStateToProps = state => ({
     product: state.product,
     user: state.user,
-  });
-  
+});
 
 
-export default connect(mapStateToProps, {createOrder, getProducts, getUsers})(CreateOrder);
+
+export default connect(mapStateToProps, { createOrder, getProducts, getUsers })(CreateOrder);

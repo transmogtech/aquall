@@ -148,7 +148,7 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
                                                                 defaultValue={selectedCompany}
                                                                 name="companyId"
                                                                 onChange={e => handleSelectCompany(e)}>
-                                                                <option value="">Select Category</option>
+                                                                <option value="">Select Company</option>
                                                                 {
                                                                     companies.map((item, index) => {
                                                                         return (

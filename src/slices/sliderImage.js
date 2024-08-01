@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        sliderimages: [...state.sliderimages, payload]
+        sliderimages: [payload, ...state.sliderimages]
       };
 
 

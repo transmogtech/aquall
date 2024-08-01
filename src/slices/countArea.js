@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        countareas: [...state.countareas, payload]
+        countareas: [payload, ...state.countareas]
       };
 
 

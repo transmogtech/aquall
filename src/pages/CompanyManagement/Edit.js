@@ -26,9 +26,10 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
             const response = await getCompany(id);
             setCompany(response);
             setSelectedCategory(response.categoryId.title);
+            setLoading(false);
+
         }
         fetchtData();
-        setLoading(false);
     }, []);
 
 

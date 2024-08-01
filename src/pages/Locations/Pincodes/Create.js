@@ -8,6 +8,7 @@ import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { Link } from 'react-router-dom';
 import Select from "react-select";
 import { useNavigate } from 'react-router-dom';
+import Loader from '../../../Components/Common/Loader';
 
 import { createPincode } from '../../../actions/pincode';
 import PropTypes from 'prop-types';
@@ -18,7 +19,10 @@ import { getAreas } from '../../../actions/area';
 import { getCategories } from '../../../actions/category';
 
 const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCategories, category: { categories } }) => {
+    const [delivery, setDelivery] = useState([]);
+    const categoryData = [];
 
+    const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {
@@ -26,7 +30,15 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
         getDistricts();
         getAreas();
         getCategories();
-    }, []);
+        categories.forEach(category => {
+            categoryData.push({ _id: category._id, title: category.title, charge: "", days: "" });
+
+        });
+        setDelivery(categoryData);
+        setLoading(false);
+
+    }, [getCategories]);
+
 
 
 
@@ -39,40 +51,7 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
     const [selectedArea, setSelectedArea] = useState(['']);
     const Districts = [];
     const Areas = [];
-    const categoryData = [];
-    categories.forEach(category => {
-        categoryData.push({ _id: category._id, title: category.title, charge: "", days: "" });
 
-    });
-
-    // const categories = [
-    //     {
-    //         _id: '34e65467',
-    //         title: 'Feed',
-    //         charge: "",
-    //         days: ""
-    //     },
-    //     {
-    //         _id: '34e65437',
-    //         title: 'Seed',
-    //         charge: "",
-    //         days: ""
-    //     },
-    //     {
-    //         _id: '34e65462',
-    //         title: 'Chemical',
-    //         charge: "",
-    //         days: ""
-    //     },
-    //     {
-    //         _id: '34w65467',
-    //         title: 'Aerators',
-    //         charge: "",
-    //         days: ""
-    //     }
-    // ];
-
-    const [delivery, setDelivery] = useState(categoryData);
 
 
     const districtsData = useSelector(state => state.district.districts);
@@ -130,11 +109,20 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
 
     states.forEach(row => States.push({ value: row._id, label: row.title }));
 
-    const handleDeliveryChange = (e, index) => {
+    const handleDeliveryChargeChange = (e, index) => {
 
-        const values = [...delivery];
-        const updatedValue = e.target.name;
-        values[index][updatedValue] = e.target.value;
+        const values = delivery;
+        values[index].charge = e.target.value;
+        setDelivery(values);
+
+        setFormData({ ...formData, delivery: delivery });
+
+    };
+
+    const handleDeliveryDaysChange = (e, index) => {
+
+        const values = delivery;
+        values[index].days = e.target.value;
         setDelivery(values);
 
         setFormData({ ...formData, delivery: delivery });
@@ -152,156 +140,110 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
     document.title = "Create Pincode | Aquall Admin";
     return (
         <React.Fragment>
-            <UiContent />
-            <div className="page-content">
+            {
+                loading ? (<Loader />) : (
+                    <>
+                        <UiContent />
+                        <div className="page-content">
 
-                <Container fluid>
-                    <BreadCrumb title="Create Pincode" pageTitle="Pincode Management" />
-                    <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Create Pincode" />
+                            <Container fluid>
+                                <BreadCrumb title="Create Pincode" pageTitle="Pincode Management" />
+                                <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+                                    <Row>
+                                        <Col lg={12}>
+                                            <Card>
+                                                <PreviewCardHeader title="Create Pincode" />
 
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-                                            <Row className="gy-4">
+                                                <CardBody className="card-body">
+                                                    <div className="live-preview">
+                                                        <Row className="gy-4">
 
 
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">State</Label>
-                                                        <Select value={{ label: selectedState }} onChange={handleSelectState} options={States} />
+                                                            <Col xxl={3} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">State</Label>
+                                                                    <Select value={{ label: selectedState }} onChange={handleSelectState} options={States} />
+                                                                </div>
+                                                            </Col>
+
+
+                                                            <Col xxl={3} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">District</Label>
+                                                                    <Select value={{ label: selectedDistrict }} onChange={handleSelectDistrict} options={options} />
+                                                                </div>
+                                                            </Col>
+
+                                                            <Col xxl={3} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Area</Label>
+                                                                    <Select value={{ label: selectedArea }} onChange={handleSelectArea} options={areas} />
+                                                                </div>
+                                                            </Col>
+                                                            <Col xxl={3} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Pincode</Label>
+                                                                    <Input type="text" className="form-control" name="title" onChange={e => onChange(e)} placeholder="Name" />
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+
                                                     </div>
-                                                </Col>
+
+                                                </CardBody>
+                                            </Card>
+                                        </Col>
+
+                                    </Row>
+
+                                    <Row>
+                                        <Col lg={12}>
+                                            <Card>
+                                                <PreviewCardHeader title="Delivery Details" />
+
+                                                <CardBody className="card-body">
+                                                    <div className="live-preview">
+
+                                                        {delivery.map((category, index) => (
+                                                            <Row className="gy-4">                                                     <Col xxl={3} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Delivery Charges - {category.title}</Label>
+                                                                    <Input type="number" className="form-control" id="charge" name='charge' onChange={e => handleDeliveryChargeChange(e, index)} placeholder="Delivery Charges" />
+                                                                </div>
+                                                            </Col>
+
+                                                                <Col xxl={3} md={6}>
+                                                                    <div>
+                                                                        <Label htmlFor="basiInput" className="form-label">Delivery Days - {category.title}</Label>
+                                                                        <Input type="text" className="form-control" name='days' id="days" onChange={e => handleDeliveryDaysChange(e, index)} placeholder="Delivery Days" />
+                                                                    </div>
+
+                                                                </Col>
+                                                            </Row>
+                                                        ))}
 
 
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">District</Label>
-                                                        <Select value={{ label: selectedDistrict }} onChange={handleSelectDistrict} options={options} />
                                                     </div>
-                                                </Col>
 
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Area</Label>
-                                                        <Select value={{ label: selectedArea }} onChange={handleSelectArea} options={areas} />
+                                                </CardBody>
+                                                <CardFooter>
+                                                    <div className="d-flex align-items-start gap-3 mt-4">
+
+                                                        <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
                                                     </div>
-                                                </Col>
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Pincode</Label>
-                                                        <Input type="text" className="form-control" name="title" onChange={e => onChange(e)} placeholder="Name" />
-                                                    </div>
-                                                </Col>
+                                                </CardFooter>
+                                            </Card>
+                                        </Col>
 
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
-                                                        <Input type="text" className="form-control" name="url" onChange={e => onChange(e)} placeholder="URL Slug" />
-                                                    </div>
-                                                </Col>
+                                    </Row>
 
 
-                                            </Row>
+                                </Form>
+                            </Container>
 
-                                        </div>
+                        </div>
 
-                                    </CardBody>
-                                </Card>
-                            </Col>
-
-                        </Row>
-
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Delivery Details" />
-
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-
-                                            {categoryData.map((category, index) => (
-                                                <Row className="gy-4">                                                     <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Delivery Charges - {category.title}</Label>
-                                                        <Input type="number" className="form-control" id="charge" name='charge' onChange={e => handleDeliveryChange(e, index)} placeholder="Delivery Charges" />
-                                                    </div>
-                                                </Col>
-
-                                                    <Col xxl={3} md={6}>
-                                                        <div>
-                                                            <Label htmlFor="basiInput" className="form-label">Delivery Days - {category.title}</Label>
-                                                            <Input type="number" className="form-control" name='days' id="days" onChange={e => handleDeliveryChange(e, index)} placeholder="Delivery Days" />
-                                                        </div>
-
-                                                    </Col>
-                                                </Row>
-                                            ))}
-
-
-                                        </div>
-
-                                    </CardBody>
-                                </Card>
-                            </Col>
-
-                        </Row>
-
-
-                        <Row>
-                            <Col lg={12}>
-                                <Card>
-                                    <PreviewCardHeader title="Meta Data" />
-
-                                    <CardBody className="card-body">
-                                        <div className="live-preview">
-
-                                            <Row className="gy-4">
-
-                                                <Col xxl={12} md={12}>
-                                                    <div>
-                                                        <Label htmlFor="metaTitle" className="form-label">Meta Title</Label>
-                                                        <textarea className="form-control" placeholder="Meta Title" onChange={e => onChange(e)} name="metaTitle" id="metaTitle" rows="3"></textarea>
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={12} md={12}>
-                                                    <div>
-                                                        <Label htmlFor="metaDescription" className="form-label">Meta Description</Label>
-                                                        <textarea className="form-control" placeholder="Meta Description" onChange={e => onChange(e)} name="metaDescription" id="metaDescription" rows="3"></textarea>
-                                                    </div>
-                                                </Col>
-                                                <Col xxl={12} md={12}>
-                                                    <div>
-                                                        <Label htmlFor="metaKeywords" className="form-label">Meta Keywords</Label>
-                                                        <textarea className="form-control" placeholder="Meta Keywords" onChange={e => onChange(e)} name="metaKeywords" id="metaKeywords" rows="3"></textarea>
-                                                    </div>
-                                                </Col>
-
-
-                                            </Row>
-
-                                        </div>
-
-                                    </CardBody>
-                                    <CardFooter>
-                                        <div className="d-flex align-items-start gap-3 mt-4">
-
-                                            <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
-                                        </div>
-                                    </CardFooter>
-                                </Card>
-                            </Col>
-
-                        </Row>
-
-                    </Form>
-                </Container>
-
-            </div>
-
-
+                    </>)}
         </React.Fragment>
     );
 }

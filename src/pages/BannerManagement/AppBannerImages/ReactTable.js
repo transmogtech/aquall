@@ -24,7 +24,7 @@ const DataTable = ({ changeStatusAppBannerImage, deleteAppBannerImage, getAppBan
   }, []);
 
 
-  appbannerimages.forEach(row => searchTable.push({ id: row._id, category: row.categoryId.title, company: row.companyId.name, discount: row.discount, priority: row.priority, image: row.image, action: row._id, status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  appbannerimages.forEach(row => searchTable.push({ id: row._id, category: row.categoryId.title, company: row.companyId.name, discount: row.discount, priority: row.priority, image: row.image, action: row._id, status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
 
@@ -146,7 +146,7 @@ const DataTable = ({ changeStatusAppBannerImage, deleteAppBannerImage, getAppBan
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}

@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        labrequests: [...state.labrequests, payload]
+        labrequests: [payload, ...state.labrequests]
       };
 
 

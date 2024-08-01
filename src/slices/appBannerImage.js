@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        appbannerimages: [...state.appbannerimages, payload]
+        appbannerimages: [payload, ...state.appbannerimages]
       };
 
 

@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        users: [...state.users, payload]
+        users: [payload, ...state.users]
       };
 
 

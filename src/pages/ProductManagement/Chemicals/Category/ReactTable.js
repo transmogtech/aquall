@@ -9,7 +9,7 @@ import moment from 'moment/moment';
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { changeStatusChemicalCategory, deleteChemicalCategory, getChemicalCategories } from '../../../../actions/chemicalCategory';
 
-const DataTable = ({changeStatusChemicalCategory, deleteChemicalCategory, getChemicalCategories, chemicalCategory: { chemicalcategories, loading } }) => {
+const DataTable = ({ changeStatusChemicalCategory, deleteChemicalCategory, getChemicalCategories, chemicalCategory: { chemicalcategories, loading } }) => {
 
   const [id, setId] = useState(null);
   const searchTable = [];
@@ -22,7 +22,7 @@ const DataTable = ({changeStatusChemicalCategory, deleteChemicalCategory, getChe
   }, []);
 
 
-  chemicalcategories.forEach(row => searchTable.push({ id: row._id, title: row.title, sequance: row.sequance, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  chemicalcategories.forEach(row => searchTable.push({ id: row._id, title: row.title, sequance: row.sequance, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
   function tog_grid(id) {
@@ -71,13 +71,13 @@ const DataTable = ({changeStatusChemicalCategory, deleteChemicalCategory, getChe
         accessorKey: "created",
         enableColumnFilter: false,
       },
-     
+
       {
         header: "Title",
         accessorKey: "title",
         enableColumnFilter: false,
       },
-      
+
       {
         header: "Sequance",
         accessorKey: "sequance",
@@ -96,9 +96,9 @@ const DataTable = ({changeStatusChemicalCategory, deleteChemicalCategory, getChe
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to={`/edit/chemical-category/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to={`/edit/chemical-category/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -116,7 +116,7 @@ const DataTable = ({changeStatusChemicalCategory, deleteChemicalCategory, getChe
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}
@@ -136,7 +136,7 @@ const DataTable = ({changeStatusChemicalCategory, deleteChemicalCategory, getChe
       />
     </React.Fragment >
 
-    
+
   );
 };
 
@@ -153,4 +153,4 @@ const mapStateToProps = state => ({
   chemicalCategory: state.chemicalCategory,
 });
 
-export default connect(mapStateToProps, {changeStatusChemicalCategory, deleteChemicalCategory, getChemicalCategories })(DataTable);
+export default connect(mapStateToProps, { changeStatusChemicalCategory, deleteChemicalCategory, getChemicalCategories })(DataTable);

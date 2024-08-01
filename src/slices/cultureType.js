@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        culturetypes: [...state.culturetypes, payload]
+        culturetypes: [payload, ...state.culturetypes]
       };
 
 

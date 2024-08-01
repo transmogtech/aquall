@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        sponsoredads: [...state.sponsoredads, payload]
+        sponsoredads: [payload, ...state.sponsoredads]
       };
 
 
