@@ -10,6 +10,7 @@ import { updateLanguage, getLanguage } from '../../actions/language';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loader from '../../Components/Common/Loader';
+import { slugify } from "../../helpers/common_functions";
 
 
 const EditLanguage = ({ updateLanguage, getLanguage }) => {
@@ -18,15 +19,19 @@ const EditLanguage = ({ updateLanguage, getLanguage }) => {
 
     const [language, setLanguage] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [url, setUrl] = useState(null);
 
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         const fetchtData = async () => {
             const response = await getLanguage(id);
             setLanguage(response);
+            setUrl(response.url);
+            setLoading(false);
+
         }
         fetchtData();
-        setLoading(false);
 
     }, []); // eslint-disable-line
 
@@ -37,7 +42,36 @@ const EditLanguage = ({ updateLanguage, getLanguage }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+
+
+    const onTitleChange = (e) => {
+        const slug = slugify(e.target.value);
+        setUrl(slug);
+        setFormData({ ...formData, [e.target.name]: e.target.value, url: slug });
+    };
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter a title' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter a url' });
+            return false;
+        }
+
+        return true;
+    }
+
     const handleSubmit = () => {
+
+        if (!validateForm()) {
+            return false;
+        }
+
         updateLanguage(id, formData);
 
         navigate('/language-management');
@@ -69,14 +103,24 @@ const EditLanguage = ({ updateLanguage, getLanguage }) => {
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Title</Label>
-                                                                    <Input type="text" onChange={e => onChange(e)} className="form-control" name="title" id="title" placeholder="Title" defaultValue={language.title} />
+                                                                    <Input type="text" onChange={e => onTitleChange(e)} className="form-control" name="title" id="title" placeholder="Title" defaultValue={language.title} />
+                                                                    {errors && errors.title ? (
+                                                                        <div className="text-danger">
+                                                                            {errors.title}
+                                                                        </div>
+                                                                    ) : null}
                                                                 </div>
                                                             </Col>
 
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
-                                                                    <Input type="text" onChange={e => onChange(e)} className="form-control" name="url" id="url" placeholder="URL Slug" defaultValue={language.url} />
+                                                                    <Input type="text" onChange={e => onChange(e)} className="form-control" name="url" id="url" placeholder="URL Slug" defaultValue={url} />
+                                                                    {errors && errors.url ? (
+                                                                        <div className="text-danger">
+                                                                            {errors.url}
+                                                                        </div>
+                                                                    ) : null}
                                                                 </div>
                                                             </Col>
 

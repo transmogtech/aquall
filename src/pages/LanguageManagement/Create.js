@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import UiContent from "../../Components/Common/UiContent";
 
 //import Components
@@ -9,16 +9,46 @@ import { createLanguage } from '../../actions/language';
 import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { slugify } from "../../helpers/common_functions";
 
 const CreateLanguage = ({ createLanguage }) => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState([]);
+    const [errors, setErrors] = useState({});
+    const [url, setUrl] = useState(null);
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+
+    const onTitleChange = (e) => {
+        const slug = slugify(e.target.value);
+        setUrl(slug);
+        setFormData({ ...formData, [e.target.name]: e.target.value, url: slug });
+    };
+
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter a title' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter a url' });
+            return false;
+        }
+
+        return true;
+    }
+
     const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
         createLanguage(formData);
 
         navigate('/language-management');
@@ -45,15 +75,25 @@ const CreateLanguage = ({ createLanguage }) => {
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
-                                                        <Label htmlFor="title" className="form-label">Title</Label>
-                                                        <Input type="text" className="form-control" onChange={e => onChange(e)} name="title"  id="title" placeholder="Title" />
+                                                        <Label htmlFor="title" className="form-label">Title <span className='text-danger'>*</span></Label>
+                                                        <Input type="text" className="form-control" onChange={e => onTitleChange(e)} name="title" id="title" placeholder="Title" />
+                                                        {errors && errors.title ? (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
-                                                        <Label htmlFor="url" className="form-label">URL Slug</Label>
-                                                        <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" placeholder="URL Slug" />
+                                                        <Label htmlFor="url" className="form-label">URL Slug <span className='text-danger'>*</span></Label>
+                                                        <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" defaultValue={url} placeholder="URL Slug" />
+                                                        {errors && errors.url ? (
+                                                            <div className="text-danger">
+                                                                {errors.url}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -128,4 +168,4 @@ CreateLanguage.propTypes = {
     createLanguage: PropTypes.func.isRequired,
 }
 
-export default connect(null, {createLanguage})(CreateLanguage);
+export default connect(null, { createLanguage })(CreateLanguage);
