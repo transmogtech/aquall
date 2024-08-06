@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        orders: [...state.orders, payload]
+        orders: [payload, ...state.orders]
       };
 
 

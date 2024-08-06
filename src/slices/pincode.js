@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        pincodes: [...state.pincodes, payload]
+        pincodes: [payload, ...state.pincodes]
       };
 
 

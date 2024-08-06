@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        counts: [...state.counts, payload]
+        counts: [payload, ...state.counts]
       };
 
 

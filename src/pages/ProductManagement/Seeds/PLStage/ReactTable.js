@@ -22,7 +22,7 @@ const DataTable = ({ changeStatusPlStage, deletePlStage, getPlStages, plStage: {
   }, []);
 
 
-  plstages.forEach(row => searchTable.push({ id: row._id, cultureType: row.culturetypeId.title, company: row.companyId.name, name: row.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  plstages.forEach(row => searchTable.push({ id: row._id, cultureType: row.culturetypeId.title, company: row.companyId.name, name: row.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editPlStage, setEditPlStage] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -139,7 +139,7 @@ const DataTable = ({ changeStatusPlStage, deletePlStage, getPlStages, plStage: {
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}

@@ -78,7 +78,7 @@ const DataTable = ({ changeStatusJobApplication, deleteJobApplication, getJobApp
         header: "Applied Date",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span>{cell.getValue()}</span>
           );
         },
         accessorKey: "created",
@@ -101,7 +101,7 @@ const DataTable = ({ changeStatusJobApplication, deleteJobApplication, getJobApp
         enableColumnFilter: false,
         cell: (cell) => {
           return (
-            <Link to={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-download'></i></Link>
+            <Link to={`${process.env.REACT_APP_API_URL}/${cell.getValue()}`} target='_blank' className="btn btn-sm btn-warning"><i className='las la-download'></i></Link>
           );
         }
       },
@@ -139,7 +139,7 @@ const DataTable = ({ changeStatusJobApplication, deleteJobApplication, getJobApp
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}

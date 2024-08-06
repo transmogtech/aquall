@@ -15,6 +15,7 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
     const { id } = useParams();
     const [bannerimage, setBannerImage] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState({});
 
     useEffect(() => {
         const fetchtData = async () => {
@@ -26,7 +27,7 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
     }, []);
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({ url: '', image: '', priority: '' });
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -44,6 +45,18 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
     }
 
     const handleSubmit = () => {
+        if (!formData.url) {
+            setError({ ...error, url: 'Please enter a url' });
+            return false;
+        }
+
+        if (!formData.image) {
+            setError({ ...error, image: 'Please select an image' });
+            return false;
+        }
+
+
+
         updateBannerImage(id, formData);
 
         navigate('/banner-images');
@@ -75,6 +88,11 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
                                                                 <div>
                                                                     <Label htmlFor="title" className="form-label">URL</Label>
                                                                     <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" defaultValue={bannerimage.url} placeholder="URL" />
+                                                                    {error && error.url ? (
+                                                                        <div class="text-danger">
+                                                                            {error.url}
+                                                                        </div>
+                                                                    ) : null}
                                                                 </div>
                                                             </Col>
 
@@ -86,9 +104,16 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
                                                                             <div className="img-wrap">
                                                                                 <span className="close" onClick={() => deleteImage()}>&times;</span>
                                                                                 <img src={`${process.env.REACT_APP_API_URL}/${bannerimage.image}`} width="100%" />
+
                                                                             </div>
                                                                         ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+
                                                                     }
+                                                                    {error && error.url ? (
+                                                                        <div class="text-danger">
+                                                                            {error.url}
+                                                                        </div>
+                                                                    ) : null}
                                                                 </div>
                                                             </Col>
 

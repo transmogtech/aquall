@@ -9,7 +9,7 @@ import moment from 'moment/moment';
 import ViewModal from "./View";
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { getProductRequests, changeStatusProductRequest, deleteProductRequest } from '../../../actions/productRequest';
- 
+
 const DataTable = ({ getProductRequests, changeStatusProductRequest, deleteProductRequest, productRequest: { productrequests, loading } }) => {
 
   const [id, setId] = useState(null);
@@ -23,9 +23,11 @@ const DataTable = ({ getProductRequests, changeStatusProductRequest, deleteProdu
     getProductRequests();
   }, []);
 
-// console.log(companies);
-productrequests.forEach(row => {  if(row === undefined) {return}
-  searchTable.push({ id: row._id,  email: row.email, action: row._id, status: row.status, name: row.name, mobile: row.mobile, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') })});
+  // console.log(companies);
+  productrequests.forEach(row => {
+    if (row === undefined) { return }
+    searchTable.push({ id: row._id, email: row.email, action: row._id, status: row.status, name: row.name, mobile: row.mobile, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') })
+  });
 
 
 
@@ -66,7 +68,7 @@ productrequests.forEach(row => {  if(row === undefined) {return}
 
 
 
- const  handleCommentChange = (e) => {
+  const handleCommentChange = (e) => {
     setComment(e.target.value);
 
   }
@@ -93,12 +95,12 @@ productrequests.forEach(row => {  if(row === undefined) {return}
         accessorKey: "created",
         enableColumnFilter: false,
       },
-      
+
       {
         header: "Name",
         accessorKey: "name",
         enableColumnFilter: false,
-       
+
       },
       {
         header: "Email",
@@ -110,7 +112,7 @@ productrequests.forEach(row => {  if(row === undefined) {return}
         accessorKey: "mobile",
         enableColumnFilter: false,
       },
-      
+
       {
         header: "Status",
         accessorKey: "status",
@@ -124,9 +126,9 @@ productrequests.forEach(row => {  if(row === undefined) {return}
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => viewRequest(cell.getValue())} to='#!' className="btn btn-sm btn-warning"><i className='las la-eye'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => viewRequest(cell.getValue())} to='#!' className="btn btn-sm btn-warning"><i className='las la-eye'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -138,40 +140,40 @@ productrequests.forEach(row => {  if(row === undefined) {return}
 
   return (
     <React.Fragment >
-    {loading ? (
-      <Loader />
-    ) : (
-      <TableContainer
-        columns={(columns || [])}
-        data={(searchTable || [])}
-        isGlobalFilter={true}
-        customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
-        SearchPlaceholder='Search...'
-      />
-    )}
-    <DeleteModal
-      show={deleteModal}
-      onCloseClick={() => setDeleteModal(false)}
-      onDeleteClick={handleDelete}
+      {loading ? (
+        <Loader />
+      ) : (
+        <TableContainer
+          columns={(columns || [])}
+          data={(searchTable || [])}
+          isGlobalFilter={true}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
+          SearchPlaceholder='Search...'
+        />
+      )}
+      <DeleteModal
+        show={deleteModal}
+        onCloseClick={() => setDeleteModal(false)}
+        onDeleteClick={handleDelete}
       />
 
-    <ViewModal
-      show={isView}
-      onCloseClick={() => setIsView(false)}
-      id={viewData}
-    />
+      <ViewModal
+        show={isView}
+        onCloseClick={() => setIsView(false)}
+        id={viewData}
+      />
 
-    <ChangeStatus
-      show={statusModal}
-      onCloseClick={() => setStatusModal(false)}
-      onClick={handleChageStatus}
-      statusOptions={statusOptions}
-      selectedSingle={selectedSingle}
-      handleSelectSingle={handleSelectSingle}
-      handleCommentChange={handleCommentChange}
-    />
-  </React.Fragment >
-    
+      <ChangeStatus
+        show={statusModal}
+        onCloseClick={() => setStatusModal(false)}
+        onClick={handleChageStatus}
+        statusOptions={statusOptions}
+        selectedSingle={selectedSingle}
+        handleSelectSingle={handleSelectSingle}
+        handleCommentChange={handleCommentChange}
+      />
+    </React.Fragment >
+
   );
 };
 

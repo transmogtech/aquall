@@ -28,7 +28,7 @@ const EditNews = ({ updateNews, getNews, getLanguages, language: { languages } }
         const fetchtData = async () => {
             const response = await getNews(id);
             setNews(response);
-            setLanguage(response.language);
+            setLanguage(response.language.title);
         }
         fetchtData();
         setLoading(false);
@@ -51,10 +51,10 @@ const EditNews = ({ updateNews, getNews, getLanguages, language: { languages } }
 
     const Languages = [];
 
-    languages.forEach(row => Languages.push({ value: row.url, label: row.title }));
+    languages.forEach(row => Languages.push({ value: row._id, label: row.title }));
 
     function handleChangeLanguage(language) {
-        setLanguage(language.value);
+        setLanguage(language.label);
         setFormData({ ...formData, language: language.value });
 
     }

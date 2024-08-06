@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        peddlertypes: [...state.peddlertypes, payload]
+        peddlertypes: [payload, ...state.peddlertypes]
       };
 
 

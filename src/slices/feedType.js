@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        feedtypes: [...state.feedtypes, payload]
+        feedtypes: [payload, ...state.feedtypes]
       };
 
 

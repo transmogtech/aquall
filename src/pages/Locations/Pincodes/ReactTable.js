@@ -22,16 +22,16 @@ const DataTable = ({ getPincodes, deletePincode, changeStatusPincode, pincode: {
   }, [getPincodes]);
 
 
-  pincodes.forEach(row => searchTable.push({ 
-    id: row._id, 
-    state: row.stateId.title, 
-    district: row.districtId.title, 
-    area: row.areaId.title, 
-    title: row.title, 
-    action: row._id, 
-    url: row.url, 
-    status: row.status, 
-    created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') 
+  pincodes.forEach(row => searchTable.push({
+    id: row._id,
+    state: row.stateId.title,
+    district: row.districtId.title,
+    area: row.areaId.title,
+    title: row.title,
+    action: row._id,
+    // url: row.url,
+    status: row.status,
+    created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss')
   }));
 
 
@@ -73,7 +73,7 @@ const DataTable = ({ getPincodes, deletePincode, changeStatusPincode, pincode: {
   const columns = useMemo(
     () => [
       {
-        
+
         header: "Created On",
         cell: (cell) => {
           return (
@@ -88,7 +88,7 @@ const DataTable = ({ getPincodes, deletePincode, changeStatusPincode, pincode: {
         accessorKey: "state",
         enableColumnFilter: false,
       },
-      
+
       {
         header: "District",
         accessorKey: "district",
@@ -104,11 +104,11 @@ const DataTable = ({ getPincodes, deletePincode, changeStatusPincode, pincode: {
         accessorKey: "title",
         enableColumnFilter: false,
       },
-      {
-        header: "Slug",
-        accessorKey: "url",
-        enableColumnFilter: false,
-      },
+      // {
+      //   header: "Slug",
+      //   accessorKey: "url",
+      //   enableColumnFilter: false,
+      // },
       {
         header: "Status",
         accessorKey: "status",
@@ -136,14 +136,14 @@ const DataTable = ({ getPincodes, deletePincode, changeStatusPincode, pincode: {
 
   return (
     <React.Fragment >
-       {loading ? (
+      {loading ? (
         <Loader />
       ) : (
         <TableContainer
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}
@@ -163,7 +163,7 @@ const DataTable = ({ getPincodes, deletePincode, changeStatusPincode, pincode: {
       />
     </React.Fragment >
 
-    
+
   );
 };
 

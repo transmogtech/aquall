@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        chemicalcategories: [...state.chemicalcategories, payload]
+        chemicalcategories: [payload, ...state.chemicalcategories]
       };
 
 

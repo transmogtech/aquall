@@ -22,7 +22,7 @@ const DataTable = ({ getStates, deleteState, changeStatusState, state: { states,
   }, [getStates]);
 
 
-  states.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, url: row.url, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  states.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, url: row.url, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
 
@@ -116,7 +116,7 @@ const DataTable = ({ getStates, deleteState, changeStatusState, state: { states,
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}

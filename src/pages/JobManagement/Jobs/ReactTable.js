@@ -23,7 +23,7 @@ const DataTable = ({ changeStatusJob, deleteJob, getJobs, job: { jobs, loading }
   }, []);
 
 
-  jobs.forEach(row => searchTable.push({ id: row._id, title: row.title, position: row.position, category: row.category, type: row.type, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  jobs.forEach(row => searchTable.push({ id: row._id, title: row.title, position: row.position, category: row.category, type: row.type, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
   const onChange = (e) => {
@@ -72,16 +72,16 @@ const DataTable = ({ changeStatusJob, deleteJob, getJobs, job: { jobs, loading }
   const columns = useMemo(
     () => [
       {
-        header: "ID",
+        header: "Created On",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span>{cell.getValue()}</span>
           );
         },
-        accessorKey: "id",
+        accessorKey: "created",
         enableColumnFilter: false,
       },
-      
+
       {
         header: "Title",
         accessorKey: "title",
@@ -115,9 +115,9 @@ const DataTable = ({ changeStatusJob, deleteJob, getJobs, job: { jobs, loading }
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to={`/edit/job/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+              <Link to={`/edit/job/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -135,7 +135,7 @@ const DataTable = ({ changeStatusJob, deleteJob, getJobs, job: { jobs, loading }
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}
@@ -153,10 +153,10 @@ const DataTable = ({ changeStatusJob, deleteJob, getJobs, job: { jobs, loading }
         selectedSingle={selectedSingle}
         handleSelectSingle={handleSelectSingle}
       />
-     
+
     </React.Fragment >
 
-    
+
   );
 };
 

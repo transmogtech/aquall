@@ -26,7 +26,7 @@ export const createLanguage = (formData) => async dispatch => {
       payload: response.language
     });
 
-    dispatch(setAlert('Languag created successfully', 'success'));
+    dispatch(setAlert('Language created successfully', 'success'));
 
   } catch (error) {
     console.log(error);

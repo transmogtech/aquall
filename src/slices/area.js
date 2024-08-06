@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        areas: [...state.areas, payload]
+        areas: [payload, ...state.areas]
       };
 
 

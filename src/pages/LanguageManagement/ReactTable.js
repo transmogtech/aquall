@@ -5,7 +5,7 @@ import ChangeStatus from '../../Components/Common/ChangeStatus';
 import { connect } from 'react-redux';
 import { getLanguages, deleteLanguage, changeStatusLanguage } from '../../actions/language';
 import PropTypes from 'prop-types';
-import moment  from 'moment/moment';
+import moment from 'moment/moment';
 import DeleteModal from '../../Components/Common/DeleteModal';
 import Loader from '../../Components/Common/Loader';
 
@@ -20,11 +20,11 @@ const DataTable = ({ getLanguages, deleteLanguage, changeStatusLanguage, languag
   useEffect(() => {
     getLanguages();
   }, [getLanguages]);
-  
 
-  languages.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, url: row.url, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
 
-  
+  languages.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, url: row.url, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+
+
 
   function tog_grid(id) {
     setStatusModal(true);
@@ -43,7 +43,7 @@ const DataTable = ({ getLanguages, deleteLanguage, changeStatusLanguage, languag
 
   }
 
-  
+
   function handleSelectSingle(selectedSingle) {
     setSelectedSingle(selectedSingle.value);
     console.log(selectedSingle);
@@ -108,31 +108,31 @@ const DataTable = ({ getLanguages, deleteLanguage, changeStatusLanguage, languag
 
   return (
     <React.Fragment >
-       {loading ? (
-                   <Loader />
-                  ) : (
-      <TableContainer
-        columns={(columns || [])}
-        data={(searchTable || [])}
-        isGlobalFilter={true}
-        customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
-        SearchPlaceholder='Search...'
+      {loading ? (
+        <Loader />
+      ) : (
+        <TableContainer
+          columns={(columns || [])}
+          data={(searchTable || [])}
+          isGlobalFilter={true}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
+          SearchPlaceholder='Search...'
+        />
+      )}
+      <DeleteModal
+        show={deleteModal}
+        onCloseClick={() => setDeleteModal(false)}
+        onDeleteClick={handleDelete}
       />
-    )}
- <DeleteModal
-    show={deleteModal}
-    onCloseClick={() => setDeleteModal(false)}
-    onDeleteClick={handleDelete}
-  />
 
-  <ChangeStatus 
-   show={statusModal}
-   onCloseClick={() => setStatusModal(false)}
-   onClick={handleChageStatus}
-   statusOptions={statusOptions}
-   selectedSingle={selectedSingle}
-   handleSelectSingle={handleSelectSingle}
-  />
+      <ChangeStatus
+        show={statusModal}
+        onCloseClick={() => setStatusModal(false)}
+        onClick={handleChageStatus}
+        statusOptions={statusOptions}
+        selectedSingle={selectedSingle}
+        handleSelectSingle={handleSelectSingle}
+      />
     </React.Fragment >
 
 

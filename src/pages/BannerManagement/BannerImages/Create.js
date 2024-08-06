@@ -12,22 +12,35 @@ import { connect } from 'react-redux';
 
 const CreateBannerImage = ({ createBannerImage }) => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({ url: '', image: '', priority: '' });
+    const [error, setError] = useState({});
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    
-const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-        // console.log(e.target.files);
-        setFormData({...formData, image: e.target.files[0] });
-    }
-  };
 
-  
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            // console.log(e.target.files);
+            setFormData({ ...formData, image: e.target.files[0] });
+        }
+    };
+
+
     const handleSubmit = () => {
+
+        if (!formData.url) {
+            setError({ ...error, url: 'Please enter a url' });
+            return false;
+        }
+
+        if (!formData.image) {
+            setError({ ...error, image: 'Please select an image' });
+            return false;
+        }
+
+
         createBannerImage(formData);
 
         navigate('/banner-images');
@@ -57,6 +70,11 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
                                                     <div>
                                                         <Label htmlFor="title" className="form-label">URL</Label>
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" placeholder="URL" />
+                                                        {error && error.url ? (
+                                                            <div class="text-danger">
+                                                                {error.url}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -64,6 +82,11 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
                                                         <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                        {error && error.image ? (
+                                                            <div class="text-danger">
+                                                                {error.image}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 

@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        categories: [...state.categories, payload]
+        categories: [payload, ...state.categories]
       };
 
 

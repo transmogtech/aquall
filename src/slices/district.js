@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        districts: [...state.districts, payload]
+        districts: [payload, ...state.districts]
       };
 
 

@@ -22,7 +22,7 @@ const DataTable = ({ changeStatusOrder, deleteOrder, getOrders, order: { orders,
   }, []);
 
 
-  orders.forEach(row => searchTable.push({ id: row._id, product: row.productId.name, user: row.userId.name, orderId: row.orderId, amount: row.totalPrice, paymentMethod: row.paymentMethod, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  orders.forEach(row => searchTable.push({ id: row._id, user: row.userId?.name, orderId: row.orderId, amount: row.totalPrice, paymentMethod: row.paymentMethod, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   function tog_grid(id) {
     setStatusModal(true);
@@ -80,11 +80,11 @@ const DataTable = ({ changeStatusOrder, deleteOrder, getOrders, order: { orders,
         accessorKey: "user",
         enableColumnFilter: false,
       },
-      {
-        header: "Product",
-        accessorKey: "product",
-        enableColumnFilter: false,
-      },
+      // {
+      //   header: "Product",
+      //   accessorKey: "product",
+      //   enableColumnFilter: false,
+      // },
       {
         header: "Amount",
         accessorKey: "amount",
@@ -108,9 +108,9 @@ const DataTable = ({ changeStatusOrder, deleteOrder, getOrders, order: { orders,
         cell: (cell) => {
           return (
             <div>
-            <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link to={`/edit/order/${cell.getValue()}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+
+              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },
@@ -128,7 +128,7 @@ const DataTable = ({ changeStatusOrder, deleteOrder, getOrders, order: { orders,
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}
@@ -148,7 +148,7 @@ const DataTable = ({ changeStatusOrder, deleteOrder, getOrders, order: { orders,
       />
     </React.Fragment >
 
-    
+
   );
 };
 

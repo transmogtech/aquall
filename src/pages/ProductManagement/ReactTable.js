@@ -22,7 +22,7 @@ const DataTable = ({ changeStatusProduct, deleteProduct, getProducts, product: {
   }, []);
 
 
-  products.forEach(row => searchTable.push({ id: row._id, image: row.imageUrl, company: row.companyId.name, category: row.categoryId.title, image: row.imageUrl, name: row.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  products.forEach(row => searchTable.push({ id: row._id, image: row.imageUrl, company: row.companyId.name, category: row.categoryId.title, image: row.imageUrl, name: row.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   function tog_grid(id) {
     setStatusModal(true);
@@ -128,7 +128,7 @@ const DataTable = ({ changeStatusProduct, deleteProduct, getProducts, product: {
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}

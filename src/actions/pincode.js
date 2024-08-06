@@ -33,13 +33,13 @@ export const createPincode = (formData) => async dispatch => {
   }
 }
 
-export const getPincodes = () => async dispatch => {
+export const getPincodes = (formData) => async dispatch => {
 
   if (localStorage.getItem('token')) {
     setAuthorization(localStorage.getItem('token'));
   }
   try {
-    const res = await axios.get('/pincodes');
+    const res = await axios.get('/pincodes', { params: formData });
     dispatch({
       type: GET_PINCODES,
       payload: res.pincodes

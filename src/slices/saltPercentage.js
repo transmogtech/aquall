@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        saltpercentages: [...state.saltpercentages, payload]
+        saltpercentages: [payload, ...state.saltpercentages]
       };
 
 

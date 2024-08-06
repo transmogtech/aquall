@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        languages: [...state.languages, payload]
+        languages: [payload, ...state.languages]
       };
 
 

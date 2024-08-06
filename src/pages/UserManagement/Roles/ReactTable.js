@@ -24,7 +24,7 @@ const DataTable = ({ changeStatusUserRole, deleteUserRole, getUserRoles, updateU
   }, []);
 
 
-  userroles.forEach(row => searchTable.push({ id: row._id, title: row.title, url: row.url, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  userroles.forEach(row => searchTable.push({ id: row._id, title: row.title, url: row.url, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editCultureType, setEditCultureType] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -141,7 +141,7 @@ const DataTable = ({ changeStatusUserRole, deleteUserRole, getUserRoles, updateU
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}

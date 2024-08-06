@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        appclassifiedimages: [...state.appclassifiedimages, payload]
+        appclassifiedimages: [payload, ...state.appclassifiedimages]
       };
 
 

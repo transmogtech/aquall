@@ -17,7 +17,7 @@ import { getPincodes } from '../../../actions/pincode';
 import { getUserRoles } from '../../../actions/userRole';
 import Loader from '../../../Components/Common/Loader';
 
-const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, getUserRoles, getUser }) => {
+const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, getUserRoles, getUser, state: { states }, district: { districts }, area: { areas }, pincode: { pincodes }, userRole: { userroles } }) => {
 
     const { id } = useParams();
     const [user, setUser] = useState([]);
@@ -27,9 +27,9 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
     const [selectedState, setSelectedState] = useState(null);
-    const [options, setOptions] = useState([]);
-    const [areas, setAreas] = useState([]);
-    const [pincodes, setPincodes] = useState([]);
+    // const [options, setOptions] = useState([]);
+    // const [areas, setAreas] = useState([]);
+    // const [pincodes, setPincodes] = useState([]);
     const [selectedDistrict, setSelectedDistrict] = useState(null);
     const [selectedArea, setSelectedArea] = useState(null);
     const [selectedPincode, setSelectedPincode] = useState(null);
@@ -44,18 +44,14 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
 
 
 
-
-    const districtsData = useSelector(state => state.district.districts);
-    const areaData = useSelector(state => state.area.areas);
-    const states = useSelector(state => state.state.states);
-    const pincodeData = useSelector(state => state.pincode.pincodes);
-    const userroles = useSelector(state => state.userRole.userroles);
+    // const districtsData = useSelector(state => state.district.districts);
+    // const areaData = useSelector(state => state.area.areas);
+    // const states = useSelector(state => state.state.states);
+    // const pincodeData = useSelector(state => state.pincode.pincodes);
+    // const userroles = useSelector(state => state.userRole.userroles);
 
     useEffect(() => {
         getStates();
-        getDistricts();
-        getAreas();
-        getPincodes();
         getUserRoles();
         const userData = async () => {
             const response = await getUser(id);
@@ -66,9 +62,13 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
             setSelectedArea(response.areaId.title);
             setSelectedPincode(response.pincodeId?.title);
             setSelectedUserRole(response.userroleId.title);
+            getDistricts({ stateId: response.stateId._id });
+            getAreas({ districtId: response.districtId._id });
+            getPincodes({ areaId: response.areaId._id });
+            setLoading(false);
+
         }
         userData();
-        setLoading(false);
     }, []);
 
 
@@ -78,52 +78,62 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
     };
 
 
-    function handleSelectState(selectedState) {
+    async function handleSelectState(selectedState) {
 
         setFormData({ ...formData, stateId: selectedState.value });
 
         setSelectedState(selectedState.label);
 
+        setSelectedDistrict("");
+        setFormData({ ...formData, districtId: "" });
+        setSelectedArea("");
+        setFormData({ ...formData, areaId: "" });
+        setSelectedPincode("");
+        setFormData({ ...formData, pincodeId: "" });
+        // districtsData.forEach(district => {
+        //     if (district.stateId._id === selectedState.value) {
+        //         Districts.push({ value: district._id, label: district.title });
+        //     }
+        // });
 
-        districtsData.forEach(district => {
-            if (district.stateId._id === selectedState.value) {
-                Districts.push({ value: district._id, label: district.title });
-            }
-        });
+        // setOptions(Districts);
 
-        setOptions(Districts);
-
+        await getDistricts({ stateId: selectedState.value });
 
     }
 
-    function handleSelectDistrict(selectedDistrict) {
+    async function handleSelectDistrict(selectedDistrict) {
         setFormData({ ...formData, districtId: selectedDistrict.value });
 
         setSelectedDistrict(selectedDistrict.label);
+        setSelectedArea("");
+        setFormData({ ...formData, areaId: "" });
+        setSelectedPincode("");
+        setFormData({ ...formData, pincodeId: "" });
+        await getAreas({ districtId: selectedDistrict.value });
+        // areaData.forEach(area => {
+        //     if (area.districtId._id === selectedDistrict.value) {
+        //         Areas.push({ value: area._id, label: area.title });
+        //     }
+        // });
 
-
-        areaData.forEach(area => {
-            if (area.districtId._id === selectedDistrict.value) {
-                Areas.push({ value: area._id, label: area.title });
-            }
-        });
-
-        setAreas(Areas);
+        // setAreas(Areas);
     }
 
 
-    function handleSelectArea(selectedArea) {
+    async function handleSelectArea(selectedArea) {
         setFormData({ ...formData, areaId: selectedArea.value });
 
         setSelectedArea(selectedArea.label);
-
-        pincodeData.forEach(pincode => {
-            if (pincode.areaId._id === selectedArea.value) {
-                Pincodes.push({ value: pincode._id, label: pincode.title });
-            }
-        });
-
-        setPincodes(Pincodes);
+        setSelectedPincode("");
+        setFormData({ ...formData, pincodeId: "" });
+        // pincodeData.forEach(pincode => {
+        //     if (pincode.areaId._id === selectedArea.value) {
+        //         Pincodes.push({ value: pincode._id, label: pincode.title });
+        //     }
+        // });
+        await getPincodes({ areaId: selectedArea.value });
+        // setPincodes(Pincodes);
 
     }
 
@@ -143,9 +153,13 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
 
 
 
-    states.forEach(row => States.push({ value: row._id, label: row.title }));
+    // states.forEach(row => States.push({ value: row._id, label: row.title }));
     userroles.forEach(row => UserRoles.push({ value: row._id, label: row.title }));
 
+    states.forEach(row => States.push({ value: row._id, label: row.title }));
+    districts.forEach(district => { Districts.push({ value: district._id, label: district.title }); });
+    areas.forEach(area => { Areas.push({ value: area._id, label: area.title }); });
+    pincodes.forEach(area => { Pincodes.push({ value: area._id, label: area.title }); });
 
     const handleSubmit = () => {
 
@@ -155,7 +169,7 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
         navigate('/users');
     }
 
-    document.title = "Create User | Aquall Admin";
+    document.title = "Edit User | Aquall Admin";
     return (
         <React.Fragment>
             {
@@ -165,16 +179,25 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
                         <div className="page-content">
 
                             <Container fluid>
-                                <BreadCrumb title="Create User" pageTitle="User Management" />
+                                <BreadCrumb title="Edit User" pageTitle="User Management" />
                                 <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                                     <Row>
                                         <Col lg={12}>
                                             <Card>
-                                                <PreviewCardHeader title="Create User" />
+                                                <PreviewCardHeader title="Edit User" />
 
                                                 <CardBody className="card-body">
                                                     <div className="live-preview">
                                                         <Row className="gy-4">
+
+                                                            <Col xxl={4} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">User Role</Label>
+                                                                    <Select value={{ label: selectedUserRole }} onChange={handleSelectUserRole} options={UserRoles} placeholder="User Role" />
+
+                                                                </div>
+                                                            </Col>
+
                                                             <Col xxl={4} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Name</Label>
@@ -196,14 +219,6 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
 
                                                             <Col xxl={4} md={6}>
                                                                 <div>
-                                                                    <Label htmlFor="basiInput" className="form-label">User Role</Label>
-                                                                    <Select value={{ label: selectedUserRole }} onChange={handleSelectUserRole} options={UserRoles} placeholder="User Role" />
-
-                                                                </div>
-                                                            </Col>
-
-                                                            <Col xxl={4} md={6}>
-                                                                <div>
                                                                     <Label htmlFor="basiInput" className="form-label">State</Label>
                                                                     <Select value={{ label: selectedState }} onChange={handleSelectState} options={States} />
                                                                 </div>
@@ -213,20 +228,20 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
                                                             <Col xxl={4} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">District</Label>
-                                                                    <Select value={{ label: selectedDistrict }} onChange={handleSelectDistrict} options={options} />
+                                                                    <Select value={{ label: selectedDistrict }} onChange={handleSelectDistrict} options={Districts} />
                                                                 </div>
                                                             </Col>
 
                                                             <Col xxl={4} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Area</Label>
-                                                                    <Select value={{ label: selectedArea }} onChange={handleSelectArea} options={areas} />
+                                                                    <Select value={{ label: selectedArea }} onChange={handleSelectArea} options={Areas} />
                                                                 </div>
                                                             </Col>
                                                             <Col xxl={4} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Pincode</Label>
-                                                                    <Select value={{ label: selectedPincode }} onChange={handleSelectPincode} options={pincodes} />
+                                                                    <Select value={{ label: selectedPincode }} onChange={handleSelectPincode} options={Pincodes} />
                                                                 </div>
                                                             </Col>
 
@@ -274,11 +289,18 @@ EditUser.propTypes = {
     getUserRoles: PropTypes.func.isRequired,
     getUser: PropTypes.func.isRequired,
     state: PropTypes.object.isRequired,
-
+    district: PropTypes.object.isRequired,
+    area: PropTypes.object.isRequired,
+    pincode: PropTypes.object.isRequired,
+    userRole: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
     state: state.state,
+    district: state.district,
+    area: state.area,
+    pincode: state.pincode,
+    userRole: state.userRole
 });
 
 

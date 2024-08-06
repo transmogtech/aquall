@@ -16,7 +16,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        newsList: [...state.newsList, payload]
+        newsList: [payload, ...state.newsList]
       };
 
 

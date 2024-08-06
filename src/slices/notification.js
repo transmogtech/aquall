@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        notifications: [...state.notifications, payload]
+        notifications: [payload, ...state.notifications]
       };
 
 

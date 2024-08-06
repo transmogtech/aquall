@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        appsliderimages: [...state.appsliderimages, payload]
+        appsliderimages: [payload, ...state.appsliderimages]
       };
 
 

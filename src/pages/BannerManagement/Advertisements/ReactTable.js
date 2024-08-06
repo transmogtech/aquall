@@ -24,7 +24,7 @@ const DataTable = ({ changeStatusAdvertisement, deleteAdvertisement, getAdvertis
   }, []);
 
 
-  advertisements.forEach(row => searchTable.push({ id: row._id, priority: row.priority, image: row.image, action: row._id, status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  advertisements.forEach(row => searchTable.push({ id: row._id, priority: row.priority, image: row.image, action: row._id, status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
 
@@ -136,7 +136,7 @@ const DataTable = ({ changeStatusAdvertisement, deleteAdvertisement, getAdvertis
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}

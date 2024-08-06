@@ -13,7 +13,6 @@ import { getCompanies } from '../../../actions/company';
 import { getProducts } from '../../../actions/product';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getProduct } from '../../../actions/product';
 
 const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProducts, category: { categories }, company: { companies }, product: { products } }) => {
 

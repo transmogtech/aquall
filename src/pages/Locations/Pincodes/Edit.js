@@ -29,9 +29,9 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
     const Districts = useState([]);
-    const [Areas, setAreas] = useState([]);
-    const [States, setStates] = useState([]);
-    const [Cateogry, setCategory] = useState([]);
+    const Areas = [];
+    const States = [];
+    const Cateogry = [];
     const [delivery, setDelivery] = useState(Cateogry);
 
     useEffect(() => {
@@ -44,57 +44,42 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
             setSelectedState(response.stateId.title);
             setSelectedDistrict(response.districtId.title);
             setSelectedArea(response.areaId.title);
-            getDistricts({ stateId: response.stateId._id });
-            getAreas({ districtId: response.districtId._id });
-
-
-
+            getDistricts({ stateId: response.stateId });
+            getAreas({ districtId: response.districtId });
+            categories.forEach((category, index) => {
+                Cateogry.push({ _id: category._id, title: category.title, charge: response.delivery[index].charge, days: response.delivery[index].days });
+            });
+            setDelivery(Cateogry);
+            setLoading(false);
         }
 
         fetchtData();
 
+    }, [getCategories]); // eslint-disable-line
 
 
 
-        setLoading(false);
-
-        categories.forEach((row, index) => setDelivery(...delivery, {
-            value: row._id,
-            label: row.title,
-            charge: pincode.delivery[index].charge,
-            days: pincode.delivery[index].days
-        }));
-        // console.log(pincode);
-
-        states.forEach(row => States.push({ value: row._id, label: row.title }));
-
-
-        districts.forEach(district => { Districts.push({ value: district._id, label: district.title }); });
-
-
-        areas.forEach(area => { Areas.push({ value: area._id, label: area.title }); });
-    }, [getStates, getCategories]); // eslint-disable-line
-
-
-
+    states.forEach(row => States.push({ value: row._id, label: row.title }));
+    districts.forEach(district => { Districts.push({ value: district._id, label: district.title }); });
+    areas.forEach(area => { Areas.push({ value: area._id, label: area.title }); });
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
 
-    function handleSelectState(selectedState) {
+    async function handleSelectState(selectedState) {
 
         setFormData({ ...formData, stateId: selectedState.value });
-
+        await getDistricts({ stateId: selectedState.value });
         setSelectedState(selectedState.label);
 
 
     }
 
-    function handleSelectDistrict(selectedDistrict) {
+    async function handleSelectDistrict(selectedDistrict) {
         setFormData({ ...formData, districtId: selectedDistrict.value });
-
+        await getAreas({ districtId: selectedDistrict.value });
         setSelectedDistrict(selectedDistrict.label);
 
 
@@ -179,14 +164,6 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
                                                                 </div>
                                                             </Col>
 
-                                                            <Col xxl={3} md={6}>
-                                                                <div>
-                                                                    <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
-                                                                    <Input type="text" className="form-control" name="url" onChange={e => onChange(e)} placeholder="URL Slug" defaultValue={pincode.url} />
-                                                                </div>
-                                                            </Col>
-
-
                                                         </Row>
 
                                                     </div>
@@ -205,7 +182,7 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
                                                 <CardBody className="card-body">
                                                     <div className="live-preview">
 
-                                                        {Cateogry.map((category, index) => (
+                                                        {delivery.map((category, index) => (
                                                             <Row className="gy-4" key={index}>
                                                                 <Col xxl={3} md={6}>
                                                                     <div>
@@ -228,46 +205,6 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
                                                     </div>
 
                                                 </CardBody>
-                                            </Card>
-                                        </Col>
-
-                                    </Row>
-
-
-                                    <Row>
-                                        <Col lg={12}>
-                                            <Card>
-                                                <PreviewCardHeader title="Meta Data" />
-
-                                                <CardBody className="card-body">
-                                                    <div className="live-preview">
-
-                                                        <Row className="gy-4">
-
-                                                            <Col xxl={12} md={12}>
-                                                                <div>
-                                                                    <Label htmlFor="metaTitle" className="form-label">Meta Title</Label>
-                                                                    <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Title" id="metaTitle" name='metaTitle' rows="3" defaultValue={pincode.metaTitle}></textarea>
-                                                                </div>
-                                                            </Col>
-                                                            <Col xxl={12} md={12}>
-                                                                <div>
-                                                                    <Label htmlFor="metaDescription" className="form-label">Meta Description</Label>
-                                                                    <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Description" id="metaDescription" name='metaDescription' rows="3" defaultValue={pincode.metaDescription}></textarea>
-                                                                </div>
-                                                            </Col>
-                                                            <Col xxl={12} md={12}>
-                                                                <div>
-                                                                    <Label htmlFor="metaKeywords" className="form-label">Meta Keywords</Label>
-                                                                    <textarea className="form-control" onChange={e => onChange(e)} placeholder="Meta Keywords" name="metaKeywords" id="metaKeywords" rows="3" defaultValue={pincode.metaKeywords}></textarea>
-                                                                </div>
-                                                            </Col>
-
-                                                        </Row>
-
-                                                    </div>
-
-                                                </CardBody>
                                                 <CardFooter>
                                                     <div className="d-flex align-items-start gap-3 mt-4">
 
@@ -278,6 +215,7 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
                                         </Col>
 
                                     </Row>
+
 
                                 </Form>
                             </Container>

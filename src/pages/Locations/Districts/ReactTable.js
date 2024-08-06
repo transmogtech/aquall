@@ -22,14 +22,14 @@ const DataTable = ({ getDistricts, deleteDistrict, changeStatusDistrict, distric
   }, [getDistricts]);
 
 
-  districts.forEach(row => searchTable.push({ 
-    id: row._id, 
-    state: row.stateId.title, 
-    title: row.title, 
-    action: row._id, 
-    url: row.url, 
-    status: row.status, 
-    created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') 
+  districts.forEach(row => searchTable.push({
+    id: row._id,
+    state: row.stateId.title,
+    title: row.title,
+    action: row._id,
+    url: row.url,
+    status: row.status,
+    created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss')
   }));
 
 
@@ -71,7 +71,7 @@ const DataTable = ({ getDistricts, deleteDistrict, changeStatusDistrict, distric
   const columns = useMemo(
     () => [
       {
-        
+
         header: "Created On",
         cell: (cell) => {
           return (
@@ -123,14 +123,14 @@ const DataTable = ({ getDistricts, deleteDistrict, changeStatusDistrict, distric
 
   return (
     <React.Fragment >
-       {loading ? (
+      {loading ? (
         <Loader />
       ) : (
         <TableContainer
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}
@@ -150,7 +150,7 @@ const DataTable = ({ getDistricts, deleteDistrict, changeStatusDistrict, distric
       />
     </React.Fragment >
 
-    
+
   );
 };
 

@@ -10,7 +10,7 @@ import moment from 'moment/moment';
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusNotification, deleteNotification, getNotifications } from '../../../actions/notification';
 
-const DataTable = ({  changeStatusNotification, deleteNotification, getNotifications, notification: { notifications, loading } }) => {
+const DataTable = ({ changeStatusNotification, deleteNotification, getNotifications, notification: { notifications, loading } }) => {
 
   const [id, setId] = useState(null);
   const searchTable = [];
@@ -23,7 +23,7 @@ const DataTable = ({  changeStatusNotification, deleteNotification, getNotificat
   }, []);
 
 
-  notifications.forEach(row => searchTable.push({ id: row._id, category: row.categoryId.title, company: row.companyId.name, product: row.productId.name, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') }));
+  notifications.forEach(row => searchTable.push({ id: row._id, category: row.categoryId.title, company: row.companyId.name, product: row.productId.name, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
 
@@ -84,7 +84,7 @@ const DataTable = ({  changeStatusNotification, deleteNotification, getNotificat
         header: "Company",
         accessorKey: "company",
         enableColumnFilter: false,
-      }, 
+      },
       {
         header: "Product",
         accessorKey: "product",
@@ -129,7 +129,7 @@ const DataTable = ({  changeStatusNotification, deleteNotification, getNotificat
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}

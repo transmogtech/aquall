@@ -15,10 +15,14 @@ const EditSliderImage = ({ updateSliderImage, getSliderImage }) => {
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
     const [sliderimage, setSliderImage] = useState([]);
+    const [error, setError] = useState({});
+    const [formData, setFormData] = useState();
+
     useEffect(() => {
         const fetchtData = async () => {
             const response = await getSliderImage(id);
             setSliderImage(response);
+            setFormData({ url: response.url, image: response.image, priority: response.priority });
         }
         fetchtData();
         setLoading(false);
@@ -26,7 +30,6 @@ const EditSliderImage = ({ updateSliderImage, getSliderImage }) => {
 
     // console.log(sliderimage);
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -41,6 +44,15 @@ const EditSliderImage = ({ updateSliderImage, getSliderImage }) => {
 
 
     const handleSubmit = () => {
+        if (!formData.url) {
+            setError({ ...error, url: 'Please enter a url' });
+            return false;
+        }
+
+        if (!formData.image) {
+            setError({ ...error, image: 'Please select an image' });
+            return false;
+        }
         updateSliderImage(id, formData);
 
         navigate('/slider-images');
@@ -76,6 +88,11 @@ const EditSliderImage = ({ updateSliderImage, getSliderImage }) => {
                                                                 <div>
                                                                     <Label htmlFor="title" className="form-label">URL</Label>
                                                                     <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" defaultValue={sliderimage.url} placeholder="URL" />
+                                                                    {error && error.url ? (
+                                                                        <div class="text-danger">
+                                                                            {error.url}
+                                                                        </div>
+                                                                    ) : null}
                                                                 </div>
                                                             </Col>
 
@@ -90,6 +107,11 @@ const EditSliderImage = ({ updateSliderImage, getSliderImage }) => {
                                                                             <img src={`${process.env.REACT_APP_API_URL}/${sliderimage.image}`} width="100%" />
                                                                         </div>
                                                                     ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />}
+                                                                    {error && error.image ? (
+                                                                        <div class="text-danger">
+                                                                            {error.image}
+                                                                        </div>
+                                                                    ) : null}
                                                                 </div>
                                                             </Col>
 

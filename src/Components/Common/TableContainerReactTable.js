@@ -17,6 +17,8 @@ import {
 
 import { rankItem } from '@tanstack/match-sorter-utils';
 
+
+
 // Column Filter
 const Filter = ({
   column,
@@ -28,7 +30,7 @@ const Filter = ({
     <>
       <DebouncedInput
         type="text"
-        value= {(columnFilterValue ?? '') }
+        value={(columnFilterValue ?? '')}
         onChange={value => column.setFilterValue(value)}
         placeholder="Search..."
         className="w-36 border shadow rounded"
@@ -81,14 +83,20 @@ const TableContainer = ({
   const [columnFilters, setColumnFilters] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
-  const fuzzyFilter = (row, columnId, value, addMeta) => {
-    const itemRank = rankItem(row.getValue(columnId), value);
-    addMeta({
-      itemRank
-    });
-    return itemRank.passed;
-  };
 
+  // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
+  const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+    // Rank the item
+    const itemRank = rankItem(row.getValue(columnId), value)
+
+    // Store the itemRank info
+    addMeta({
+      itemRank,
+    })
+
+    // Return if the item should be filtered in/out
+    return itemRank.passed
+  }
   const table = useReactTable({
     columns,
     data,
@@ -101,7 +109,7 @@ const TableContainer = ({
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
+    globalFilterFn: 'fuzzy',
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -124,7 +132,7 @@ const TableContainer = ({
   useEffect(() => {
     (customPageSize) && setPageSize((customPageSize));
   }, [customPageSize, setPageSize]);
-  
+
   return (
     <Fragment>
       {isGlobalFilter && <Row className="mb-3">
@@ -207,7 +215,7 @@ const TableContainer = ({
           </div>
         </div>
         <div className="col-sm-auto">
-          <ul className="pagination pagination-separated pagination-md justify-content-center justify-content-sm-start mb-0">
+          <ul className="pagination pagination-separated pagination-md justify-content-center align-item-center mb-0 flex-wrap">
             <li className={!getCanPreviousPage() ? "page-item disabled" : "page-item"}>
               <Link to="#" className="page-link" onClick={previousPage}>Previous</Link>
             </li>

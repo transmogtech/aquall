@@ -57,72 +57,72 @@ const Counts = ({ getCounts, changeStatusCount, deleteCount, count: { counts } }
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-         
+
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
                   <h5 className="card-title mb-0 float-start">Count</h5>
                   <div className='float-end'>
-                     
-                      <Link to='/create-count' className="btn btn-success"
-                      ><i className="ri-add-line align-bottom me-1"></i> Add</Link>
+
+                    <Link to='/create-count' className="btn btn-success"
+                    ><i className="ri-add-line align-bottom me-1"></i> Add</Link>
                   </div>
                 </CardHeader>
                 <CardBody>
-                <div className="table-responsive">
-{ counts ? counts.map((row, index) => (
+                  <div className="table-responsive">
+                    {counts ? counts.map((row, index) => (
 
-<Table className="table-nowrap table-bordered border-primary mb-0" key={index}>
+                      <Table className="table-nowrap table-bordered border-primary mb-4" key={index}>
 
-    <thead>
-        <tr>
-            <th scope="col">No. { index + 1 }</th>
-            <th scope="col" colSpan={2}>Count Type  : { row.categoryId.title}	</th>
-            <th scope="col" colSpan={2}>Count Area : {row.countareaId.title}	</th>
-            <th scope="col" colSpan={2}>Culture Type: {row.culturetypeId.title}	</th>
-            <th scope="col" colSpan={2}>Status: {row.status}	</th>
-            <th scope="col">
-            <Link onClick={() => tog_grid(row._id)} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
-            <Link  to={`/edit/count/${row._id}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-            <Link onClick={() => tog_center(row._id)} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
-            </th>
-        </tr>
-    </thead>
-    
-       <tbody key={index}>
-       <tr className="table-warning">
-       {row.counts.map((counter, index) => (
-       
-        <td>{counter.count}</td>
-      ))
-    }
-    </tr>
-    <tr>
-    {row.counts.map((counter, index) => (
-        <td>{counter.volume}</td>
-      ))
-    }
-    </tr>
-   </tbody>
-      
-       
-</Table>
+                        <thead>
+                          <tr>
+                            <th scope="col">No. {index + 1}</th>
+                            <th scope="col" colSpan={2}>Count Type  : {row.categoryId.title}	</th>
+                            <th scope="col" colSpan={2}>Count Area : {row.countareaId.title}	</th>
+                            <th scope="col" colSpan={2}>Culture Type: {row.culturetypeId.title}	</th>
+                            <th scope="col" colSpan={2}>Status: {row.status}	</th>
+                            <th scope="col">
+                              <Link onClick={() => tog_grid(row._id)} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+                              <Link to={`/edit/count/${row._id}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
+                              <Link onClick={() => tog_center(row._id)} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+                            </th>
+                          </tr>
+                        </thead>
 
-))
-: (
-  <Fragment>
-    No Data Found
-  </Fragment>
-)
-}
-</div>
+                        <tbody key={index}>
+                          <tr className="table-warning">
+                            {row.counts.map((counter, index) => (
+
+                              <td>{counter.count}</td>
+                            ))
+                            }
+                          </tr>
+                          <tr>
+                            {row.counts.map((counter, index) => (
+                              <td>{counter.volume}</td>
+                            ))
+                            }
+                          </tr>
+                        </tbody>
+
+
+                      </Table>
+
+                    ))
+                      : (
+                        <Fragment>
+                          No Data Found
+                        </Fragment>
+                      )
+                    }
+                  </div>
 
                 </CardBody>
               </Card>
             </Col>
           </Row>
-         
+
 
         </Container>
       </div>

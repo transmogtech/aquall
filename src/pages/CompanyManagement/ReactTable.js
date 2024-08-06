@@ -26,7 +26,7 @@ const DataTable = ({ changeStatusCompany, deleteCompany, getCompanies, company: 
   // console.log(companies);
   companies.forEach(row => {
     if (row === undefined) { return }
-    searchTable.push({ id: row._id, logo: row.logo, action: row._id, status: row.status, name: row.name, category: row.categoryId.title, created: moment(row.created).format('MMMM Do YYYY, h:mm:ss a') })
+    searchTable.push({ id: row._id, logo: row.logo, action: row._id, status: row.status, name: row.name, category: row.categoryId.title, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') })
   });
 
 
@@ -75,13 +75,13 @@ const DataTable = ({ changeStatusCompany, deleteCompany, getCompanies, company: 
   const columns = useMemo(
     () => [
       {
-        header: "ID",
+        header: "Created On",
         cell: (cell) => {
           return (
             <span className="">{cell.getValue()}</span>
           );
         },
-        accessorKey: "id",
+        accessorKey: "created",
         enableColumnFilter: false,
       },
 
@@ -140,7 +140,7 @@ const DataTable = ({ changeStatusCompany, deleteCompany, getCompanies, company: 
           columns={(columns || [])}
           data={(searchTable || [])}
           isGlobalFilter={true}
-          customPageSize={(searchTable.length < 5) ? searchTable.length : 5}
+          customPageSize={(searchTable.length < process.env.LIMIT) ? searchTable.length : process.env.LIMIT}
           SearchPlaceholder='Search...'
         />
       )}

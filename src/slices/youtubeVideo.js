@@ -14,7 +14,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        youtubevideos: [...state.youtubevideos, payload]
+        youtubevideos: [payload, ...state.youtubevideos]
       };
 
 

@@ -17,37 +17,15 @@ const CreateAdvertisement = ({ createAdvertisement }) => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
 
-
-    // Form validation
-    const validation = useFormik({
-        // enableReinitialize : use this flag when initial values needs to be changed
-        enableReinitialize: true,
-
-        initialValues: {
-            url: "",
-            image: "",
-            start_date: "",
-            end_date: "",
-
-        },
-        validationSchema: Yup.object({
-            url: Yup.string().required("Please Enter Advertisement URL"),
-            lastname: Yup.string().required("Please Enter Advertisement image"),
-            username: Yup.string().required("Please Enter start date"),
-            city: Yup.string().required("Please Enter end date"),
-        }),
-        onSubmit: (values) => {
-            createAdvertisement(formData);
-
-            navigate('/advertisements');
-        },
-    });
-
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleSubmit = () => {
+        createAdvertisement(formData);
 
+        navigate('/advertisements');
+    }
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             // console.log(e.target.files);
@@ -68,7 +46,7 @@ const CreateAdvertisement = ({ createAdvertisement }) => {
                     <Form className="needs-validation"
                         onSubmit={(e) => {
                             e.preventDefault();
-                            validation.handleSubmit();
+                            handleSubmit();
                             return false;
                         }} action="#">
                         <Row>
@@ -86,21 +64,9 @@ const CreateAdvertisement = ({ createAdvertisement }) => {
                                                         <Label htmlFor="title" className="form-label">URL</Label>
                                                         <Input type="text" className="form-control" name="url" id="url" placeholder="URL"
                                                             onChange={e => onChange(e)}
-                                                            onBlur={validation.handleBlur}
-                                                            value={validation.values.url || ""}
-                                                            invalid={
-                                                                validation.touched.url &&
-                                                                    validation.errors.url
-                                                                    ? true
-                                                                    : false
-                                                            }
+
                                                         />
-                                                        {validation.touched.url &&
-                                                            validation.errors.url ? (
-                                                            <FormFeedback type="invalid">
-                                                                {validation.errors.url}
-                                                            </FormFeedback>
-                                                        ) : null}
+
                                                     </div>
                                                 </Col>
 

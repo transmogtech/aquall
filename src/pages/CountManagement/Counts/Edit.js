@@ -24,21 +24,21 @@ const CreateCount = ({ getCountTypes, getCultureTypes, getCountAreas, updateCoun
     const [selectedCultureType, setSelectedCultureType] = useState(null);
     const [selectedCountArea, setSelectedCountArea] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const CountPercent = [];
+    // const CountPercent = [
+    //     { count: '', volume: "" },
+    //     { count: '', volume: "" },
+    //     { count: '', volume: "" },
+    //     { count: '', volume: "" },
+    //     { count: '', volume: "" },
+    //     { count: '', volume: "" },
+    //     { count: '', volume: "" },
+    //     { count: '', volume: "" },
+    //     { count: '', volume: "" },
+    //     { count: '', volume: "" }
+    // ];
 
-    const CountPercent = [
-        { count: '', volume: "" },
-        { count: '', volume: "" },
-        { count: '', volume: "" },
-        { count: '', volume: "" },
-        { count: '', volume: "" },
-        { count: '', volume: "" },
-        { count: '', volume: "" },
-        { count: '', volume: "" },
-        { count: '', volume: "" },
-        { count: '', volume: "" }
-    ];
-
-    const [counter, setCounter] = useState(CountPercent);
+    const [counter, setCounter] = useState([]);
 
     useEffect(() => {
         getCountTypes();
@@ -51,10 +51,15 @@ const CreateCount = ({ getCountTypes, getCultureTypes, getCountAreas, updateCoun
             setSelectedCountArea(response.countareaId.title);
             setSelectedCultureType(response.culturetypeId.title);
             // console.log(response.counts[2].count);
-            setCounter(response.counts);
+            const count = response.counts;
+            count.forEach((row, index) => {
+                CountPercent.push({ count: row.count, volume: row.volume });
+            });
+            setCounter(CountPercent);
+            setLoading(false);
+
         }
         fetchtData();
-        setLoading(false);
 
     }, []);
 
@@ -87,15 +92,18 @@ const CreateCount = ({ getCountTypes, getCultureTypes, getCountAreas, updateCoun
 
         setSelectedCategory(selectedCategory.label);
     }
+    console.log(counter);
 
 
     const handleCounterChange = (e, index) => {
+
 
         const values = [...counter];
         const updatedValue = e.target.name;
         values[index][updatedValue] = e.target.value;
         setCounter(values);
-        setFormData({ ...formData, counts: counter });
+
+        setFormData({ ...formData, counts: values });
 
     };
 
@@ -161,12 +169,12 @@ const CreateCount = ({ getCountTypes, getCultureTypes, getCountAreas, updateCoun
                                                                     <h6 className=''>Count {index + 1}</h6>
                                                                     <Row className="gy-4 mt-3 border-top">
                                                                         <Col xxl={6} md={6} className='mt-3 mb-3 '>
-                                                                            <Input name='count' className='form-control' placeholder={`Count${count.count}`} defaultValue={count.count} onChange={e => handleCounterChange(e, index)} />
+                                                                            <Input name="count" className='form-control' placeholder={`Count ${(index + 1)} `} defaultValue={count.count} onChange={e => handleCounterChange(e, index)} />
                                                                         </Col>
 
                                                                         <Col xxl={6} md={6} className='mt-3 mb-3'>
 
-                                                                            <Input name='volume' className='form-control' defaultValue={count.volume} placeholder={`Volume${count.volume}`} onChange={e => handleCounterChange(e, index)} />
+                                                                            <Input name="volume" className='form-control' defaultValue={count.volume} placeholder={`Volume ${(index + 1)}`} onChange={e => handleCounterChange(e, index)} />
                                                                         </Col>
 
                                                                     </Row>
