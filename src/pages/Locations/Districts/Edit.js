@@ -5,7 +5,7 @@ import UiContent from "../../../Components/Common/UiContent";
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { updateDistrict, getDistrict } from '../../../actions/district';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -149,7 +149,7 @@ const EditDistrict = ({ updateDistrict, getStates, getDistrict, state: { states 
                                                 </CardBody>
                                                 <CardFooter>
                                                     <div className="d-flex align-items-start gap-3 mt-4">
-
+                                                        <Link to="/districts" className="btn btn-primary" >Cancel</Link>
                                                         <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
                                                     </div>
                                                 </CardFooter>

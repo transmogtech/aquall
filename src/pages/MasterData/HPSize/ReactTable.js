@@ -11,6 +11,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { changeStatusHPSize, deleteHPSize, getHPSizes, updateHPSize } from '../../../actions/hpSizes';
 import EditModal from './Edit';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes, updateHPSize, hpSize: { hpsizes, loading } }) => {
 
@@ -25,7 +26,7 @@ const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes, updateHPSize,
   }, []);
 
 
-  hpsizes.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  hpsizes.forEach(row => searchTable.push({ id: row._id, title: row.title, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editHpSize, setEditHpSize] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -47,10 +48,10 @@ const DataTable = ({ changeStatusHPSize, deleteHPSize, getHPSizes, updateHPSize,
     updateHPSize(id, defaultValue);
     setEditHpSize(false);
   }
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

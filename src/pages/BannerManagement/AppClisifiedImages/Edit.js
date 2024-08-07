@@ -6,7 +6,7 @@ import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { updateAppClassifiedImage, getAppClassifiedImage } from '../../../actions/appClassifiedImage';
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loader from '../../../Components/Common/Loader';
@@ -15,11 +15,13 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
     const { id } = useParams();
     const [appclassifiedimage, setAppClassifiedImage] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [error, setErrors] = useState({});
+    const [formData, setFormData] = useState();
     useEffect(() => {
         const fetchtData = async () => {
             const response = await getAppClassifiedImage(id);
             setAppClassifiedImage(response);
+            setFormData({ url: response.url, image: response.image, priority: response.priority });
         }
         fetchtData();
         setLoading(false);
@@ -27,7 +29,7 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
 
     // console.log(appclassifiedimage);
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -42,16 +44,46 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
 
     const deleteImage = () => {
         setAppClassifiedImage({ ...appclassifiedimage, image: null });
+        setFormData({ ...formData, image: null });
+    }
+
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.url) {
+            setErrors({ ...error, url: 'Please enter url' });
+            return false;
+        }
+
+
+        if (!formData.image) {
+            setErrors({ ...error, image: 'Please select image' });
+            return false;
+        }
+
+
+        if (!formData.priority) {
+            setErrors({ ...error, priority: 'Please enter priority' });
+            return false;
+        }
+
+
+
+        return true;
     }
 
     const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
         updateAppClassifiedImage(id, formData);
 
         navigate('/app-clasified-images');
     }
 
 
-    document.title = "Create App Classified Image | Aquall Admin";
+    document.title = "Edit App Classified Image | Aquall Admin";
     return (
         <React.Fragment>
 
@@ -63,12 +95,12 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
                     <div className="page-content">
 
                         <Container fluid>
-                            <BreadCrumb title="Create App Classified Image" pageTitle="App Classified Image Management" />
+                            <BreadCrumb title="Edit App Classified Image" pageTitle="App Classified Image Management" />
                             <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                                 <Row>
                                     <Col lg={12}>
                                         <Card>
-                                            <PreviewCardHeader title="Create App Classified Image" />
+                                            <PreviewCardHeader title="Edit App Classified Image" />
 
                                             <CardBody className="card-body">
                                                 <div className="live-preview">
@@ -79,6 +111,11 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
                                                             <div>
                                                                 <Label htmlFor="title" className="form-label">URL</Label>
                                                                 <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" defaultValue={appclassifiedimage.url} placeholder="URL" />
+                                                                {error && error.url ? (
+                                                                    <div class="text-danger">
+                                                                        {error.url}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -93,6 +130,11 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
                                                                         </div>
                                                                     ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
                                                                 }
+                                                                {error && error.image ? (
+                                                                    <div class="text-danger">
+                                                                        {error.image}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -100,6 +142,11 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                                 <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" defaultValue={appclassifiedimage.priority} placeholder="Priority" />
+                                                                {error && error.priority ? (
+                                                                    <div class="text-danger">
+                                                                        {error.priority}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -110,6 +157,7 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
                                             </CardBody>
                                             <CardFooter>
                                                 <div className="d-flex align-items-start gap-3 mt-4">
+                                                    <Link to="/app-clasified-images" className='btn btn-primary'>Cancel</Link>
                                                     <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                                 </div>
                                             </CardFooter>

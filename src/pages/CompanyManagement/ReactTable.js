@@ -9,6 +9,7 @@ import moment from 'moment/moment';
 
 import DeleteModal from "../../Components/Common/DeleteModal";
 import { changeStatusCompany, deleteCompany, getCompanies } from '../../actions/company';
+import { Capitalize } from '../../helpers/common_functions';
 
 const DataTable = ({ changeStatusCompany, deleteCompany, getCompanies, company: { companies, loading } }) => {
 
@@ -26,14 +27,14 @@ const DataTable = ({ changeStatusCompany, deleteCompany, getCompanies, company: 
   // console.log(companies);
   companies.forEach(row => {
     if (row === undefined) { return }
-    searchTable.push({ id: row._id, logo: row.logo, action: row._id, status: row.status, name: row.name, category: row.categoryId.title, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') })
+    searchTable.push({ id: row._id, logo: row.logo, action: [row._id, row.status], status: row.status, name: row.name, category: row.categoryId.title, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') })
   });
 
 
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

@@ -5,7 +5,7 @@ import UiContent from "../../../../Components/Common/UiContent";
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { updateChemicalCategory, getChemicalCategory } from '../../../../actions/chemicalCategory';
@@ -16,33 +16,56 @@ const EditChemicalCategory = ({ updateChemicalCategory, getChemicalCategory }) =
     const { id } = useParams();
     const [chemicalcategory, setChemicalCategory] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState();
 
     useEffect(() => {
         const fetchtData = async () => {
             const response = await getChemicalCategory(id);
             setChemicalCategory(response);
+            setFormData({ title: response.title, sequance: response.sequance });
+            setLoading(false);
+
         }
         fetchtData();
-        setLoading(false);
     }, []);
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
 
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter category name' });
+            return false;
+        }
+
+
+        if (!formData.sequance) {
+            setErrors({ ...errors, sequance: 'Please enter sequance' });
+            return false;
+        }
+
+        return true;
+    }
+
     const handleSubmit = () => {
 
-
+        if (!validateForm()) {
+            return false;
+        }
         updateChemicalCategory(id, formData);
 
         navigate('/chemical-categories');
     }
 
 
-    document.title = "Create Chemical Category| Aquall Admin";
+    document.title = "Edit Chemical Category| Aquall Admin";
     return (
         <React.Fragment>
             {
@@ -51,12 +74,12 @@ const EditChemicalCategory = ({ updateChemicalCategory, getChemicalCategory }) =
                     <div className="page-content">
 
                         <Container fluid>
-                            <BreadCrumb title="Create Chemical Category" pageTitle="Chemical Category Management" />
+                            <BreadCrumb title="Edit Chemical Category" pageTitle="Chemical Category Management" />
                             <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                                 <Row>
                                     <Col lg={12}>
                                         <Card>
-                                            <PreviewCardHeader title="Create Chemical Category" />
+                                            <PreviewCardHeader title="Edit Chemical Category" />
 
                                             <CardBody className="card-body">
                                                 <div className="live-preview">
@@ -67,6 +90,11 @@ const EditChemicalCategory = ({ updateChemicalCategory, getChemicalCategory }) =
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Name</Label>
                                                                 <Input type="text" onChange={e => onChange(e)} className="form-control" name="title" id="title" placeholder="Name" defaultValue={chemicalcategory.title} />
+                                                                {errors && errors.title ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.title}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -74,6 +102,11 @@ const EditChemicalCategory = ({ updateChemicalCategory, getChemicalCategory }) =
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Sequance</Label>
                                                                 <Input type="number" onChange={e => onChange(e)} className="form-control" name="sequance" id="sequance" placeholder="Sequance" defaultValue={chemicalcategory.sequance} />
+                                                                {errors && errors.sequance ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.sequance}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -85,7 +118,7 @@ const EditChemicalCategory = ({ updateChemicalCategory, getChemicalCategory }) =
 
                                             <CardFooter>
                                                 <div className="d-flex align-items-start gap-3 mt-4">
-
+                                                    <Link to="/chemical-categories" className='btn btn-primary'>Cancel</Link>
                                                     <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                                 </div>
                                             </CardFooter>

@@ -18,29 +18,6 @@ const Navdata = () => {
   const [isCounts, setIsCounts] = useState(false);
   const [isSeeds, setSeeds] = useState(false);
 
-
-  // Authentication
-  // const [isSignIn, setIsSignIn] = useState(false);
-  // const [isSignUp, setIsSignUp] = useState(false);
-  // const [isPasswordReset, setIsPasswordReset] = useState(false);
-  // const [isPasswordCreate, setIsPasswordCreate] = useState(false);
-  // const [isLockScreen, setIsLockScreen] = useState(false);
-  // const [isLogout, setIsLogout] = useState(false);
-  // const [isSuccessMessage, setIsSuccessMessage] = useState(false);
-  // const [isVerification, setIsVerification] = useState(false);
-  // const [isError, setIsError] = useState(false);
-
-  // // Pages
-  // const [isProfile, setIsProfile] = useState(false);
-  // const [isLanding, setIsLanding] = useState(false);
-
-  // // Charts
-  // const [isApex, setIsApex] = useState(false);
-
-  // // Multi Level
-  // const [isLevel1, setIsLevel1] = useState(false);
-  // const [isLevel2, setIsLevel2] = useState(false);
-
   const [iscurrentState, setIscurrentState] = useState("Dashboard");
 
   function updateIconSidebar(e) {
@@ -122,6 +99,7 @@ const Navdata = () => {
           label: "Language Management",
           link: "/language-management",
           parentId: "news",
+
         },
       ],
     },

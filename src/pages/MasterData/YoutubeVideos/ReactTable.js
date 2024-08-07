@@ -9,6 +9,7 @@ import moment from 'moment/moment';
 
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusYoutubeVideo, deleteYoutubeVideo, getYoutubeVideos } from '../../../actions/youtubeVideo';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusYoutubeVideo, deleteYoutubeVideo, getYoutubeVideos, youtubeVideo: { youtubevideos, loading } }) => {
 
@@ -23,15 +24,14 @@ const DataTable = ({ changeStatusYoutubeVideo, deleteYoutubeVideo, getYoutubeVid
   }, []);
 
 
-  youtubevideos.forEach(row => searchTable.push({ id: row._id, title: row.title, url: row.url, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  youtubevideos.forEach(row => searchTable.push({ id: row._id, title: row.title, url: row.url, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
-
 
   function tog_center(id) {
     setDeleteModal(true);

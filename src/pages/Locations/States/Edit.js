@@ -5,7 +5,7 @@ import UiContent from "../../../Components/Common/UiContent";
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { updateState, getState } from '../../../actions/state';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -129,6 +129,7 @@ const EditState = ({ updateState, getState }) => {
                                                 </CardBody>
                                                 <CardFooter>
                                                     <div className="d-flex align-items-start gap-3 mt-4">
+                                                        <Link to="/states" className="btn btn-primary" >Cancel</Link>
                                                         <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                                     </div>
                                                 </CardFooter>

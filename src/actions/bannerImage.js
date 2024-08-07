@@ -30,6 +30,7 @@ export const createBannerImage = (formData) => async dispatch => {
 
   } catch (error) {
     console.log(error);
+
   }
 }
 

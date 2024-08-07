@@ -5,7 +5,7 @@ import UiContent from "../../../Components/Common/UiContent";
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { createJobApplication } from '../../../actions/jobApplication';
 import { getUsers } from '../../../actions/user';
 import { getJobs } from '../../../actions/job';
@@ -25,38 +25,38 @@ const CreateJobApplication = ({ createJobApplication, getUsers, getJobs, user: {
     const [selectedUser, setSelectedUser] = useState(null);
     const [selectedJob, setSelectedJob] = useState(null);
 
-    const Jobs   = [];
-    const Users   = [];
-    jobs.forEach(row => Jobs.push({ value: row._id, label: row.title}));
+    const Jobs = [];
+    const Users = [];
+    jobs.forEach(row => Jobs.push({ value: row._id, label: row.title }));
 
-    users.forEach(row => Users.push({ value: row._id, label: row.name}));
+    users.forEach(row => Users.push({ value: row._id, label: row.name }));
 
     function handleSelectJob(selectedJob) {
-        setFormData({...formData, jobId: selectedJob.value });
+        setFormData({ ...formData, jobId: selectedJob.value });
 
         setSelectedJob(selectedJob.label);
     }
 
     function handleSelectUser(selectedUser) {
-        setFormData({...formData, userId: selectedUser.value });
+        setFormData({ ...formData, userId: selectedUser.value });
 
         setSelectedUser(selectedUser.label);
     }
-    
-const handleResumeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-        // console.log(e.target.files);
-        setFormData({...formData, resume: e.target.files[0] });
-    }
-  };
 
-  const handleCoverLetterChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-        // console.log(e.target.files);
-        setFormData({...formData, coverletter: e.target.files[0] });
-    }
-  };
-  
+    const handleResumeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            // console.log(e.target.files);
+            setFormData({ ...formData, resume: e.target.files[0] });
+        }
+    };
+
+    const handleCoverLetterChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            // console.log(e.target.files);
+            setFormData({ ...formData, coverletter: e.target.files[0] });
+        }
+    };
+
     const handleSubmit = () => {
         createJobApplication(formData);
 
@@ -73,63 +73,64 @@ const handleResumeChange = (e: ChangeEvent<HTMLInputElement>) => {
 
                 <Container fluid>
                     <BreadCrumb title="Create Job Application" pageTitle="Job Application Management" />
-                    <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false;  }}  action="#">
-                    <Row>
-                        <Col lg={12}>
-                            <Card>
-                                <PreviewCardHeader title="Create Job Application" />
+                    <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+                        <Row>
+                            <Col lg={12}>
+                                <Card>
+                                    <PreviewCardHeader title="Create Job Application" />
 
-                                <CardBody className="card-body">
-                                    <div className="live-preview">
-                                        <Row className="gy-4">
-                                          
-                                       
-                                        <Col xxl={3} md={6}>
-                                                <div>
-                                                    <Label htmlFor="basiInput" className="form-label">User</Label>
-                                                    <Select value={{label: selectedUser}} onChange={ handleSelectUser } options={Users} />
-                                                </div>
-                                            </Col>
+                                    <CardBody className="card-body">
+                                        <div className="live-preview">
+                                            <Row className="gy-4">
 
-                                            <Col xxl={3} md={6}>
-                                                <div>
-                                                    <Label htmlFor="basiInput" className="form-label">Job</Label>
-                                                    <Select value={{label: selectedJob}} onChange={ handleSelectJob } options={Jobs} />
-                                                </div>
-                                            </Col>
 
-                                            <Col xxl={3} md={6}>
-                                                <div>
-                                                    <Label htmlFor="basiInput" className="form-label">Resume</Label>
-                                                    <Input type="file" className="form-control" id="title"  onChange={handleResumeChange} placeholder="URL Slug" />
-                                                </div>
-                                            </Col>
+                                                <Col xxl={3} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">User</Label>
+                                                        <Select value={{ label: selectedUser }} onChange={handleSelectUser} options={Users} />
+                                                    </div>
+                                                </Col>
 
-                                            {/* <Col xxl={3} md={6}>
+                                                <Col xxl={3} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">Job</Label>
+                                                        <Select value={{ label: selectedJob }} onChange={handleSelectJob} options={Jobs} />
+                                                    </div>
+                                                </Col>
+
+                                                <Col xxl={3} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">Resume</Label>
+                                                        <Input type="file" className="form-control" id="title" onChange={handleResumeChange} placeholder="URL Slug" />
+                                                    </div>
+                                                </Col>
+
+                                                {/* <Col xxl={3} md={6}>
                                                 <div>
                                                     <Label htmlFor="basiInput" className="form-label">Cover Letter</Label>
                                                     <Input type="file" className="form-control" onChange={handleCoverLetterChange} id="title" placeholder="URL Slug" />
                                                 </div>
                                             </Col> */}
 
-                                        </Row>
+                                            </Row>
 
-                                    </div>
-                                  
-                                </CardBody>
-                                <CardFooter>
-                                <div className="d-flex align-items-start gap-3 mt-4">
-                                <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
-                              </div>
-                            </CardFooter>
-                            </Card>
-                        </Col>
+                                        </div>
 
-                    </Row>
+                                    </CardBody>
+                                    <CardFooter>
+                                        <div className="d-flex align-items-start gap-3 mt-4">
+                                            <Link to="/job-applications" className='btn btn-primary'>Cancel</Link>
+                                            <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
+                                        </div>
+                                    </CardFooter>
+                                </Card>
+                            </Col>
+
+                        </Row>
 
 
 
-</Form>
+                    </Form>
                 </Container>
 
             </div>
@@ -152,7 +153,7 @@ CreateJobApplication.propTypes = {
 const mapStateToProps = state => ({
     user: state.user,
     job: state.job,
-  });
+});
 
 
 export default connect(mapStateToProps, { createJobApplication, getJobs, getUsers })(CreateJobApplication);

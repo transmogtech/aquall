@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { connect } from 'react-redux';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import ChangeStatus from '../../../Components/Common/ChangeStatus';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const Counts = ({ getCounts, changeStatusCount, deleteCount, count: { counts } }) => {
 
@@ -18,9 +19,10 @@ const Counts = ({ getCounts, changeStatusCount, deleteCount, count: { counts } }
   const [statusModal, setStatusModal] = useState(false);
   const [selectedSingle, setSelectedSingle] = useState(null);
 
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 
@@ -83,7 +85,7 @@ const Counts = ({ getCounts, changeStatusCount, deleteCount, count: { counts } }
                             <th scope="col" colSpan={2}>Culture Type: {row.culturetypeId.title}	</th>
                             <th scope="col" colSpan={2}>Status: {row.status}	</th>
                             <th scope="col">
-                              <Link onClick={() => tog_grid(row._id)} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
+                              <Link onClick={() => tog_grid([row._id, row.status])} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
                               <Link to={`/edit/count/${row._id}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
                               <Link onClick={() => tog_center(row._id)} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
                             </th>

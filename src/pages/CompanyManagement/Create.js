@@ -5,7 +5,7 @@ import UiContent from "../../Components/Common/UiContent";
 import BreadCrumb from '../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../Components/Common/PreviewCardHeader';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Select from "react-select";
 import { createCompany } from '../../actions/company';
 import PropTypes from 'prop-types';
@@ -103,7 +103,7 @@ const CreateCompany = ({ getCategories, createCompany, category: { categories } 
 
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
-
+                                            <Link to="/companies" className="btn btn-primary" >Cancel</Link>
                                             <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                         </div>
                                     </CardFooter>

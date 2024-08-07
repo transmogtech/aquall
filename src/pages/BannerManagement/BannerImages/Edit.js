@@ -6,7 +6,7 @@ import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { updateBannerImage, getBannerImage } from '../../../actions/bannerImage';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loader from '../../../Components/Common/Loader';
@@ -16,18 +16,19 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
     const [bannerimage, setBannerImage] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({});
+    const [formData, setFormData] = useState({ url: '', image: '', priority: '' });
 
     useEffect(() => {
         const fetchtData = async () => {
             const response = await getBannerImage(id);
             setBannerImage(response);
+            setFormData({ url: response.url, image: response.image, priority: response.priority });
         }
         fetchtData();
         setLoading(false);
     }, []);
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({ url: '', image: '', priority: '' });
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -42,6 +43,7 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
 
     const deleteImage = () => {
         setBannerImage({ ...bannerimage, image: null });
+        setFormData({ ...formData, image: null });
     }
 
     const handleSubmit = () => {
@@ -55,7 +57,10 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
             return false;
         }
 
-
+        if (!formData.priority) {
+            setError({ ...error, priority: 'Please enter priority number' });
+            return false;
+        }
 
         updateBannerImage(id, formData);
 
@@ -109,9 +114,9 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
                                                                         ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
 
                                                                     }
-                                                                    {error && error.url ? (
+                                                                    {error && error.image ? (
                                                                         <div class="text-danger">
-                                                                            {error.url}
+                                                                            {error.image}
                                                                         </div>
                                                                     ) : null}
                                                                 </div>
@@ -121,6 +126,11 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                                     <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" defaultValue={bannerimage.priority} placeholder="Priority" />
+                                                                    {error && error.priority ? (
+                                                                        <div class="text-danger">
+                                                                            {error.priority}
+                                                                        </div>
+                                                                    ) : null}
                                                                 </div>
                                                             </Col>
 
@@ -131,6 +141,7 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
                                                 </CardBody>
                                                 <CardFooter>
                                                     <div className="d-flex align-items-start gap-3 mt-4">
+                                                        <Link to="/banner-images" className='btn btn-primary'>Cancel</Link>
                                                         <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                                     </div>
                                                 </CardFooter>

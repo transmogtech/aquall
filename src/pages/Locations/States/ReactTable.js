@@ -8,6 +8,7 @@ import moment from 'moment/moment';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import Loader from '../../../Components/Common/Loader';
 import { getStates, deleteState, changeStatusState } from '../../../actions/state';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ getStates, deleteState, changeStatusState, state: { states, loading } }) => {
 
@@ -22,13 +23,13 @@ const DataTable = ({ getStates, deleteState, changeStatusState, state: { states,
   }, [getStates]);
 
 
-  states.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, url: row.url, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  states.forEach(row => searchTable.push({ id: row._id, title: row.title, action: [row._id, row.status], url: row.url, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

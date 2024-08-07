@@ -5,7 +5,7 @@ import UiContent from "../../Components/Common/UiContent";
 import BreadCrumb from '../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../Components/Common/PreviewCardHeader';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { getPlStages } from "../../actions/plStages";
 import { getSaltPercentages } from "../../actions/saltPercentage";
 import { getCompanies } from "../../actions/company";
@@ -24,6 +24,8 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
     const { id } = useParams();
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [formData, setFormData] = useState();
+    const [errors, setErrors] = useState({});
 
     const [showHideFields, setShowHideFields] = useState(null);
     const [gstFields, setGSTFields] = useState(false);
@@ -39,11 +41,13 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
         const fetchtData = async () => {
             const response = await getProduct(id);
             setProduct(response);
+            setFormData({ name: response.name, price: response.price, description: response.description, image: response.image, volume: response.volume, categoryId: response.categoryId._id, companyId: response.companyId._id });
             setShowHideFields(response.categoryId._id);
             setGSTFields(response.gstPercentage ? true : false);
+            setLoading(false);
+
         }
         fetchtData();
-        setLoading(false);
     }, []);
 
     const Categories = [];
@@ -64,7 +68,6 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
     peddlertypes.forEach(row => PeddlerTypes.push({ value: row._id, label: row.name }));
     hpsizes.forEach(row => HpSizes.push({ value: row._id, label: row.title }));
 
-    const [formData, setFormData] = useState();
     const [image, setImage] = useState(null);
     const navigate = useNavigate();
 
@@ -84,6 +87,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
 
     const deleteImage = () => {
         setProduct({ ...product, imageUrl: null });
+        setFormData({ ...formData, imageUrl: null });
     }
     const handleSelectCategory = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -96,13 +100,59 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
         setGSTFields(!gstFields);
     }
 
+
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.categoryId) {
+            setErrors({ ...errors, categoryId: 'Please select category' });
+            return false;
+        }
+
+        if (!formData.companyId) {
+            setErrors({ ...errors, companyId: 'Please select company' });
+            return false;
+        }
+
+        if (!formData.name) {
+            setErrors({ ...errors, name: 'Please enter product name' });
+            return false;
+        }
+
+        if (!formData.imageUrl) {
+            setErrors({ ...errors, imageUrl: 'Please select image' });
+            return false;
+        }
+
+        if (!formData.price) {
+            setErrors({ ...errors, price: 'Please enter price' });
+            return false;
+        }
+
+        if (!formData.volume) {
+            setErrors({ ...errors, volume: 'Please enter volume' });
+            return false;
+        }
+
+        if (!formData.description) {
+            setErrors({ ...errors, description: 'Please enter description' });
+            return false;
+        }
+
+        return true;
+    }
+
+
     const handleSubmit = () => {
-        updateProduct(id, formData);
+        if (!validateForm()) {
+            return false;
+        } updateProduct(id, formData);
 
         navigate('/products');
     }
 
-    document.title = "Create Product | Aquall Admin";
+    document.title = "Edit Product | Aquall Admin";
     return (
         <React.Fragment>
             {
@@ -111,12 +161,12 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                     <div className="page-content">
 
                         <Container fluid>
-                            <BreadCrumb title="Create Product" pageTitle="Product Management" />
+                            <BreadCrumb title="Edit Product" pageTitle="Product Management" />
                             <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                                 <Row>
                                     <Col lg={12}>
                                         <Card>
-                                            <PreviewCardHeader title="Create Product" />
+                                            <PreviewCardHeader title="Edit Product" />
 
                                             <CardBody className="card-body">
                                                 <div className="live-preview">
@@ -141,6 +191,11 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                         })
                                                                     }
                                                                 </select>
+                                                                {errors && errors.categoryId ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.categoryId}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
                                                         <Col xxl={3} md={6}>
@@ -161,6 +216,11 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                         })
                                                                     }
                                                                 </select>
+                                                                {errors && errors.companyId ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.companyId}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -178,7 +238,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                         {
                                                                             HpSizes.map((item, index) => {
                                                                                 return (
-                                                                                    <option key={index} value={item.value} selected={item.value == product.hpsizeId._id}>{item.label}</option>
+                                                                                    <option key={index} value={item.value} selected={item.value == product.hpsizeId?._id}>{item.label}</option>
                                                                                 )
                                                                             })
                                                                         }
@@ -200,7 +260,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                         {
                                                                             CultureTypes.map((item, index) => {
                                                                                 return (
-                                                                                    <option key={index} value={item.value} selected={item.value == product.culturetypeId._id}>{item.label}</option>
+                                                                                    <option key={index} value={item.value} selected={item.value == product.culturetypeId?._id}>{item.label}</option>
                                                                                 )
                                                                             })
                                                                         }
@@ -222,7 +282,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                     {
                                                                         PlStages.map((item, index) => {
                                                                             return (
-                                                                                <option key={index} value={item.value} selected={item.value == product.plstageId._id}>{item.label}</option>
+                                                                                <option key={index} value={item.value} selected={item.value == product.plstageId?._id}>{item.label}</option>
                                                                             )
                                                                         })
                                                                     }
@@ -245,7 +305,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                         {
                                                                             SaltPercentages.map((item, index) => {
                                                                                 return (
-                                                                                    <option key={index} value={item.value} selected={item.value == product.saltpercentageId._id}>{item.label}</option>
+                                                                                    <option key={index} value={item.value} selected={item.value == product.saltpercentageId?._id}>{item.label}</option>
                                                                                 )
                                                                             })
                                                                         }
@@ -287,7 +347,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                     {
                                                                         PeddlerTypes.map((item, index) => {
                                                                             return (
-                                                                                <option key={index} value={item.value} selected={item.value == product.peddlertypeId._id}>{item.label}</option>
+                                                                                <option key={index} value={item.value} selected={item.value == product.peddlertypeId?._id}>{item.label}</option>
                                                                             )
                                                                         })
                                                                     }
@@ -299,6 +359,11 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Product Name</Label>
                                                                 <Input type="text" className="form-control" onChange={e => onChange(e)} name="name" placeholder="Product Name" defaultValue={product.name} />
+                                                                {errors && errors.name ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.name}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -312,19 +377,35 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                             <img src={`${process.env.REACT_APP_API_URL}/${product.imageUrl}`} width="100%" />
                                                                         </div>
                                                                     ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+
                                                                 }
+                                                                {errors && errors.imageUrl ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.imageUrl}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
                                                         <Col xxl={3} md={6}>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Price</Label>
                                                                 <Input type="number" className="form-control" onChange={e => onChange(e)} name="price" defaultValue={product.price} />
+                                                                {errors && errors.price ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.price}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
                                                         <Col xxl={3} md={6}>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Volume</Label>
                                                                 <Input type="number" className="form-control" onChange={e => onChange(e)} name="volume" defaultValue={product.volume} />
+                                                                {errors && errors.volume ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.volume}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
                                                         <Col xxl={3} md={6}>
@@ -357,6 +438,11 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Description</Label>
                                                                 <textarea name='description' onChange={e => onChange(e)} defaultValue={product.description} className='form-control'></textarea>
+                                                                {errors && errors.description ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.description}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
                                                     </Row>
@@ -423,7 +509,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                             </CardBody>
                                             <CardFooter>
                                                 <div className="d-flex align-items-start gap-3 mt-4">
-
+                                                    <Link to="/products" className='btn btn-primary'>Cancel</Link>
                                                     <button type="submit" className="btn btn-secondary">
                                                         Save
                                                     </button>

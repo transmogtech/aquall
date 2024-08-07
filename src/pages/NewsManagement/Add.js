@@ -12,14 +12,15 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { connect } from 'react-redux';
 import { createNews } from '../../actions/news';
 import Alert from '../../Components/Common/Alert';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { getLanguages } from '../../actions/language';
+import { slugify } from "../../helpers/common_functions";
 
 const CreateNews = ({ createNews, getLanguages, language: { languages } }) => {
 
     const [description, setDescription] = useState(null);
-    const [language, setLanguage] = useState(null);
-    const [image, setImage] = useState(null);
+    const [url, setUrl] = useState(null);
+    const [errors, setErrors] = useState({});
 
     const [formData, setFormData] = useState([]);
 
@@ -32,7 +33,7 @@ const CreateNews = ({ createNews, getLanguages, language: { languages } }) => {
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setImage(e.target.files[0]);
+            // setImage(e.target.files[0]);
             // console.log(e.target.files);
             setFormData({ ...formData, imageUrl: e.target.files[0] });
         }
@@ -43,18 +44,60 @@ const CreateNews = ({ createNews, getLanguages, language: { languages } }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+
+    const onTitleChange = (e) => {
+        const slug = slugify(e.target.value);
+        setUrl(slug);
+        setFormData({ ...formData, [e.target.name]: e.target.value, url: slug });
+    };
+
+
     const Languages = [];
 
     languages.forEach(row => Languages.push({ value: row._id, label: row.title }));
 
     function handleChangeLanguage(language) {
-        setLanguage(language.value);
-        console.log(language.value);
         setFormData({ ...formData, language: language.value });
 
     }
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        console.log(formData);
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter news title' });
+            return false;
+
+        }
+
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter a url' });
+            return false;
+
+        }
+
+        if (!formData.language) {
+            setErrors({ ...errors, language: 'Please select news language' });
+            return false;
+        }
+
+        if (!description) {
+            setErrors({ ...errors, description: 'Please enter news description' });
+            return false;
+        }
+
+        return true;
+    }
+
     const handleSubmit = () => {
+
+
+        if (!validateForm()) {
+            return false;
+        }
 
 
         createNews(formData);
@@ -85,21 +128,35 @@ const CreateNews = ({ createNews, getLanguages, language: { languages } }) => {
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Title</Label>
-                                                        <Input type="text" className="form-control" name="title" onChange={e => onChange(e)} placeholder="Title" />
+                                                        <Label htmlFor="basiInput" className="form-label">Title <span className='text-danger'>*</span></Label>
+                                                        <Input type="text" className="form-control" name="title" onChange={e => onTitleChange(e)} placeholder="Title" />
+                                                        {errors && errors.title ? (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
-                                                        <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
-                                                        <Input type="text" className="form-control" name="url" onChange={e => onChange(e)} placeholder="URL Slug" />
+                                                        <Label htmlFor="basiInput" className="form-label">URL Slug <span className='text-danger'>*</span></Label>
+                                                        <Input type="text" className="form-control" name="url" onChange={e => onChange(e)} defaultValue={url} placeholder="URL Slug" />
+                                                        {errors && errors.url ? (
+                                                            <div className="text-danger">
+                                                                {errors.url}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={6} md={6}>
-                                                    <label className="form-label">Language: </label>
+                                                    <label className="form-label">Language <span className='text-danger'>*</span></label>
                                                     <Select name="language" onChange={handleChangeLanguage} options={Languages} />
-
+                                                    {errors && errors.language ? (
+                                                        <div className="text-danger">
+                                                            {errors.language}
+                                                        </div>
+                                                    ) : null}
                                                 </Col>
 
                                                 <Col lg={6} >
@@ -118,21 +175,26 @@ const CreateNews = ({ createNews, getLanguages, language: { languages } }) => {
                                                 </Col>
                                                 <Col xxl={12} md={12}>
                                                     <div>
-                                                        <Label htmlFor="description" className="form-label">Description</Label>
-                                                        <textarea className="form-control" placeholder="Description" id="description" rows="3" name="description" onChange={e => onChange(e)}></textarea>
-                                                        {/* <CKEditor
+                                                        <Label htmlFor="description" className="form-label">Description <span className='text-danger'>*</span></Label>
+
+
+                                                        <CKEditor
                                                             editor={ClassicEditor}
-                                                            data="<p>Hello from CKEditor 5!</p>"
+                                                            data={description}
                                                             onReady={(editor) => {
                                                                 // You can store the "editor" and use when it is needed.
 
                                                             }}
-
-                                                            name="description"
                                                             onChange={(event, editor) => {
-                                                               handleChange(editor);
+                                                                setDescription(editor.getData());
+                                                                setFormData({ ...formData, description: editor.getData() })
                                                             }}
-                                                        /> */}
+                                                        />
+                                                        {errors && errors.description ? (
+                                                            <div className="text-danger">
+                                                                {errors.description}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -186,8 +248,9 @@ const CreateNews = ({ createNews, getLanguages, language: { languages } }) => {
                                     </CardBody>
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
+                                            <Link to="/news-management" className="btn btn-primary" >Cancel</Link>
                                             <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
-                                            {/* <Link to="/news-management" className="btn btn-success btn-label right ms-auto nexttab nexttab" ><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Link> */}
+
                                         </div>
                                     </CardFooter>
                                 </Card>

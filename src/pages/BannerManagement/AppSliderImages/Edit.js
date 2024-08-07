@@ -5,13 +5,12 @@ import UiContent from "../../../Components/Common/UiContent";
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { useParams, useNavigate } from 'react-router-dom';
-import Select from "react-select";
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { updateAppSliderImage, getAppSliderImage } from '../../../actions/appSliderImage';
 import { getCategories } from '../../../actions/category';
 import { getCompanies } from '../../../actions/company';
 import PropTypes from 'prop-types';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import Loader from '../../../Components/Common/Loader';
 import { getProducts } from '../../../actions/product';
 
@@ -24,6 +23,8 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedCompany, setSelectedCompany] = useState(null);
     const [selectedProduct, setSelectedProduct] = useState([]);
+    const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState();
 
     useEffect(() => {
         getCategories();
@@ -35,6 +36,7 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
             setSelectedCategory(response.categoryId);
             await getCompanies({ categoryId: response.categoryId });
             await getProducts({ companyId: response.companyId });
+            setFormData({ categoryId: response.categoryId, companyId: response.companyId, url: response.url, image: response.image, discount: response.discount, priority: response.priority, products: response.products });
             setLoading(false);
 
         }
@@ -44,7 +46,6 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
 
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -52,6 +53,7 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
 
     const deleteImage = () => {
         setAppSliderImage({ ...appsliderimage, image: null });
+        setFormData({ ...formData, image: null });
     }
 
 
@@ -91,8 +93,52 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
     };
 
 
-    const handleSubmit = () => {
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.categoryId) {
+            setErrors({ ...errors, categoryId: 'Please select category' });
+            return false;
+
+        }
+
+
+        if (!formData.companyId) {
+            setErrors({ ...errors, companyId: 'Please select company' });
+            return false;
+
+        }
+
+        if (!formData.image) {
+            setErrors({ ...errors, image: 'Please select image' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter url' });
+            return false;
+        }
+
+
+        if (!formData.priority) {
+            setErrors({ ...errors, priority: 'Please enter priority' });
+            return false;
+        }
+
+        if (!formData.products) {
+            setErrors({ ...errors, products: 'Please select at least one product' });
+            return false;
+        }
+
+        return true;
+    }
+
+    const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
         updateAppSliderImage(id, formData);
 
         navigate('/app-slider-images');
@@ -135,6 +181,11 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
                                                                     })
                                                                 }
                                                             </select>
+                                                            {errors && errors.categoryId ? (
+                                                                <div className="text-danger">
+                                                                    {errors.categoryId}
+                                                                </div>
+                                                            ) : null}
                                                         </div>
                                                     </Col>
 
@@ -155,6 +206,11 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
                                                                     })
                                                                 }
                                                             </select>
+                                                            {errors && errors.companyId ? (
+                                                                <div className="text-danger">
+                                                                    {errors.companyId}
+                                                                </div>
+                                                            ) : null}
                                                         </div>
                                                     </Col>
 
@@ -169,6 +225,11 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
                                                                     </div>
                                                                 ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
                                                             }
+                                                            {errors && errors.image ? (
+                                                                <div className="text-danger">
+                                                                    {errors.image}
+                                                                </div>
+                                                            ) : null}
                                                         </div>
                                                     </Col>
                                                     <Col xxl={4} md={6}>
@@ -181,12 +242,22 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">URL</Label>
                                                             <Input type="text" className="form-control" name="url" placeholder="URL" onChange={e => onChange(e)} defaultValue={appsliderimage.url} />
+                                                            {errors && errors.url ? (
+                                                                <div className="text-danger">
+                                                                    {errors.url}
+                                                                </div>
+                                                            ) : null}
                                                         </div>
                                                     </Col>
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                             <Input type="text" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} defaultValue={appsliderimage.priority} />
+                                                            {errors && errors.priority ? (
+                                                                <div className="text-danger">
+                                                                    {errors.priority}
+                                                                </div>
+                                                            ) : null}
                                                         </div>
                                                     </Col>
                                                     <Col md={12}>
@@ -198,7 +269,11 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
                                                                     onChange={e => handleProductChange(e, index)} /> {prod.name}
                                                             </div>
                                                         ))}
-
+                                                        {errors && errors.products ? (
+                                                            <div className="text-danger">
+                                                                {errors.products}
+                                                            </div>
+                                                        ) : null}
                                                     </Col>
 
 
@@ -210,6 +285,7 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
                                         </CardBody>
                                         <CardFooter>
                                             <div className="d-flex align-items-start gap-3 mt-4">
+                                                <Link to="/app-slider-images" className='btn btn-primary'>Cancel</Link>
                                                 <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                             </div>
                                         </CardFooter>

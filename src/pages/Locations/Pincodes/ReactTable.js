@@ -8,6 +8,7 @@ import moment from 'moment/moment';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import Loader from '../../../Components/Common/Loader';
 import { getPincodes, deletePincode, changeStatusPincode } from '../../../actions/pincode';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ getPincodes, deletePincode, changeStatusPincode, pincode: { pincodes, loading } }) => {
 
@@ -28,17 +29,16 @@ const DataTable = ({ getPincodes, deletePincode, changeStatusPincode, pincode: {
     district: row.districtId.title,
     area: row.areaId.title,
     title: row.title,
-    action: row._id,
+    action: [row._id, row.status],
     // url: row.url,
     status: row.status,
     created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss')
   }));
 
-
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

@@ -8,6 +8,7 @@ import ChangeStatus from '../../../Components/Common/ChangeStatus';
 import moment from 'moment/moment';
 
 import DeleteModal from "../../../Components/Common/DeleteModal";
+import { Capitalize } from '../../../helpers/common_functions';
 
 import { changeStatusJobApplication, deleteJobApplication, getJobApplications } from '../../../actions/jobApplication';
 
@@ -23,7 +24,7 @@ const DataTable = ({ changeStatusJobApplication, deleteJobApplication, getJobApp
   }, []);
 
 
-  jobapplications.forEach(row => searchTable.push({ id: row._id, job: row.jobId.title, user: row.userId.name, action: row._id, resume: row.resume, status: row.status, created: moment(row.created).format('MMMM Do YYYY') }));
+  jobapplications.forEach(row => searchTable.push({ id: row._id, job: row.jobId.title, user: row.userId.name, action: [row._id, row.status], resume: row.resume, status: row.status, created: moment(row.created).format('MMMM Do YYYY') }));
 
 
   const onChange = (e) => {
@@ -34,10 +35,10 @@ const DataTable = ({ changeStatusJobApplication, deleteJobApplication, getJobApp
     updateJobApplication(id, defaultValue);
     setEditJobApplication(false);
   }
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

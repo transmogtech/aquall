@@ -6,16 +6,25 @@ import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { createCategory } from '../../../actions/category';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { slugify } from "../../../helpers/common_functions";
 
 const CreateCategory = ({ createCategory }) => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
+    const [url, setUrl] = useState(null);
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+
+    const onTitleChange = (e) => {
+        const slug = slugify(e.target.value);
+        setUrl(slug);
+        setFormData({ ...formData, [e.target.name]: e.target.value, url: slug });
     };
 
     const handleSubmit = () => {
@@ -45,14 +54,14 @@ const CreateCategory = ({ createCategory }) => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="title" className="form-label">Name</Label>
-                                                        <Input type="text" className="form-control" onChange={e => onChange(e)} name="title" id="title" placeholder="Title" />
+                                                        <Input type="text" className="form-control" onChange={e => onTitleChange(e)} name="title" id="title" placeholder="Title" />
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
-                                                        <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" placeholder="URL Slug" />
+                                                        <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" defaultValue={url} placeholder="URL Slug" />
                                                     </div>
                                                 </Col>
 
@@ -106,7 +115,7 @@ const CreateCategory = ({ createCategory }) => {
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
 
-                                           
+                                            <Link to="/categories" className='btn btn-primary'>Cancel</Link>
                                             <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
                                         </div>
                                     </CardFooter>

@@ -6,28 +6,56 @@ import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { createAppClassifiedImage } from '../../../actions/appClassifiedImage';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 const AppClassifiedImage = ({ createAppClassifiedImage }) => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({ url: '', image: '', priority: '' });
+    const [error, setErrors] = useState({});
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    
-const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-        // console.log(e.target.files);
-        setFormData({...formData, image: e.target.files[0] });
-    }
-  };
 
-  
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            // console.log(e.target.files);
+            setFormData({ ...formData, image: e.target.files[0] });
+        }
+    };
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.url) {
+            setErrors({ ...error, url: 'Please enter url' });
+            return false;
+        }
+
+
+        if (!formData.image) {
+            setErrors({ ...error, image: 'Please select image' });
+            return false;
+        }
+
+
+        if (!formData.priority) {
+            setErrors({ ...error, priority: 'Please enter priority' });
+            return false;
+        }
+
+
+
+        return true;
+    }
+
     const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
         createAppClassifiedImage(formData);
 
         navigate('/app-clasified-images');
@@ -57,6 +85,11 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
                                                     <div>
                                                         <Label htmlFor="title" className="form-label">URL</Label>
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" placeholder="URL" />
+                                                        {error && error.url ? (
+                                                            <div class="text-danger">
+                                                                {error.url}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -64,6 +97,11 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
                                                         <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                        {error && error.image ? (
+                                                            <div class="text-danger">
+                                                                {error.image}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -71,6 +109,11 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                         <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" placeholder="Priority" />
+                                                        {error && error.priority ? (
+                                                            <div class="text-danger">
+                                                                {error.priority}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -81,6 +124,7 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
                                     </CardBody>
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
+                                            <Link to="/app-clasified-images" className='btn btn-primary'>Cancel</Link>
                                             <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                         </div>
                                     </CardFooter>

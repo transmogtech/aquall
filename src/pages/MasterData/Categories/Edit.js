@@ -6,7 +6,7 @@ import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { updateCategory, getCategory } from '../../../actions/category';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loader from '../../../Components/Common/Loader';
@@ -128,6 +128,7 @@ const EditCategory = ({ updateCategory, getCategory }) => {
                                                 </CardBody>
                                                 <CardFooter>
                                                     <div className="d-flex align-items-start gap-3 mt-4">
+                                                        <Link to="/categories" className='btn btn-primary'>Cancel</Link>
                                                         <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                                     </div>
                                                 </CardFooter>

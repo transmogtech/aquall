@@ -6,6 +6,7 @@ import Loader from '../../../Components/Common/Loader';
 import PropTypes from 'prop-types';
 import ChangeStatus from '../../../Components/Common/ChangeStatus';
 import moment from 'moment/moment';
+import { Capitalize } from '../../../helpers/common_functions';
 
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusAppBannerImage, deleteAppBannerImage, getAppBannerImages } from '../../../actions/appBannerImage';
@@ -24,15 +25,14 @@ const DataTable = ({ changeStatusAppBannerImage, deleteAppBannerImage, getAppBan
   }, []);
 
 
-  appbannerimages.forEach(row => searchTable.push({ id: row._id, category: row.categoryId.title, company: row.companyId.name, discount: row.discount, priority: row.priority, image: row.image, action: row._id, status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  appbannerimages.forEach(row => searchTable.push({ id: row._id, category: row.categoryId.title, company: row.companyId.name, discount: row.discount, priority: row.priority, image: row.image, action: [row._id, row.status], status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
-
 
   function tog_center(id) {
     setDeleteModal(true);

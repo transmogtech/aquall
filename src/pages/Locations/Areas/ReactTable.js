@@ -8,6 +8,7 @@ import moment from 'moment/moment';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import Loader from '../../../Components/Common/Loader';
 import { getAreas, deleteArea, changeStatusArea } from '../../../actions/area';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ getAreas, deleteArea, changeStatusArea, area: { areas, loading } }) => {
 
@@ -27,17 +28,17 @@ const DataTable = ({ getAreas, deleteArea, changeStatusArea, area: { areas, load
     state: row.stateId.title,
     district: row.districtId.title,
     title: row.title,
-    action: row._id,
+    action: [row._id, row.status],
     url: row.url,
     status: row.status,
     created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss')
   }));
 
 
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

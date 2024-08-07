@@ -5,7 +5,7 @@ import UiContent from "../../../Components/Common/UiContent";
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Select from "react-select";
 import { createBestDeal } from '../../../actions/bestDeal';
 import { getCategories } from '../../../actions/category';
@@ -25,8 +25,8 @@ const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProduc
 
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
-
+    const [formData, setFormData] = useState({ categoryId: '', companyId: '', url: '', image: '', priority: '', products: '' });
+    const [errors, setErrors] = useState({});
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -80,8 +80,55 @@ const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProduc
     };
 
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.categoryId) {
+            setErrors({ ...errors, categoryId: 'Please select category' });
+            return false;
+
+        }
+
+
+        if (!formData.companyId) {
+            setErrors({ ...errors, companyId: 'Please select company' });
+            return false;
+
+        }
+
+        if (!formData.image) {
+            setErrors({ ...errors, image: 'Please select image' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter url' });
+            return false;
+        }
+
+        if (!formData.discount) {
+            setErrors({ ...errors, discount: 'Please enter discount' });
+            return false;
+        }
+
+        if (!formData.priority) {
+            setErrors({ ...errors, priority: 'Please enter priority' });
+            return false;
+        }
+
+        if (!formData.products) {
+            setErrors({ ...errors, products: 'Please select at least one product' });
+            return false;
+        }
+
+        return true;
+    }
     const handleSubmit = () => {
 
+        if (!validateForm()) {
+            return false;
+        }
         createBestDeal(formData);
 
         navigate('/best-deals');
@@ -109,14 +156,24 @@ const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProduc
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Category</Label>
-                                                        <Select value={{ label: selectedCategory }} onChange={handleSelectCategory} options={Categories} />
+                                                        <Select onChange={handleSelectCategory} options={Categories} />
+                                                        {errors && errors.categoryId ? (
+                                                            <div className="text-danger">
+                                                                {errors.categoryId}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Company</Label>
-                                                        <Select value={{ label: selectedCompany }} onChange={handleSelectCompany} options={Companies} />
+                                                        <Select onChange={handleSelectCompany} options={Companies} />
+                                                        {errors && errors.companyId ? (
+                                                            <div className="text-danger">
+                                                                {errors.companyId}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -125,24 +182,44 @@ const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProduc
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
                                                         <Input type="file" className="form-control" id="title" placeholder="URL Slug" onChange={handleFileChange} />
+                                                        {errors && errors.image ? (
+                                                            <div className="text-danger">
+                                                                {errors.image}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Discount %</Label>
                                                         <Input type="number" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} />
+                                                        {errors && errors.discount ? (
+                                                            <div className="text-danger">
+                                                                {errors.discount}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL</Label>
                                                         <Input type="text" className="form-control" name="url" placeholder="URL" onChange={e => onChange(e)} />
+                                                        {errors && errors.url ? (
+                                                            <div className="text-danger">
+                                                                {errors.url}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                         <Input type="text" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} />
+                                                        {errors && errors.priority ? (
+                                                            <div className="text-danger">
+                                                                {errors.priority}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col md={12}>
@@ -152,7 +229,11 @@ const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProduc
                                                             <Input type='checkbox' className='form-check-input' value={prod._id} onChange={e => handleProductChange(e, index)} /> {prod.name}
                                                         </div>
                                                     ))}
-
+                                                    {errors && errors.products ? (
+                                                        <div className="text-danger">
+                                                            {errors.products}
+                                                        </div>
+                                                    ) : null}
                                                 </Col>
 
 
@@ -164,6 +245,7 @@ const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProduc
                                     </CardBody>
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
+                                            <Link to="/best-deals" className='btn btn-primary'>Cancel</Link>
                                             <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                         </div>
                                     </CardFooter>

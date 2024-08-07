@@ -11,6 +11,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { changeStatusUserRole, deleteUserRole, getUserRoles, updateUserRole } from '../../../actions/userRole';
 import EditModal from './Edit';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusUserRole, deleteUserRole, getUserRoles, updateUserRole, userRole: { userroles, loading } }) => {
   const [id, setId] = useState(null);
@@ -24,7 +25,7 @@ const DataTable = ({ changeStatusUserRole, deleteUserRole, getUserRoles, updateU
   }, []);
 
 
-  userroles.forEach(row => searchTable.push({ id: row._id, title: row.title, url: row.url, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  userroles.forEach(row => searchTable.push({ id: row._id, title: row.title, url: row.url, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editCultureType, setEditCultureType] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -51,11 +52,11 @@ const DataTable = ({ changeStatusUserRole, deleteUserRole, getUserRoles, updateU
     setEditCultureType(false);
   }
 
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
-
 
   function tog_center(id) {
     setDeleteModal(true);

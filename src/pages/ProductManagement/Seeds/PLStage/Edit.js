@@ -5,7 +5,7 @@ import UiContent from "../../../../Components/Common/UiContent";
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import Select from "react-select";
 import { getCompanies } from '../../../../actions/company';
 import PropTypes from 'prop-types';
@@ -21,6 +21,9 @@ const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage,
     const [loading, setLoading] = useState(true);
     const [selectedCultureType, setSelectedCultureType] = useState(null);
     const [selectedCompany, setSelectedCompany] = useState(null);
+    const [formData, setFormData] = useState();
+
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         getCultureTypes();
@@ -31,12 +34,13 @@ const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage,
             setPlStage(response);
             setSelectedCultureType(response.culturetypeId.title);
             setSelectedCompany(response.companyId.name);
+            setFormData({ name: response.name, culturetypeId: response.culturetypeId._id, companyId: response.companyId._id });
+            setLoading(false);
+
         }
         fetchtData();
-        setLoading(false);
     }, []);
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
 
     function handleSelectedCultureType(selectedCultureType) {
 
@@ -65,9 +69,39 @@ const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage,
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+
+
+    const validateForm = () => {
+
+        setErrors({});
+
+
+
+        if (!formData.culturetypeId) {
+            setErrors({ ...errors, culturetypeId: 'Please select culture type' });
+            return false;
+        }
+
+
+        if (!formData.companyId) {
+            setErrors({ ...errors, companyId: 'Please select company' });
+            return false;
+        }
+
+
+        if (!formData.name) {
+            setErrors({ ...errors, name: 'Please enter name' });
+            return false;
+        }
+
+        return true;
+    }
+
     const handleSubmit = () => {
 
-
+        if (!validateForm()) {
+            return false;
+        }
         updatePlStage(id, formData);
 
         navigate('/pl-stages');
@@ -97,18 +131,33 @@ const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage,
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
                                                                 <Select value={{ label: selectedCultureType }} onChange={handleSelectedCultureType} options={CultureTypes} />
+                                                                {errors && errors.culturetypeId ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.culturetypeId}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
                                                         <Col xxl={4} md={4}>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Company</Label>
                                                                 <Select value={{ label: selectedCompany }} onChange={handleSelectedCompany} options={Companies} />
+                                                                {errors && errors.companyId ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.companyId}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
                                                         <Col xxl={4} md={4}>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Name</Label>
                                                                 <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={plstage.name} />
+                                                                {errors && errors.name ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.name}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -120,7 +169,7 @@ const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage,
 
                                             <CardFooter>
                                                 <div className="d-flex align-items-start gap-3 mt-4">
-
+                                                    <Link to="/pl-stages" className='btn btn-primary'>Cancel</Link>
                                                     <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                                 </div>
                                             </CardFooter>

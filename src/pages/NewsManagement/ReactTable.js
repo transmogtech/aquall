@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import TableContainer from '../../Components/Common/TableContainerReactTable';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { getNewsList, deleteNews, changeStatusNews } from '../../actions/news';
 import Loader from '../../Components/Common/Loader';
 import PropTypes from 'prop-types';
 import DeleteModal from '../../Components/Common/DeleteModal';
 import ChangeStatus from '../../Components/Common/ChangeStatus';
 import moment from 'moment/moment';
-
+import { Capitalize } from '../../helpers/common_functions';
 
 const SearchTable = ({ getNewsList, deleteNews, changeStatusNews, news: { newsList, loading } }) => {
 
@@ -23,12 +23,13 @@ const SearchTable = ({ getNewsList, deleteNews, changeStatusNews, news: { newsLi
   }, [getNewsList]);
 
 
-  newsList.forEach(row => searchTable.push({ id: row._id, title: row.title, image: row.imageUrl, action: row._id, language: row.language.title, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  newsList.forEach(row => searchTable.push({ id: row._id, title: row.title, image: row.imageUrl, action: [row._id, row.status], language: row.language.title, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

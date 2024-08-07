@@ -5,7 +5,7 @@ import UiContent from "../../../../Components/Common/UiContent";
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Select from "react-select";
 import { getCompanies } from '../../../../actions/company';
 import PropTypes from 'prop-types';
@@ -15,7 +15,7 @@ import { getPlStages } from '../../../../actions/plStages';
 import { createSaltPercentage } from '../../../../actions/saltPercentage';
 
 
-const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, createSaltPercentage, company: { companies }, cultureType: { culturetypes}, plStage: {plstages} }) => {
+const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, createSaltPercentage, company: { companies }, cultureType: { culturetypes }, plStage: { plstages } }) => {
 
 
     useEffect(() => {
@@ -30,7 +30,8 @@ const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, crea
     const [selectedCompany, setSelectedCompany] = useState(false);
     const [selectedPlStage, setSelectedPlStage] = useState(false);
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({ name: '', culturetypeId: '', companyId: '', plstageId: '' });
+    const [errors, setErrors] = useState({});
 
     function handleSelectedCultureType(selectedCultureType) {
 
@@ -57,19 +58,55 @@ const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, crea
     }
 
 
-    const CultureTypes   = [];
-    const Companies   = [];
-    const PlStages   = [];
 
-    culturetypes.forEach(row => CultureTypes.push({ value: row._id, label: row.title}));
-    companies.forEach(row => Companies.push({ value: row._id, label: row.name}));
-    plstages.forEach(row => PlStages.push({ value: row._id, label: row.name}));
+    const CultureTypes = [];
+    const Companies = [];
+    const PlStages = [];
+
+    culturetypes.forEach(row => CultureTypes.push({ value: row._id, label: row.title }));
+    companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
+    plstages.forEach(row => PlStages.push({ value: row._id, label: row.name }));
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+
+    const validateForm = () => {
+
+        setErrors({});
+
+
+
+        if (!formData.culturetypeId) {
+            setErrors({ ...errors, culturetypeId: 'Please select culture type' });
+            return false;
+        }
+
+
+        if (!formData.companyId) {
+            setErrors({ ...errors, companyId: 'Please select company' });
+            return false;
+        }
+
+
+        if (!formData.plstageId) {
+            setErrors({ ...errors, plstageId: 'Please enter pl stage' });
+            return false;
+        }
+
+        if (!formData.name) {
+            setErrors({ ...errors, name: 'Please enter name' });
+            return false;
+        }
+
+        return true;
+    }
+
     const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
 
 
         createSaltPercentage(formData);
@@ -96,31 +133,51 @@ const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, crea
                                         <div className="live-preview">
                                             <Row className="gy-4">
 
-                                                <Col xxl={3} md={3}>
+                                                <Col xxl={6} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
-                                                        <Select value={{ label: selectedCultureType }} onChange={handleSelectedCultureType} options={CultureTypes} />
+                                                        <Select onChange={handleSelectedCultureType} options={CultureTypes} />
+                                                        {errors && errors.culturetypeId ? (
+                                                            <div class="text-danger">
+                                                                {errors.culturetypeId}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
-                                              
-                                                <Col xxl={3} md={3}>
+
+                                                <Col xxl={6} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Company</Label>
-                                                        <Select value={{ label: selectedCompany }} onChange={handleSelectedCompany} options={Companies} />
+                                                        <Select onChange={handleSelectedCompany} options={Companies} />
+                                                        {errors && errors.companyId ? (
+                                                            <div class="text-danger">
+                                                                {errors.companyId}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
-                                                <Col xxl={3} md={3}>
+                                                <Col xxl={6} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Pl Stage</Label>
-                                                        <Select value={{ label: selectedPlStage }} onChange={handleSelectedPlStage} options={PlStages} />
+                                                        <Select onChange={handleSelectedPlStage} options={PlStages} />
+                                                        {errors && errors.plstageId ? (
+                                                            <div class="text-danger">
+                                                                {errors.plstageId}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
-                                                <Col xxl={3} md={3}>
+                                                <Col xxl={6} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Name</Label>
                                                         <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" />
+                                                        {errors && errors.name ? (
+                                                            <div class="text-danger">
+                                                                {errors.name}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -132,7 +189,7 @@ const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, crea
 
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
-
+                                            <Link to="/salt-percentage" className='btn btn-primary'>Cancel</Link>
                                             <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                         </div>
                                     </CardFooter>

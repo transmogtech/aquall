@@ -6,6 +6,7 @@ import Loader from '../../../Components/Common/Loader';
 import PropTypes from 'prop-types';
 import ChangeStatus from '../../../Components/Common/ChangeStatus';
 import moment from 'moment/moment';
+import { Capitalize } from '../../../helpers/common_functions';
 
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusBannerImage, deleteBannerImage, getBannerImages } from '../../../actions/bannerImage';
@@ -24,13 +25,12 @@ const DataTable = ({ changeStatusBannerImage, deleteBannerImage, getBannerImages
   }, []);
 
 
-  bannerimages.forEach(row => searchTable.push({ id: row._id, priority: row.priority, image: row.image, action: row._id, status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  bannerimages.forEach(row => searchTable.push({ id: row._id, priority: row.priority, image: row.image, action: [row._id, row.status], status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
-
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

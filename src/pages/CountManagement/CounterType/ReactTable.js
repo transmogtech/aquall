@@ -11,6 +11,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { changeStatusCountType, deleteCountType, getCountTypes, updateCountType } from '../../../actions/countType';
 import EditModal from './Edit';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusCountType, deleteCountType, getCountTypes, updateCountType, countType: { counttypes, loading } }) => {
 
@@ -25,7 +26,7 @@ const DataTable = ({ changeStatusCountType, deleteCountType, getCountTypes, upda
   }, []);
 
 
-  counttypes.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  counttypes.forEach(row => searchTable.push({ id: row._id, title: row.title, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editCountType, setEditCountType] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -48,9 +49,10 @@ const DataTable = ({ changeStatusCountType, deleteCountType, getCountTypes, upda
     setEditCountType(false);
   }
 
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

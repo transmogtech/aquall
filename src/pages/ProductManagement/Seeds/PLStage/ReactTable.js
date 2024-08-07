@@ -8,6 +8,7 @@ import ChangeStatus from '../../../../Components/Common/ChangeStatus';
 import moment from 'moment/moment';
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { changeStatusPlStage, deletePlStage, getPlStages } from '../../../../actions/plStages';
+import { Capitalize } from '../../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusPlStage, deletePlStage, getPlStages, plStage: { plstages, loading } }) => {
 
@@ -22,7 +23,7 @@ const DataTable = ({ changeStatusPlStage, deletePlStage, getPlStages, plStage: {
   }, []);
 
 
-  plstages.forEach(row => searchTable.push({ id: row._id, cultureType: row.culturetypeId.title, company: row.companyId.name, name: row.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  plstages.forEach(row => searchTable.push({ id: row._id, cultureType: row.culturetypeId.title, company: row.companyId.name, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editPlStage, setEditPlStage] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -45,9 +46,10 @@ const DataTable = ({ changeStatusPlStage, deletePlStage, getPlStages, plStage: {
     setEditPlStage(false);
   }
 
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 
@@ -85,7 +87,7 @@ const DataTable = ({ changeStatusPlStage, deletePlStage, getPlStages, plStage: {
         header: "Created On",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span>{cell.getValue()}</span>
           );
         },
         accessorKey: "created",

@@ -9,6 +9,7 @@ import moment from 'moment/moment';
 
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusNotification, deleteNotification, getNotifications } from '../../../actions/notification';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusNotification, deleteNotification, getNotifications, notification: { notifications, loading } }) => {
 
@@ -23,15 +24,14 @@ const DataTable = ({ changeStatusNotification, deleteNotification, getNotificati
   }, []);
 
 
-  notifications.forEach(row => searchTable.push({ id: row._id, category: row.categoryId.title, company: row.companyId.name, product: row.productId.name, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  notifications.forEach(row => searchTable.push({ id: row._id, category: row.categoryId.title, company: row.companyId.name, product: row.productId.name, title: row.title, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
-
 
   function tog_center(id) {
     setDeleteModal(true);

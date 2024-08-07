@@ -8,6 +8,7 @@ import moment from 'moment/moment';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import Loader from '../../../Components/Common/Loader';
 import { getUsers, deleteUser, changeStatusUser } from '../../../actions/user';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ getUsers, deleteUser, changeStatusUser, user: { users, loading } }) => {
 
@@ -27,7 +28,7 @@ const DataTable = ({ getUsers, deleteUser, changeStatusUser, user: { users, load
     name: row.name,
     email: row.email,
     mobile: row.mobile,
-    action: row._id,
+    action: [row._id, row.status],
     avatar: row.avatar,
     status: row.status,
     created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss')
@@ -35,9 +36,10 @@ const DataTable = ({ getUsers, deleteUser, changeStatusUser, user: { users, load
 
 
 
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

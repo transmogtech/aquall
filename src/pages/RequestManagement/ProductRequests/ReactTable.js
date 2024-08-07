@@ -9,6 +9,7 @@ import moment from 'moment/moment';
 import ViewModal from "./View";
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { getProductRequests, changeStatusProductRequest, deleteProductRequest } from '../../../actions/productRequest';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ getProductRequests, changeStatusProductRequest, deleteProductRequest, productRequest: { productrequests, loading } }) => {
 
@@ -26,14 +27,14 @@ const DataTable = ({ getProductRequests, changeStatusProductRequest, deleteProdu
   // console.log(companies);
   productrequests.forEach(row => {
     if (row === undefined) { return }
-    searchTable.push({ id: row._id, email: row.email, action: row._id, status: row.status, name: row.name, mobile: row.mobile, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') })
+    searchTable.push({ id: row._id, email: row.email, action: [row._id, row.status], status: row.status, name: row.name, mobile: row.mobile, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') })
   });
 
 
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

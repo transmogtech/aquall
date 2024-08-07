@@ -5,7 +5,7 @@ import UiContent from "../../../Components/Common/UiContent";
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { createNotification } from '../../../actions/notification';
 import { getCategories } from '../../../actions/category';
 import { getCompanies } from '../../../actions/company';
@@ -149,7 +149,7 @@ const CreateNotification = ({ createNotification, getCategories, getCompanies, g
 
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
-
+                                            <Link to="/notifications" className='btn btn-primary'>Cancel</Link>
                                             <button type="submit" className="btn btn-secondary">
                                                 Save
                                             </button>

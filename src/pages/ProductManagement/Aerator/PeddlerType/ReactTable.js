@@ -8,6 +8,7 @@ import ChangeStatus from '../../../../Components/Common/ChangeStatus';
 import moment from 'moment/moment';
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { changeStatusPeddlerType, deletePeddlerType, getPeddlerTypes } from '../../../../actions/peddlerType';
+import { Capitalize } from '../../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusPeddlerType, deletePeddlerType, getPeddlerTypes, peddlerType: { peddlertypes, loading } }) => {
 
@@ -22,17 +23,15 @@ const DataTable = ({ changeStatusPeddlerType, deletePeddlerType, getPeddlerTypes
   }, []);
 
 
-  peddlertypes.forEach(row => searchTable.push({ id: row._id, HpSize: row.hpsizeId.title, company: row.companyId.name, name: row.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  peddlertypes.forEach(row => searchTable.push({ id: row._id, HpSize: row.hpsizeId.title, company: row.companyId.name, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editPlStage, setEditPlStage] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
-
-
   function tog_center(id) {
     setDeleteModal(true);
     setId(id);
@@ -67,7 +66,7 @@ const DataTable = ({ changeStatusPeddlerType, deletePeddlerType, getPeddlerTypes
         header: "Created On",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span>{cell.getValue()}</span>
           );
         },
         accessorKey: "created",

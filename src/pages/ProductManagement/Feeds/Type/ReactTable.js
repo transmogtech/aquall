@@ -8,6 +8,7 @@ import ChangeStatus from '../../../../Components/Common/ChangeStatus';
 import moment from 'moment/moment';
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { changeStatusFeedType, deleteFeedType, getFeedTypes } from '../../../../actions/feedType';
+import { Capitalize } from '../../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusFeedType, deleteFeedType, getFeedTypes, feedType: { feedtypes, loading } }) => {
 
@@ -22,7 +23,7 @@ const DataTable = ({ changeStatusFeedType, deleteFeedType, getFeedTypes, feedTyp
   }, []);
 
 
-  feedtypes.forEach(row => searchTable.push({ id: row._id, cultureType: row.culturetypeId.title, company: row.companyId.name, name: row.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  feedtypes.forEach(row => searchTable.push({ id: row._id, cultureType: row.culturetypeId.title, company: row.companyId.name, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editPlStage, setEditPlStage] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -44,10 +45,10 @@ const DataTable = ({ changeStatusFeedType, deleteFeedType, getFeedTypes, feedTyp
     updatePlStage(id, defaultValue);
     setEditPlStage(false);
   }
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 
@@ -85,7 +86,7 @@ const DataTable = ({ changeStatusFeedType, deleteFeedType, getFeedTypes, feedTyp
         header: "Created On",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span>{cell.getValue()}</span>
           );
         },
         accessorKey: "created",

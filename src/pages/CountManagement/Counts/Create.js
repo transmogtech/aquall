@@ -5,7 +5,7 @@ import UiContent from "../../../Components/Common/UiContent";
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Select from "react-select";
 import { getCountTypes } from '../../../actions/countType';
 import { getCultureTypes } from '../../../actions/cultureType';
@@ -79,16 +79,16 @@ const CreateCount = ({ getCountTypes, getCultureTypes, getCountAreas, createCoun
     // ];
 
     const CountPercent = [
-        {count: '', volume: "" },
-        {count: '', volume: "" },
-        {count: '', volume: "" },
-        {count: '', volume: "" },
-        {count: '', volume: "" },
-        {count: '', volume: "" },
-        {count: '', volume: "" },
-        {count: '', volume: "" },
-        {count: '', volume: "" },
-        {count: '', volume: "" }
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" },
+        { count: '', volume: "" }
     ];
 
     const [counter, setCounter] = useState(CountPercent);
@@ -135,20 +135,20 @@ const CreateCount = ({ getCountTypes, getCultureTypes, getCountAreas, createCoun
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Category</Label>
-                                                        <Select value={{label: selectedCategory}} onChange={handleSelectedCategory} options={CountType} />
+                                                        <Select value={{ label: selectedCategory }} onChange={handleSelectedCategory} options={CountType} />
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
-                                                        <Select value={{label: selectedCultureType}} onChange={handleSelectCultureType} options={CultuteType} />
+                                                        <Select value={{ label: selectedCultureType }} onChange={handleSelectCultureType} options={CultuteType} />
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Count Area</Label>
-                                                        <Select value={{label: selectedCountArea}} onChange={handleSelectCountArea} options={CountArea} />
+                                                        <Select value={{ label: selectedCountArea }} onChange={handleSelectCountArea} options={CountArea} />
                                                     </div>
                                                 </Col>
                                             </Row>
@@ -164,12 +164,12 @@ const CreateCount = ({ getCountTypes, getCultureTypes, getCountAreas, createCoun
                                                             <Row className="gy-4 mt-3 border-top">
                                                                 <Col xxl={6} md={6} className='mt-3 mb-3 '>
 
-                                                                    <Input name='count' className='form-control' placeholder={`Count${count.count}`} onChange={e => handleCounterChange(e, index)}  />
+                                                                    <Input name='count' className='form-control' placeholder={`Count${count.count}`} onChange={e => handleCounterChange(e, index)} />
                                                                 </Col>
 
                                                                 <Col xxl={6} md={6} className='mt-3 mb-3'>
 
-                                                                    <Input name='volume' className='form-control' placeholder={`Volume${count.volume}`} onChange={e => handleCounterChange(e, index)}  />
+                                                                    <Input name='volume' className='form-control' placeholder={`Volume${count.volume}`} onChange={e => handleCounterChange(e, index)} />
                                                                 </Col>
 
                                                             </Row>
@@ -188,7 +188,7 @@ const CreateCount = ({ getCountTypes, getCultureTypes, getCountAreas, createCoun
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
 
-                                        <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
+                                            <Button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</Button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -225,7 +225,7 @@ const mapStateToProps = state => ({
     countType: state.countType,
     countArea: state.countArea,
     cultureType: state.cultureType,
-  });
-  
+});
 
-export default connect(mapStateToProps, {createCount, getCountAreas, getCountTypes, getCultureTypes})(CreateCount);
+
+export default connect(mapStateToProps, { createCount, getCountAreas, getCountTypes, getCultureTypes })(CreateCount);

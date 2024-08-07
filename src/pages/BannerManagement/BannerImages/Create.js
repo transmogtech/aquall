@@ -6,7 +6,7 @@ import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter, Button } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
 import { createBannerImage } from '../../../actions/bannerImage';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -40,6 +40,11 @@ const CreateBannerImage = ({ createBannerImage }) => {
             return false;
         }
 
+        if (!formData.priority) {
+            setError({ ...error, priority: 'Please enter priority number' });
+            return false;
+        }
+
 
         createBannerImage(formData);
 
@@ -47,19 +52,19 @@ const CreateBannerImage = ({ createBannerImage }) => {
     }
 
 
-    document.title = "Create Slider Image | Aquall Admin";
+    document.title = "Create Banner Image | Aquall Admin";
     return (
         <React.Fragment>
             <UiContent />
             <div className="page-content">
 
                 <Container fluid>
-                    <BreadCrumb title="Create Slider Image" pageTitle="Slider Image Management" />
+                    <BreadCrumb title="Create Banner Image" pageTitle="Banner Image Management" />
                     <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                         <Row>
                             <Col lg={12}>
                                 <Card>
-                                    <PreviewCardHeader title="Create Slider Image" />
+                                    <PreviewCardHeader title="Create Banner Image" />
 
                                     <CardBody className="card-body">
                                         <div className="live-preview">
@@ -94,6 +99,11 @@ const CreateBannerImage = ({ createBannerImage }) => {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                         <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" placeholder="Priority" />
+                                                        {error && error.priority ? (
+                                                            <div class="text-danger">
+                                                                {error.priority}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -104,6 +114,7 @@ const CreateBannerImage = ({ createBannerImage }) => {
                                     </CardBody>
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
+                                            <Link to="/banner-images" className='btn btn-primary'>Cancel</Link>
                                             <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                         </div>
                                     </CardFooter>

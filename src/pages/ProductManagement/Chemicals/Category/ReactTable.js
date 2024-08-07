@@ -8,6 +8,7 @@ import ChangeStatus from '../../../../Components/Common/ChangeStatus';
 import moment from 'moment/moment';
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { changeStatusChemicalCategory, deleteChemicalCategory, getChemicalCategories } from '../../../../actions/chemicalCategory';
+import { Capitalize } from '../../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusChemicalCategory, deleteChemicalCategory, getChemicalCategories, chemicalCategory: { chemicalcategories, loading } }) => {
 
@@ -22,12 +23,13 @@ const DataTable = ({ changeStatusChemicalCategory, deleteChemicalCategory, getCh
   }, []);
 
 
-  chemicalcategories.forEach(row => searchTable.push({ id: row._id, title: row.title, sequance: row.sequance, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  chemicalcategories.forEach(row => searchTable.push({ id: row._id, title: row.title, sequance: row.sequance, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 
@@ -65,7 +67,7 @@ const DataTable = ({ changeStatusChemicalCategory, deleteChemicalCategory, getCh
         header: "Created On",
         cell: (cell) => {
           return (
-            <span className="fw-semibold">{cell.getValue()}</span>
+            <span>{cell.getValue()}</span>
           );
         },
         accessorKey: "created",

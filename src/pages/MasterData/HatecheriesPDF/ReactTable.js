@@ -9,6 +9,7 @@ import moment from 'moment/moment';
 import EditPdf from './Create';
 
 import { getHatecheriesPdfs, updateHatecheriesPdf } from '../../../actions/hatecheriesPdf';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ getHatecheriesPdfs, updateHatecheriesPdf, hatecheriesPdf: { hatecheriespdfs, loading } }) => {
 
@@ -22,7 +23,7 @@ const DataTable = ({ getHatecheriesPdfs, updateHatecheriesPdf, hatecheriesPdf: {
   }, []);
 
 
-  hatecheriespdfs.forEach(row => searchTable.push({ id: row._id, action: row._id, download_link: row.pdf, pdf: row.pdf, created: moment(row.updated).format('MMMM Do YYYY, HH:mm:ss') }));
+  hatecheriespdfs.forEach(row => searchTable.push({ id: row._id, action: [row._id, row.status], download_link: row.pdf, pdf: row.pdf, created: moment(row.updated).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {

@@ -11,6 +11,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { changeStatusCultureType, deleteCultureType, getCultureTypes, updateCultureType } from '../../../actions/cultureType';
 import EditModal from './Edit';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusCultureType, deleteCultureType, getCultureTypes, updateCultureType, cultureType: { culturetypes, loading } }) => {
   const [id, setId] = useState(null);
@@ -24,7 +25,7 @@ const DataTable = ({ changeStatusCultureType, deleteCultureType, getCultureTypes
   }, []);
 
 
-  culturetypes.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  culturetypes.forEach(row => searchTable.push({ id: row._id, title: row.title, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editCultureType, setEditCultureType] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -49,9 +50,10 @@ const DataTable = ({ changeStatusCultureType, deleteCultureType, getCultureTypes
     setEditCultureType(false);
   }
 
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

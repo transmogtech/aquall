@@ -11,6 +11,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { changeStatusCountArea, deleteCountArea, getCountAreas, updateCountArea } from '../../../actions/countArea';
 import EditModal from './Edit';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas, updateCountArea, countArea: { countareas, loading } }) => {
 
@@ -25,7 +26,7 @@ const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas, upda
   }, []);
 
 
-  countareas.forEach(row => searchTable.push({ id: row._id, title: row.title, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  countareas.forEach(row => searchTable.push({ id: row._id, title: row.title, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editCountArea, setEditCountArea] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
@@ -47,10 +48,10 @@ const DataTable = ({ changeStatusCountArea, deleteCountArea, getCountAreas, upda
     updateCountArea(id, { "title": defaultValue });
     setEditCountArea(false);
   }
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

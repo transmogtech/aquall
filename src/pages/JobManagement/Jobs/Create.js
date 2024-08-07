@@ -4,7 +4,7 @@ import UiContent from "../../../Components/Common/UiContent";
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardHeader } from 'reactstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Flatpickr from "react-flatpickr";
 import { createJob } from '../../../actions/job';
 import PropTypes from "prop-types";
@@ -20,30 +20,30 @@ const CreateJob = ({ createJob }) => {
     };
 
     const JobCategory = [
-        {label: "Accounting & Finance", value: "Accounting & Finance"},
-        {label: "Purchasing Manager", value: "Purchasing Manager"},
-        {label: "Education & training", value: "Education & training"},
-        {label: "Marketing & Advertising", value: "Marketing & Advertising"},
-        {label: "Digital Marketing", value: "Digital Marketing"},
-        {label: "Administrative Officer", value: "Administrative Officer"},
-        {label: "Government Jobs", value: "Government Jobs"},
-        {label: "It / Software Jobs", value: "It / Software Jobs"},
+        { label: "Accounting & Finance", value: "Accounting & Finance" },
+        { label: "Purchasing Manager", value: "Purchasing Manager" },
+        { label: "Education & training", value: "Education & training" },
+        { label: "Marketing & Advertising", value: "Marketing & Advertising" },
+        { label: "Digital Marketing", value: "Digital Marketing" },
+        { label: "Administrative Officer", value: "Administrative Officer" },
+        { label: "Government Jobs", value: "Government Jobs" },
+        { label: "It / Software Jobs", value: "It / Software Jobs" },
     ];
 
     const JobType = [
-        {label: "Full Time", value: "Full Time"},
-        {label: "Part Time", value: "Part Time"},
-        {label: "Freelance", value: "Freelance"},
-        {label: "Intership", value: "Intership"},
+        { label: "Full Time", value: "Full Time" },
+        { label: "Part Time", value: "Part Time" },
+        { label: "Freelance", value: "Freelance" },
+        { label: "Intership", value: "Intership" },
     ];
 
     const experience = [
-        {label: "0 Year", value: "0 Year"},
-        {label: "1 Year", value: "1 Year"},
-        {label: "2 Years", value: "2 Years"},
-        {label: "3 Years", value: "3 Years"},
-        {label: "4 Years", value: "4 Years"},
-        {label: "5 Years", value: "5 Years"},
+        { label: "0 Year", value: "0 Year" },
+        { label: "1 Year", value: "1 Year" },
+        { label: "2 Years", value: "2 Years" },
+        { label: "3 Years", value: "3 Years" },
+        { label: "4 Years", value: "4 Years" },
+        { label: "5 Years", value: "5 Years" },
     ]
     const handleSubmit = () => {
 
@@ -86,7 +86,7 @@ const CreateJob = ({ createJob }) => {
                                                         name="title"
                                                         placeholder="Enter job title"
                                                         required
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     />
                                                 </div>
                                             </Col>
@@ -105,7 +105,7 @@ const CreateJob = ({ createJob }) => {
                                                         placeholder="Enter job position"
                                                         required
                                                         name="position"
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     />
                                                 </div>
                                             </Col>
@@ -122,7 +122,7 @@ const CreateJob = ({ createJob }) => {
                                                         data-choices
                                                         name="category"
                                                         required
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     >
                                                         <option value="">Select Category</option>
                                                         {
@@ -132,7 +132,7 @@ const CreateJob = ({ createJob }) => {
                                                                 )
                                                             })
                                                         }
-                                                      
+
                                                     </select>
                                                 </div>
                                             </Col>
@@ -149,7 +149,7 @@ const CreateJob = ({ createJob }) => {
                                                         data-choices
                                                         name="type"
                                                         required
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     >
                                                         <option value="">Select job type</option>
                                                         {
@@ -178,7 +178,7 @@ const CreateJob = ({ createJob }) => {
                                                         placeholder="Enter description"
                                                         required
                                                         name="description"
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     ></textarea>
                                                 </div>
                                             </Col>
@@ -199,7 +199,7 @@ const CreateJob = ({ createJob }) => {
                                                         placeholder="No. of vacancy "
                                                         required
                                                         name="vacancy_count"
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     />
                                                 </div>
                                             </Col>
@@ -215,7 +215,7 @@ const CreateJob = ({ createJob }) => {
                                                         className="form-select"
                                                         data-choices
                                                         name="experience"
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     >
                                                         <option value="">Select Experience</option>
                                                         {
@@ -245,7 +245,7 @@ const CreateJob = ({ createJob }) => {
                                                         placeholder="Last date of Apply "
                                                         required
                                                         name="from_date"
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     />
                                                     {/* <Flatpickr
                                                         className="form-control"
@@ -278,7 +278,7 @@ const CreateJob = ({ createJob }) => {
                                                         placeholder="Close date "
                                                         required
                                                         name="to_date"
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     />
                                                     {/* <Flatpickr
                                                         className="form-control"
@@ -311,7 +311,7 @@ const CreateJob = ({ createJob }) => {
                                                         name="start_salary"
                                                         placeholder="Enter start salary"
                                                         required
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     />
                                                 </div>
                                             </Col>
@@ -331,7 +331,7 @@ const CreateJob = ({ createJob }) => {
                                                         placeholder="Enter end salary"
                                                         name="close_salary"
                                                         required
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     />
                                                 </div>
                                             </Col>
@@ -348,7 +348,7 @@ const CreateJob = ({ createJob }) => {
                                                         placeholder="Enter country"
                                                         required
                                                         name="stateId"
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     />
                                                 </div>
                                             </Col>
@@ -365,7 +365,7 @@ const CreateJob = ({ createJob }) => {
                                                         placeholder="Enter city"
                                                         name="city"
                                                         required
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     />
                                                 </div>
                                             </Col>
@@ -384,14 +384,14 @@ const CreateJob = ({ createJob }) => {
                                                         defaultValue="Design, Remote"
                                                         required
                                                         name="tags"
-                                                        onChange={e => onChange(e)} 
+                                                        onChange={e => onChange(e)}
                                                     />
                                                 </div>
                                             </Col>
 
                                             <Col lg={12}>
                                                 <div className="hstack justify-content-end gap-2">
-                                                  
+                                                    <Link to="/jobs" className='btn btn-primary'>Cancel</Link>
                                                     <button type="submit" className="btn btn-secondary">
                                                         Add Job
                                                     </button>
@@ -413,4 +413,4 @@ CreateJob.propTypes = {
     createJob: PropTypes.func.isRequired,
 }
 
-export default connect(null, {createJob})(CreateJob);
+export default connect(null, { createJob })(CreateJob);

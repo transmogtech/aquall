@@ -10,6 +10,7 @@ import moment from 'moment/moment';
 import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { changeStatusJob, deleteJob, getJobs } from '../../../actions/job';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusJob, deleteJob, getJobs, job: { jobs, loading } }) => {
   const [id, setId] = useState(null);
@@ -23,7 +24,7 @@ const DataTable = ({ changeStatusJob, deleteJob, getJobs, job: { jobs, loading }
   }, []);
 
 
-  jobs.forEach(row => searchTable.push({ id: row._id, title: row.title, position: row.position, category: row.category, type: row.type, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  jobs.forEach(row => searchTable.push({ id: row._id, title: row.title, position: row.position, category: row.category, type: row.type, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
   const onChange = (e) => {
@@ -34,12 +35,11 @@ const DataTable = ({ changeStatusJob, deleteJob, getJobs, job: { jobs, loading }
     updateJob(id, defaultValue);
     setEditJob(false);
   }
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
-
 
   function tog_center(id) {
     setDeleteModal(true);

@@ -4,7 +4,7 @@ import UiContent from "../../../Components/Common/UiContent";
 //import Components
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardHeader } from 'reactstrap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { updateJob, getJob } from '../../../actions/job';
 import PropTypes from "prop-types";
 import { connect } from 'react-redux';
@@ -433,9 +433,9 @@ const EditJob = ({ updateJob, getJob }) => {
 
                                                         <Col lg={12}>
                                                             <div className="hstack justify-content-end gap-2">
-
+                                                                <Link to="/jobs" className='btn btn-primary'>Cancel</Link>
                                                                 <button type="submit" className="btn btn-secondary">
-                                                                    Add Job
+                                                                    Update Job
                                                                 </button>
                                                             </div>
                                                         </Col>

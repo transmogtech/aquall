@@ -5,7 +5,7 @@ import UiContent from "../../../Components/Common/UiContent";
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../Components/Common/PreviewCardHeader';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { createSponsoredAd } from '../../../actions/sponsoredAd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -13,22 +13,61 @@ import { connect } from 'react-redux';
 
 const CreateSponsorAd = ({ createSponsoredAd }) => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({ name: '', discount: '', image: '', url: '', priority: '' });
+    const [errors, setErrors] = useState({});
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    
-const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-        // console.log(e.target.files);
-        setFormData({...formData, image: e.target.files[0] });
-    }
-  };
 
-  
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            // console.log(e.target.files);
+            setFormData({ ...formData, image: e.target.files[0] });
+        }
+    };
+
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.name) {
+            setErrors({ ...errors, name: 'Please enter sponsor name' });
+            return false;
+        }
+
+        if (!formData.discount) {
+            setErrors({ ...errors, discount: 'Please enter discount' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter url' });
+            return false;
+        }
+
+
+        if (!formData.image) {
+            setErrors({ ...errors, image: 'Please select image' });
+            return false;
+        }
+
+
+        if (!formData.priority) {
+            setErrors({ ...errors, priority: 'Please enter priority' });
+            return false;
+        }
+
+        return true;
+    }
+
     const handleSubmit = () => {
+
+        if (!validateForm()) {
+            return false;
+        }
+
         createSponsoredAd(formData);
 
         navigate('/sponsor-ads');
@@ -53,11 +92,16 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
                                         <div className="live-preview">
                                             <Row className="gy-4">
 
-                                       
+
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Sponsor Name</Label>
-                                                        <Input type="text" className="form-control" name="name" placeholder="Sponsor Name"  onChange={e => onChange(e)} />
+                                                        <Input type="text" className="form-control" name="name" placeholder="Sponsor Name" onChange={e => onChange(e)} />
+                                                        {errors && errors.name ? (
+                                                            <div class="text-danger">
+                                                                {errors.name}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -65,27 +109,47 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Discount %</Label>
                                                         <Input type="number" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} />
+                                                        {errors && errors.discount ? (
+                                                            <div class="text-danger">
+                                                                {errors.discount}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                        <Input type="file" className="form-control" id="title" onChange={handleFileChange} />
+                                                        <Input type="file" className="form-control" id="image" onChange={handleFileChange} />
+                                                        {errors && errors.image ? (
+                                                            <div class="text-danger">
+                                                                {errors.image}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL</Label>
                                                         <Input type="text" className="form-control" name="url" placeholder="URL" onChange={e => onChange(e)} />
+                                                        {errors && errors.url ? (
+                                                            <div class="text-danger">
+                                                                {errors.url}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                         <Input type="text" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} />
+                                                        {errors && errors.priority ? (
+                                                            <div class="text-danger">
+                                                                {errors.priority}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
-                                               
+
 
                                             </Row>
 
@@ -94,8 +158,8 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
                                     </CardBody>
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
-
-                                        <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
+                                            <Link to="/sponsor-ads" className='btn btn-primary'>Cancel</Link>
+                                            <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                         </div>
                                     </CardFooter>
                                 </Card>

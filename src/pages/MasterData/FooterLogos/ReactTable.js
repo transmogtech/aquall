@@ -9,6 +9,7 @@ import moment from 'moment/moment';
 
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { changeStatusFooterLogo, deleteFooterLogo, getFooterLogos } from '../../../actions/footerLogo';
+import { Capitalize } from '../../../helpers/common_functions';
 
 const DataTable = ({ changeStatusFooterLogo, deleteFooterLogo, getFooterLogos, footerLogo: { footerlogos, loading } }) => {
 
@@ -23,13 +24,13 @@ const DataTable = ({ changeStatusFooterLogo, deleteFooterLogo, getFooterLogos, f
   }, []);
 
 
-  footerlogos.forEach(row => searchTable.push({ id: row._id, priority: row.priority, logo: row.logo, company: row.company.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  footerlogos.forEach(row => searchTable.push({ id: row._id, priority: row.priority, logo: row.logo, company: row.company.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
-
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
 
 

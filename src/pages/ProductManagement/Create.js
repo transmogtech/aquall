@@ -5,7 +5,7 @@ import UiContent from "../../Components/Common/UiContent";
 import BreadCrumb from '../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../Components/Common/PreviewCardHeader';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getPlStages } from "../../actions/plStages";
 import { getSaltPercentages } from "../../actions/saltPercentage";
 import { getCompanies } from "../../actions/company";
@@ -53,7 +53,9 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
     const [showHideFields, setShowHideFields] = useState(false);
     const [cartFields, setCartFields] = useState(false);
     const [gstFields, setGSTFields] = useState(false);
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({ name: '', price: '', description: '', image: '', volume: '', categoryId: '', companyId: '' });
+    const [errors, setErrors] = useState({});
+
     const [image, setImage] = useState(null);
     const navigate = useNavigate();
 
@@ -67,12 +69,12 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
         if (e.target.files) {
             setImage(e.target.files[0]);
             // console.log(e.target.files);
-            setFormData({...formData, imageUrl: e.target.files[0] });
+            setFormData({ ...formData, imageUrl: e.target.files[0] });
         }
-      };
-    
+    };
 
-      const handleSelectCategory = (e) => {
+
+    const handleSelectCategory = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         console.log(e.target.value);
 
@@ -83,7 +85,55 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
         setGSTFields(!gstFields);
     }
 
+
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.categoryId) {
+            setErrors({ ...errors, categoryId: 'Please select category' });
+            return false;
+        }
+
+        if (!formData.companyId) {
+            setErrors({ ...errors, companyId: 'Please select company' });
+            return false;
+        }
+
+        if (!formData.name) {
+            setErrors({ ...errors, name: 'Please enter product name' });
+            return false;
+        }
+
+        if (!formData.imageUrl) {
+            setErrors({ ...errors, imageUrl: 'Please select image' });
+            return false;
+        }
+
+        if (!formData.price) {
+            setErrors({ ...errors, price: 'Please enter price' });
+            return false;
+        }
+
+        if (!formData.volume) {
+            setErrors({ ...errors, volume: 'Please enter volume' });
+            return false;
+        }
+
+        if (!formData.description) {
+            setErrors({ ...errors, description: 'Please enter description' });
+            return false;
+        }
+
+        return true;
+    }
+
+
     const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
+
         createProduct(formData);
 
         navigate('/products');
@@ -125,6 +175,11 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                                 })
                                                             }
                                                         </select>
+                                                        {errors && errors.categoryId ? (
+                                                            <div class="text-danger">
+                                                                {errors.categoryId}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
@@ -145,6 +200,11 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                                 })
                                                             }
                                                         </select>
+                                                        {errors && errors.companyId ? (
+                                                            <div class="text-danger">
+                                                                {errors.companyId}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -153,46 +213,46 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Hp Size</Label>
                                                             <select
-                                                            className="form-select"
-                                                            data-choices
-                                                            name="saltpercentageId"
-                                                            onChange={e => onChange(e)}
-                                                        >
-                                                            <option value="">Select HP Size</option>
-                                                            {
-                                                                HpSizes.map((item, index) => {
-                                                                    return (
-                                                                        <option key={index} value={item.value}>{item.label}</option>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </select>
+                                                                className="form-select"
+                                                                data-choices
+                                                                name="saltpercentageId"
+                                                                onChange={e => onChange(e)}
+                                                            >
+                                                                <option value="">Select HP Size</option>
+                                                                {
+                                                                    HpSizes.map((item, index) => {
+                                                                        return (
+                                                                            <option key={index} value={item.value}>{item.label}</option>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </select>
                                                         </div>
                                                     </Col>}
 
-                                                {["664645eb3f25f68d99341a71", "664645fb3f25f68d99341a74", "6646460f3f25f68d99341a77"].indexOf(showHideFields) > -1 && 
-                                                <Col xxl={3} md={6}>
-                                                    <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
-                                                        <select
-                                                            className="form-select"
-                                                            data-choices
-                                                            name="culturetypeId"
-                                                            onChange={e => onChange(e)}
-                                                        >
-                                                            <option value="">Select Culture Type</option>
-                                                            {
-                                                                CultureTypes.map((item, index) => {
-                                                                    return (
-                                                                        <option key={index} value={item.value}>{item.label}</option>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
-                                                </Col>
+                                                {["664645eb3f25f68d99341a71", "664645fb3f25f68d99341a74", "6646460f3f25f68d99341a77"].indexOf(showHideFields) > -1 &&
+                                                    <Col xxl={3} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
+                                                            <select
+                                                                className="form-select"
+                                                                data-choices
+                                                                name="culturetypeId"
+                                                                onChange={e => onChange(e)}
+                                                            >
+                                                                <option value="">Select Culture Type</option>
+                                                                {
+                                                                    CultureTypes.map((item, index) => {
+                                                                        return (
+                                                                            <option key={index} value={item.value}>{item.label}</option>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </Col>
                                                 }
-                                               
+
                                                 {showHideFields === '664645fb3f25f68d99341a74' && <Col xxl={3} md={6} >
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">PL Stage</Label>
@@ -220,23 +280,23 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Salt Percentage</Label>
                                                             <select
-                                                            className="form-select"
-                                                            data-choices
-                                                            name="saltpercentageId"
-                                                            onChange={e => onChange(e)}
-                                                        >
-                                                            <option value="">Select Salt Percentage</option>
-                                                            {
-                                                                SaltPercentages.map((item, index) => {
-                                                                    return (
-                                                                        <option key={index} value={item.value}>{item.label}</option>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </select>
+                                                                className="form-select"
+                                                                data-choices
+                                                                name="saltpercentageId"
+                                                                onChange={e => onChange(e)}
+                                                            >
+                                                                <option value="">Select Salt Percentage</option>
+                                                                {
+                                                                    SaltPercentages.map((item, index) => {
+                                                                        return (
+                                                                            <option key={index} value={item.value}>{item.label}</option>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </select>
                                                         </div>
                                                     </Col>}
-                                                
+
                                                 {showHideFields === '664645eb3f25f68d99341a71' && <Col xxl={3} md={6} id='feedTypeDiv'>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Feed Type</Label>
@@ -283,27 +343,47 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Product Name</Label>
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="name" placeholder="Product Name" />
+                                                        {errors && errors.name ? (
+                                                            <div class="text-danger">
+                                                                {errors.name}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                        <Input type="file" className="form-control" onChange={handleFileChange}  id="title" placeholder="URL Slug" />
+                                                        <Input type="file" className="form-control" onChange={handleFileChange} id="title" placeholder="URL Slug" />
+                                                        {errors && errors.imageUrl ? (
+                                                            <div class="text-danger">
+                                                                {errors.imageUrl}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Price</Label>
                                                         <Input type="number" className="form-control" onChange={e => onChange(e)} name="price" />
+                                                        {errors && errors.price ? (
+                                                            <div class="text-danger">
+                                                                {errors.price}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
-                                                    <Col xxl={3} md={6}>
-                                                        <div>
-                                                            <Label htmlFor="basiInput" className="form-label">Volume</Label>
-                                                            <Input type="number" className="form-control" onChange={e => onChange(e)} name="volume" />
-                                                        </div>
-                                                    </Col>
+                                                <Col xxl={3} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">Volume</Label>
+                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="volume" />
+                                                        {errors && errors.volume ? (
+                                                            <div class="text-danger">
+                                                                {errors.volume}
+                                                            </div>
+                                                        ) : null}
+                                                    </div>
+                                                </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         {showHideFields == '664645fb3f25f68d99341a74' ? <Label htmlFor="basiInput" className="form-label">Bonus</Label> : <Label htmlFor="basiInput" className="form-label">Discount %</Label>}
@@ -334,6 +414,11 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Description</Label>
                                                         <textarea name='description' onChange={e => onChange(e)} className='form-control'></textarea>
+                                                        {errors && errors.description ? (
+                                                            <div class="text-danger">
+                                                                {errors.description}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                             </Row>
@@ -400,10 +485,10 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                     </CardBody>
                                     <CardFooter>
                                         <div className="d-flex align-items-start gap-3 mt-4">
-
-                                        <button type="submit" className="btn btn-secondary">
-                                                        Save
-                                                    </button>
+                                            <Link to="/products" className='btn btn-primary'>Cancel</Link>
+                                            <button type="submit" className="btn btn-secondary">
+                                                Save
+                                            </button>
                                         </div>
                                     </CardFooter>
                                 </Card>
@@ -450,8 +535,8 @@ const mapStateToProps = state => ({
     feedType: state.feedType,
     peddlerType: state.peddlerType,
     hpSize: state.hpSize,
-  });
-  
+});
 
 
-export default connect(mapStateToProps, {createProduct, getCategories, getCompanies, getCultureTypes, getFeedTypes, getPeddlerTypes, getPlStages, getSaltPercentages, getHPSizes})(CreateProduct);
+
+export default connect(mapStateToProps, { createProduct, getCategories, getCompanies, getCultureTypes, getFeedTypes, getPeddlerTypes, getPlStages, getSaltPercentages, getHPSizes })(CreateProduct);

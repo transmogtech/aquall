@@ -5,7 +5,7 @@ import UiContent from "../../../../Components/Common/UiContent";
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import { Card, CardBody, Col, Container, Form, Input, Label, Row, CardFooter } from 'reactstrap';
 import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import Select from "react-select";
 import { getCompanies } from '../../../../actions/company';
 import PropTypes from 'prop-types';
@@ -24,6 +24,8 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
     const [selectedCultureType, setSelectedCultureType] = useState(null);
     const [selectedCompany, setSelectedCompany] = useState(null);
     const [selectedPlStage, setSelectedPlStage] = useState(null);
+    const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState();
 
     useEffect(() => {
         getCultureTypes();
@@ -36,15 +38,16 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
             setSelectedCultureType(response.culturetypeId.title);
             setSelectedCompany(response.companyId.name);
             setSelectedPlStage(response.plstageId.name);
+            setFormData({ name: response.name, culturetypeId: response.culturetypeId._id, companyId: response.companyId._id, plstageId: response.plstageId._id });
+            setLoading(false);
+
         }
         fetchtData();
-        setLoading(false);
 
     }, []);
 
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
 
     function handleSelectedCultureType(selectedCultureType) {
 
@@ -83,8 +86,44 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+
+    const validateForm = () => {
+
+        setErrors({});
+
+
+
+        if (!formData.culturetypeId) {
+            setErrors({ ...errors, culturetypeId: 'Please select culture type' });
+            return false;
+        }
+
+
+        if (!formData.companyId) {
+            setErrors({ ...errors, companyId: 'Please select company' });
+            return false;
+        }
+
+
+        if (!formData.plstageId) {
+            setErrors({ ...errors, plstageId: 'Please enter pl stage' });
+            return false;
+        }
+
+        if (!formData.name) {
+            setErrors({ ...errors, name: 'Please enter name' });
+            return false;
+        }
+
+        return true;
+    }
+
+
     const handleSubmit = () => {
 
+        if (!validateForm()) {
+            return false;
+        }
 
         updateSaltPercentage(id, formData);
 
@@ -92,7 +131,7 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
     }
 
 
-    document.title = "Create Salt Percentage| Aquall Admin";
+    document.title = "Edit Salt Percentage| Aquall Admin";
     return (
         <React.Fragment>
             {
@@ -101,12 +140,12 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
                     <div className="page-content">
 
                         <Container fluid>
-                            <BreadCrumb title="Create Salt Percentage" pageTitle="Salt Percentage Management" />
+                            <BreadCrumb title="Edit Salt Percentage" pageTitle="Salt Percentage Management" />
                             <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
                                 <Row>
                                     <Col lg={12}>
                                         <Card>
-                                            <PreviewCardHeader title="Create Salt Percentage" />
+                                            <PreviewCardHeader title="Edit Salt Percentage" />
 
                                             <CardBody className="card-body">
                                                 <div className="live-preview">
@@ -116,6 +155,11 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
                                                                 <Select value={{ label: selectedCultureType }} onChange={handleSelectedCultureType} options={CultureTypes} />
+                                                                {errors && errors.culturetypeId ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.culturetypeId}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -123,6 +167,11 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Company</Label>
                                                                 <Select value={{ label: selectedCompany }} onChange={handleSelectedCompany} options={Companies} />
+                                                                {errors && errors.companyId ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.companyId}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -130,6 +179,11 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Pl Stage</Label>
                                                                 <Select value={{ label: selectedPlStage }} onChange={handleSelectedPlStage} options={PlStages} />
+                                                                {errors && errors.plstageId ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.plstageId}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -137,6 +191,11 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Name</Label>
                                                                 <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={saltpercentage.name} />
+                                                                {errors && errors.name ? (
+                                                                    <div class="text-danger">
+                                                                        {errors.name}
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </Col>
 
@@ -148,7 +207,7 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
 
                                             <CardFooter>
                                                 <div className="d-flex align-items-start gap-3 mt-4">
-
+                                                    <Link to="/salt-percentage" className='btn btn-primary'>Cancel</Link>
                                                     <button type="submit" className="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab"><i className="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Save</button>
                                                 </div>
                                             </CardFooter>

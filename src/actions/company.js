@@ -23,7 +23,7 @@ export const createCompany = (formData) => async dispatch => {
 
     dispatch({
       type: CREATE_COMPANY,
-      payload: response.companies
+      payload: response.company
     });
 
     dispatch(setAlert('Company created successfully', 'success'));

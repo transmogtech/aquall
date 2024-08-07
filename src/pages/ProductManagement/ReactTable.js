@@ -8,6 +8,7 @@ import ChangeStatus from '../../Components/Common/ChangeStatus';
 import moment from 'moment/moment';
 import DeleteModal from "../../Components/Common/DeleteModal";
 import { changeStatusProduct, deleteProduct, getProducts } from '../../actions/product';
+import { Capitalize } from '../../helpers/common_functions';
 
 const DataTable = ({ changeStatusProduct, deleteProduct, getProducts, product: { products, loading } }) => {
 
@@ -22,13 +23,13 @@ const DataTable = ({ changeStatusProduct, deleteProduct, getProducts, product: {
   }, []);
 
 
-  products.forEach(row => searchTable.push({ id: row._id, image: row.imageUrl, company: row.companyId.name, category: row.categoryId.title, image: row.imageUrl, name: row.name, action: row._id, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  products.forEach(row => searchTable.push({ id: row._id, image: row.imageUrl, company: row.companyId.name, category: row.categoryId.title, image: row.imageUrl, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
-  function tog_grid(id) {
+  function tog_grid(data) {
     setStatusModal(true);
-    setId(id);
+    setSelectedSingle(Capitalize(data[1]));
+    setId(data[0]);
   }
-
 
   function tog_center(id) {
     setDeleteModal(true);
