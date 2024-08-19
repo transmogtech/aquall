@@ -23,7 +23,7 @@ const DataTable = ({ changeStatusOrder, deleteOrder, getOrders, order: { orders,
   }, []);
 
 
-  orders.forEach(row => searchTable.push({ id: row._id, user: row.userId?.name, orderId: row.orderId, amount: row.totalPrice, paymentMethod: row.paymentMethod, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  orders.forEach(row => searchTable.push({ id: row._id, orderId: row.orderId, orderId: row.orderId, amount: row.totalPrice, paymentMethod: row.paymentMethod, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   function tog_grid(data) {
     setStatusModal(true);
@@ -77,8 +77,8 @@ const DataTable = ({ changeStatusOrder, deleteOrder, getOrders, order: { orders,
         enableColumnFilter: false,
       },
       {
-        header: "Customer",
-        accessorKey: "user",
+        header: "Order ID",
+        accessorKey: "orderId",
         enableColumnFilter: false,
       },
       // {
@@ -111,7 +111,7 @@ const DataTable = ({ changeStatusOrder, deleteOrder, getOrders, order: { orders,
             <div>
               <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
 
-              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_center(cell.getValue()[0])} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
             </div>
           );
         },

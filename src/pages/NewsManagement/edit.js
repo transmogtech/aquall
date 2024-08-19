@@ -102,7 +102,7 @@ const EditNews = ({ updateNews, getNews, getLanguages, language: { languages } }
             return false;
         }
 
-        if (!description) {
+        if (!formData.description) {
             setErrors({ ...errors, description: 'Please enter news description' });
             return false;
         }

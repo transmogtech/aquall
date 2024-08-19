@@ -70,7 +70,7 @@ const DataTable = ({ getHatecheriesPdfs, updateHatecheriesPdf, hatecheriesPdf: {
         cell: (cell) => {
           return (
             <div>
-              <Link onClick={() => tog_center(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>
+              <Link onClick={() => tog_center(cell.getValue()[0])} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>
             </div>
           );
         },
