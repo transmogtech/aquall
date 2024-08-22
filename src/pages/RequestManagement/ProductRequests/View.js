@@ -21,25 +21,29 @@ const ViewModal = ({ show, id, onCloseClick }) => {
               <h5 className="fs-16">Product Name</h5>
               <p>{productrequest.productId.name}</p>
               <hr />
-            
-              <h5 className="fs-16">Company Name</h5>
-              <p>{productrequest.companyId.name}</p>
-              <hr />
-          
-              <h5 className="fs-16">Category</h5>
-              <p>{productrequest.categoryId.title}</p>
-              <hr />
-           
+
               <h5 className="fs-16">Volume</h5>
               <p>{productrequest.volume}</p>
               <hr />
-           
+
               <h5 className="fs-16">Price</h5>
               <p>{productrequest.price}</p>
               <hr />
-           
+
               <h5 className="fs-16">Discount</h5>
               <p>{productrequest.discount}%</p>
+              <hr />
+
+              <h5 className="fs-16">User Name</h5>
+              <p>{productrequest.userId.name}</p>
+              <hr />
+
+              <h5 className="fs-16">Email</h5>
+              <p>{productrequest.userId.email}</p>
+              <hr />
+
+              <h5 className="fs-16">Mobile</h5>
+              <p>{productrequest.userId.mobile}</p>
               <hr />
             </Col>
           </div>
@@ -50,11 +54,11 @@ const ViewModal = ({ show, id, onCloseClick }) => {
           </div>
 
         )}
-         <Col lg={12}>
-                <div className="hstack gap-2 justify-content-end">
-                  <Button color="danger" onClick={onCloseClick}>Close</Button>
-                </div>
-              </Col>
+        <Col lg={12}>
+          <div className="hstack gap-2 justify-content-end">
+            <Button color="danger" onClick={onCloseClick}>Close</Button>
+          </div>
+        </Col>
 
       </ModalBody>
     </Modal>

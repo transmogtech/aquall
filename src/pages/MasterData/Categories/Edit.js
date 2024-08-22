@@ -38,6 +38,15 @@ const EditCategory = ({ updateCategory, getCategory }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            // console.log(e.target.files);
+            setFormData({ ...formData, image: e.target.files[0] });
+        }
+    };
+
+
     const handleSubmit = () => {
         updateCategory(id, formData);
 
@@ -78,7 +87,23 @@ const EditCategory = ({ updateCategory, getCategory }) => {
                                                                     <Input type="text" onChange={e => onChange(e)} className="form-control" name="url" id="url" placeholder="URL Slug" defaultValue={category.url} />
                                                                 </div>
                                                             </Col>
-
+                                                            <Col xxl={3} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Image</Label>
+                                                                    {category.image ? (
+                                                                        <div class="img-wrap">
+                                                                            <span class="close" onClick={() => deleteImage()}>&times;</span>
+                                                                            <img src={`${process.env.REACT_APP_API_URL}/${category.image}`} width="50" />
+                                                                        </div>
+                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" />}
+                                                                </div>
+                                                            </Col>
+                                                            <Col xxl={3} md={6}>
+                                                                <div>
+                                                                    <Label htmlFor="basiInput" className="form-label">Order</Label>
+                                                                    <Input type="number" className="form-control" onChange={e => onChange(e)} name="order" id="order" placeholder="Order" defaultValue={category.order} />
+                                                                </div>
+                                                            </Col>
                                                         </Row>
 
                                                     </div>

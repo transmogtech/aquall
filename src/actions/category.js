@@ -15,7 +15,7 @@ export const createCategory = (formData) => async dispatch => {
 
     const config = {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'multipart/form-data'
       }
     };
 
@@ -130,7 +130,7 @@ export const updateCategory = (id, formData) => async dispatch => {
 
   const config = {
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'multipart/form-data'
     }
   };
 

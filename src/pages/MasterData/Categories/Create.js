@@ -27,6 +27,15 @@ const CreateCategory = ({ createCategory }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value, url: slug });
     };
 
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            // console.log(e.target.files);
+            setFormData({ ...formData, image: e.target.files[0] });
+        }
+    };
+
+
     const handleSubmit = () => {
         createCategory(formData);
 
@@ -64,7 +73,18 @@ const CreateCategory = ({ createCategory }) => {
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" defaultValue={url} placeholder="URL Slug" />
                                                     </div>
                                                 </Col>
-
+                                                <Col xxl={3} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">Image</Label>
+                                                        <Input type="file" className="form-control" onChange={handleFileChange} name="image" id="image" />
+                                                    </div>
+                                                </Col>
+                                                <Col xxl={3} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">Order</Label>
+                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="order" id="order" placeholder="Order" />
+                                                    </div>
+                                                </Col>
                                             </Row>
 
                                         </div>
