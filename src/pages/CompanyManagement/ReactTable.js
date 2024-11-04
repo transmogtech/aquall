@@ -27,7 +27,7 @@ const DataTable = ({ changeStatusCompany, deleteCompany, getCompanies, company: 
   // console.log(companies);
   companies.forEach(row => {
     if (row === undefined) { return }
-    searchTable.push({ id: row._id, logo: row.logo, action: [row._id, row.status], status: row.status, name: row.name, category: row.categoryId.title, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') })
+    searchTable.push({ id: row._id, logo: row.logo, action: [row._id, row.status], status: row.status, name: row.name, category: row.categoryId?.title, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') })
   });
 
 

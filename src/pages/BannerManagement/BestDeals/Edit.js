@@ -269,21 +269,31 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getProducts
                                                     </Col>
                                                     <Col md={12}>
                                                         <h6 className="form-label">Products</h6>
-                                                        {products.map((prod, index) => (
-                                                            <div className="form-check-inline" key={index}>
-                                                                <Input type='checkbox' className='form-check-input' value={prod._id}
-                                                                    defaultChecked={selectedProduct.includes(prod._id)}
-                                                                    onChange={e => handleProductChange(e, index)} /> {prod.name}
-                                                            </div>
-                                                        ))}
-                                                        {errors && errors.products ? (
-                                                            <div className="text-danger">
-                                                                {errors.products}
-                                                            </div>
-                                                        ) : null}
+                                                        <Row>
+                                                            {products.map((prod, index) => (
+                                                                <Col xxl={4} md={4} sm={12}>
+
+                                                                    <div className="form-check-inline" key={index}>
+                                                                        <Input type='checkbox' className='form-check-input' value={prod._id}
+                                                                            defaultChecked={selectedProduct.includes(prod._id)}
+                                                                            onChange={e => handleProductChange(e, index)} /> {prod.name}
+                                                                    </div>
+                                                                </Col>
+                                                            ))}
+                                                            {errors && errors.products ? (
+                                                                <div className="text-danger">
+                                                                    {errors.products}
+                                                                </div>
+                                                            ) : null}
+                                                        </Row>
                                                     </Col>
 
-
+                                                    <Col xxl={12} md={12} className='border-dashed border-primary rounded-2 p-3'>
+                                                        <h4 className='mb-4'>Instructions:</h4>
+                                                        <p className='mb-1'><strong>File type - </strong>JPEG, JPG, PNG</p>
+                                                        <p className='mb-1'><strong>Size - </strong>Maximum file size is 10MB</p>
+                                                        <p className='mb-1'><strong>Recommended dimensions - </strong>1168W x 658H pixels.</p>
+                                                    </Col>
 
                                                 </Row>
 

@@ -23,7 +23,7 @@ const DataTable = ({ changeStatusSaltPercentage, deleteSaltPercentage, getSaltPe
   }, []);
 
 
-  saltpercentages.forEach(row => searchTable.push({ id: row._id, cultureType: row.culturetypeId.title, company: row.companyId.name, plStage: row.plstageId.name, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  saltpercentages.forEach(row => searchTable.push({ id: row._id, cultureType: row.culturetypeId?.title, company: row.companyId?.name, plStage: row.plstageId?.name, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   function tog_grid(data) {
     setStatusModal(true);

@@ -10,15 +10,15 @@ const EcommerceOrders = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-         
+
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
                   <h5 className="card-title mb-0 float-start">Orders </h5>
                   <div className='float-end'>
-                     
-                      <Link to="/create-order" color="success" className="btn btn-success" id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Link>
+
+
                   </div>
                 </CardHeader>
                 <CardBody>
@@ -28,7 +28,7 @@ const EcommerceOrders = () => {
               </Card>
             </Col>
           </Row>
-         
+
         </Container>
       </div>
     </React.Fragment>

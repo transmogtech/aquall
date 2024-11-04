@@ -23,7 +23,7 @@ const SearchTable = ({ getNewsList, deleteNews, changeStatusNews, news: { newsLi
   }, [getNewsList]);
 
 
-  newsList.forEach(row => searchTable.push({ id: row._id, title: row.title, image: row.imageUrl, action: [row._id, row.status], language: row.language.title, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  newsList.forEach(row => searchTable.push({ id: row._id, title: row.title, image: row.imageUrl, action: [row._id, row.status], language: row.language?.title, status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
   function tog_grid(data) {

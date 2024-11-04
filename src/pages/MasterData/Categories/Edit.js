@@ -39,6 +39,11 @@ const EditCategory = ({ updateCategory, getCategory }) => {
     };
 
 
+    const deleteImage = () => {
+        setCategory({ ...category, image: null });
+    }
+
+
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             // console.log(e.target.files);

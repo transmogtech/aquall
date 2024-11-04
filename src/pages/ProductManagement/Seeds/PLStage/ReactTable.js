@@ -23,7 +23,7 @@ const DataTable = ({ changeStatusPlStage, deletePlStage, getPlStages, plStage: {
   }, []);
 
 
-  plstages.forEach(row => searchTable.push({ id: row._id, cultureType: row.culturetypeId.title, company: row.companyId.name, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  plstages.forEach(row => searchTable.push({ id: row._id, cultureType: row.culturetypeId?.title, company: row.companyId?.name, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editPlStage, setEditPlStage] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);

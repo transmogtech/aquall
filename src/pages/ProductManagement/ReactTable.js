@@ -23,7 +23,7 @@ const DataTable = ({ changeStatusProduct, deleteProduct, getProducts, product: {
   }, []);
 
 
-  products.forEach(row => searchTable.push({ id: row._id, image: row.imageUrl, company: row.companyId.name, category: row.categoryId.title, image: row.imageUrl, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  products.forEach(row => searchTable.push({ id: row._id, image: row.imageUrl, company: row.companyId?.name, category: row.categoryId?.title, image: row.imageUrl, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   function tog_grid(data) {
     setStatusModal(true);

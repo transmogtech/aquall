@@ -25,9 +25,9 @@ const DataTable = ({ getPincodes, deletePincode, changeStatusPincode, pincode: {
 
   pincodes.forEach(row => searchTable.push({
     id: row._id,
-    state: row.stateId.title,
-    district: row.districtId.title,
-    area: row.areaId.title,
+    state: row.stateId?.title,
+    district: row.districtId?.title,
+    area: row.areaId?.title,
     title: row.title,
     action: [row._id, row.status],
     // url: row.url,

@@ -138,6 +138,12 @@ const CreateAdvertisement = ({ createAdvertisement }) => {
                                                             onChange={([date]) => {
                                                                 setFormData({ ...formData, 'start_date': date });
                                                             }}
+                                                            options={{
+                                                                minDate: new Date(),
+
+                                                                dateFormat: "Y-m-d",
+                                                            }}
+
                                                         />
 
                                                     </div>
@@ -151,7 +157,7 @@ const CreateAdvertisement = ({ createAdvertisement }) => {
                                                                 setFormData({ ...formData, 'end_date': date });
                                                             }}
                                                             options={{
-                                                                minDate: "today",
+                                                                minDate: formData.start_date,
 
                                                                 dateFormat: "Y-m-d",
                                                             }}
@@ -159,7 +165,12 @@ const CreateAdvertisement = ({ createAdvertisement }) => {
 
                                                     </div>
                                                 </Col>
-
+                                                <Col xxl={12} md={12} className='border-dashed border-primary rounded-2 p-3'>
+                                                    <h4 className='mb-4'>Instructions:</h4>
+                                                    <p className='mb-1'><strong>File type - </strong>JPEG, JPG, PNG</p>
+                                                    <p className='mb-1'><strong>Size - </strong>Maximum file size is 10MB</p>
+                                                    <p className='mb-1'><strong>Recommended dimensions - </strong>1168W x 658H pixels.</p>
+                                                </Col>
                                             </Row>
 
                                         </div>

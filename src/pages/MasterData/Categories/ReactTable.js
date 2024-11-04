@@ -58,7 +58,7 @@ const DataTable = ({ getCategories, deleteCategory, changeStatusCategory, catego
 
   const statusOptions = [
     { value: 'Active', label: 'Active' },
-    { value: 'Inactive', label: 'Inactive' }
+    { value: 'paused', label: 'Paused' }
   ];
 
 

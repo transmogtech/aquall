@@ -24,7 +24,7 @@ const DataTable = ({ changeStatusJobApplication, deleteJobApplication, getJobApp
   }, []);
 
 
-  jobapplications.forEach(row => searchTable.push({ id: row._id, job: row.jobId.title, user: row.userId.name, action: [row._id, row.status], resume: row.resume, status: row.status, created: moment(row.created).format('MMMM Do YYYY') }));
+  jobapplications.forEach(row => searchTable.push({ id: row._id, job: row.jobId?.title, user: row.userId?.name, action: [row._id, row.status], resume: row.resume, status: row.status, created: moment(row.created).format('MMMM Do YYYY') }));
 
 
   const onChange = (e) => {

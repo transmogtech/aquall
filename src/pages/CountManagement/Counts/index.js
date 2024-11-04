@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import ChangeStatus from '../../../Components/Common/ChangeStatus';
 import { Capitalize } from '../../../helpers/common_functions';
+import moment from 'moment/moment';
 
 const Counts = ({ getCounts, changeStatusCount, deleteCount, count: { counts } }) => {
 
@@ -79,7 +80,7 @@ const Counts = ({ getCounts, changeStatusCount, deleteCount, count: { counts } }
 
                         <thead>
                           <tr>
-                            <th scope="col">No. {index + 1}</th>
+                            <th scope="col">{moment(row.created).format('MMMM Do YYYY')}</th>
                             <th scope="col" colSpan={2}>Count Type  : {row.categoryId.title}	</th>
                             <th scope="col" colSpan={2}>Count Area : {row.countareaId.title}	</th>
                             <th scope="col" colSpan={2}>Culture Type: {row.culturetypeId.title}	</th>

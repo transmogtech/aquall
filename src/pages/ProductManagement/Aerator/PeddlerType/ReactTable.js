@@ -23,7 +23,7 @@ const DataTable = ({ changeStatusPeddlerType, deletePeddlerType, getPeddlerTypes
   }, []);
 
 
-  peddlertypes.forEach(row => searchTable.push({ id: row._id, HpSize: row.hpsizeId.title, company: row.companyId.name, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  peddlertypes.forEach(row => searchTable.push({ id: row._id, HpSize: row.hpsizeId?.title, company: row.companyId?.name, name: row.name, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   const [editPlStage, setEditPlStage] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);

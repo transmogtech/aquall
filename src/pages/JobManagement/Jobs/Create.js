@@ -245,6 +245,8 @@ const CreateJob = ({ createJob }) => {
                                                         placeholder="Last date of Apply "
                                                         required
                                                         name="from_date"
+                                                        min={new Date().toJSON().slice(0, 10)}
+
                                                         onChange={e => onChange(e)}
                                                     />
                                                     {/* <Flatpickr
@@ -269,15 +271,16 @@ const CreateJob = ({ createJob }) => {
                                                         htmlFor="close-date-Input"
                                                         className="form-label"
                                                     >
-                                                        Close Date <span className="text-danger">*</span>
+                                                        Closing Date <span className="text-danger">*</span>
                                                     </Label>
                                                     <Input
                                                         type="date"
                                                         className="form-control"
                                                         id="Vacancy -Input"
-                                                        placeholder="Close date "
+                                                        placeholder="Closing date "
                                                         required
                                                         name="to_date"
+                                                        min={new Date().toJSON().slice(0, 10)}
                                                         onChange={e => onChange(e)}
                                                     />
                                                     {/* <Flatpickr

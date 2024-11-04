@@ -25,7 +25,7 @@ const DataTable = ({ getDistricts, deleteDistrict, changeStatusDistrict, distric
 
   districts.forEach(row => searchTable.push({
     id: row._id,
-    state: row.stateId.title,
+    state: row.stateId?.title,
     title: row.title,
     action: [row._id, row.status],
     url: row.url,

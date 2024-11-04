@@ -274,6 +274,7 @@ const EditJob = ({ updateJob, getJob }) => {
                                                                     placeholder="Last date of Apply "
                                                                     required
                                                                     name="from_date"
+                                                                    min={new Date()}
                                                                     onChange={e => onChange(e)}
                                                                     defaultValue={job.from_date}
 
@@ -300,16 +301,17 @@ const EditJob = ({ updateJob, getJob }) => {
                                                                     htmlFor="close-date-Input"
                                                                     className="form-label"
                                                                 >
-                                                                    Close Date <span className="text-danger">*</span>
+                                                                    Closing Date <span className="text-danger">*</span>
                                                                 </Label>
                                                                 <Input
                                                                     type="date"
                                                                     className="form-control"
                                                                     id="Vacancy -Input"
-                                                                    placeholder="Close date "
+                                                                    placeholder="Closing date "
                                                                     required
                                                                     name="to_date"
                                                                     defaultValue={job.to_date}
+                                                                    min={new Date()}
 
                                                                     onChange={e => onChange(e)}
                                                                 />

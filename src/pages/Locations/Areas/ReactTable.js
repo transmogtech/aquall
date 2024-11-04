@@ -25,8 +25,8 @@ const DataTable = ({ getAreas, deleteArea, changeStatusArea, area: { areas, load
 
   areas.forEach(row => searchTable.push({
     id: row._id,
-    state: row.stateId.title,
-    district: row.districtId.title,
+    state: row.stateId?.title,
+    district: row.districtId?.title,
     title: row.title,
     action: [row._id, row.status],
     url: row.url,

@@ -81,11 +81,7 @@ const DataTable = ({ changeStatusOrder, deleteOrder, getOrders, order: { orders,
         accessorKey: "orderId",
         enableColumnFilter: false,
       },
-      // {
-      //   header: "Product",
-      //   accessorKey: "product",
-      //   enableColumnFilter: false,
-      // },
+
       {
         header: "Amount",
         accessorKey: "amount",

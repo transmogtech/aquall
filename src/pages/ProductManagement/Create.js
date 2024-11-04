@@ -438,6 +438,12 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                         <Input type="number" className="form-control" onChange={e => onChange(e)} name="gstPercentage" />
                                                     </div>
                                                 </Col>}
+                                                <Col xxl={12} md={12} className='border-dashed border-primary rounded-2 p-3'>
+                                                    <h4 className='mb-4'>Instructions:</h4>
+                                                    <p className='mb-1'><strong>File type - </strong>JPEG, JPG, PNG</p>
+                                                    <p className='mb-1'><strong>Size - </strong>Maximum file size is 10MB</p>
+                                                    <p className='mb-1'><strong>Recommended dimensions - </strong>960W x 720H pixels.</p>
+                                                </Col>
                                             </Row>
                                         </div>
 
