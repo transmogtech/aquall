@@ -108,7 +108,7 @@ const CreateSponsorAd = ({ createSponsoredAd }) => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Discount %</Label>
-                                                        <Input type="number" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} />
+                                                        <Input type="number" min="1" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} />
                                                         {errors && errors.discount ? (
                                                             <div class="text-danger">
                                                                 {errors.discount}
@@ -141,7 +141,7 @@ const CreateSponsorAd = ({ createSponsoredAd }) => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Priority</Label>
-                                                        <Input type="text" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} />
+                                                        <Input type="number" min="1" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} />
                                                         {errors && errors.priority ? (
                                                             <div class="text-danger">
                                                                 {errors.priority}

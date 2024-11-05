@@ -106,7 +106,7 @@ const EditCategory = ({ updateCategory, getCategory }) => {
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Order</Label>
-                                                                    <Input type="number" className="form-control" onChange={e => onChange(e)} name="order" id="order" placeholder="Order" defaultValue={category.order} />
+                                                                    <Input type="number" className="form-control" onChange={e => onChange(e)} name="order" id="order" placeholder="Order" min="1" defaultValue={category.order} />
                                                                 </div>
                                                             </Col>
                                                         </Row>

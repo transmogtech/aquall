@@ -29,8 +29,8 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
         const fetchtData = async () => {
             const response = await getFooterLogo(id);
             setFooterlogo(response);
-            setFormData({ ...formData, company: response.company._id, priority: response.priority });
-            setSelectedCompany(response.company.name);
+            setFormData({ ...formData, company: response.company?._id, priority: response.priority });
+            setSelectedCompany(response.company?.name);
         }
         fetchtData();
         setLoading(false);
@@ -124,7 +124,7 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Priority</Label>
-                                                                    <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" placeholder="Priority" defaultValue={footerlogo.priority} />
+                                                                    <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" min="1" id="priority" placeholder="Priority" defaultValue={footerlogo.priority} />
                                                                 </div>
                                                             </Col>
                                                             <Col xxl={12} md={12} className='border-dashed border-primary rounded-2 p-3'>

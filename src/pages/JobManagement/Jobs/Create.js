@@ -198,6 +198,7 @@ const CreateJob = ({ createJob }) => {
                                                         id="Vacancy -Input"
                                                         placeholder="No. of vacancy "
                                                         required
+                                                        min="1"
                                                         name="vacancy_count"
                                                         onChange={e => onChange(e)}
                                                     />
@@ -314,6 +315,7 @@ const CreateJob = ({ createJob }) => {
                                                         name="start_salary"
                                                         placeholder="Enter start salary"
                                                         required
+                                                        min="1"
                                                         onChange={e => onChange(e)}
                                                     />
                                                 </div>
@@ -334,6 +336,7 @@ const CreateJob = ({ createJob }) => {
                                                         placeholder="Enter end salary"
                                                         name="close_salary"
                                                         required
+                                                        min="1"
                                                         onChange={e => onChange(e)}
                                                     />
                                                 </div>

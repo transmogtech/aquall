@@ -82,7 +82,7 @@ const CreateCategory = ({ createCategory }) => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Order</Label>
-                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="order" id="order" placeholder="Order" />
+                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="order" min="1" id="order" placeholder="Order" />
                                                     </div>
                                                 </Col>
                                             </Row>

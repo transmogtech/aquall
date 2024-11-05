@@ -87,7 +87,7 @@ const CreateChemicalCategory = ({ createChemicalCategory }) => {
                                                 <Col xxl={6} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Sequance</Label>
-                                                        <Input type="number" onChange={e => onChange(e)} className="form-control" name="sequance" id="sequance" placeholder="Sequance" />
+                                                        <Input type="number" min="1" onChange={e => onChange(e)} className="form-control" name="sequance" id="sequance" placeholder="Sequance" />
                                                         {errors && errors.sequance ? (
                                                             <div class="text-danger">
                                                                 {errors.sequance}

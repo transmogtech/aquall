@@ -232,7 +232,7 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Discount %</Label>
-                                                            <Input type="number" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} defaultValue={appbannerimage.discount} />
+                                                            <Input type="number" min="1" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} defaultValue={appbannerimage.discount} />
 
                                                         </div>
                                                     </Col>
@@ -250,7 +250,7 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Priority</Label>
-                                                            <Input type="text" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} defaultValue={appbannerimage.priority} />
+                                                            <Input type="number" min="1" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} defaultValue={appbannerimage.priority} />
                                                             {errors && errors.priority ? (
                                                                 <div className="text-danger">
                                                                     {errors.priority}

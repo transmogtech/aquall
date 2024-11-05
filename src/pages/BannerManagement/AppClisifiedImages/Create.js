@@ -108,7 +108,7 @@ const AppClassifiedImage = ({ createAppClassifiedImage }) => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Priority</Label>
-                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" placeholder="Priority" />
+                                                        <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" placeholder="Priority" />
                                                         {error && error.priority ? (
                                                             <div class="text-danger">
                                                                 {error.priority}

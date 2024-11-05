@@ -252,7 +252,7 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Priority</Label>
-                                                            <Input type="text" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} defaultValue={appsliderimage.priority} />
+                                                            <Input type="number" min="1" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} defaultValue={appsliderimage.priority} />
                                                             {errors && errors.priority ? (
                                                                 <div className="text-danger">
                                                                     {errors.priority}

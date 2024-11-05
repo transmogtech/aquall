@@ -119,7 +119,7 @@ const EditSliderImage = ({ updateSliderImage, getSliderImage }) => {
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Priority</Label>
-                                                                    <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" defaultValue={sliderimage.priority} placeholder="Priority" />
+                                                                    <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" defaultValue={sliderimage.priority} placeholder="Priority" />
                                                                 </div>
                                                             </Col>
                                                             <Col xxl={12} md={12} className='border-dashed border-primary rounded-2 p-3'>

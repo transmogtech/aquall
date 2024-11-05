@@ -365,7 +365,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Price</Label>
-                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="price" />
+                                                        <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="price" />
                                                         {errors && errors.price ? (
                                                             <div class="text-danger">
                                                                 {errors.price}
@@ -376,7 +376,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Volume</Label>
-                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="volume" />
+                                                        <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="volume" />
                                                         {errors && errors.volume ? (
                                                             <div class="text-danger">
                                                                 {errors.volume}
@@ -387,7 +387,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         {showHideFields == '664645fb3f25f68d99341a74' ? <Label htmlFor="basiInput" className="form-label">Bonus</Label> : <Label htmlFor="basiInput" className="form-label">Discount %</Label>}
-                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="discount" />
+                                                        <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="discount" />
                                                     </div>
                                                 </Col>
                                                 {
@@ -435,7 +435,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                 {gstFields === true && <Col xxl={9} md={9} id='gstDiv'>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">GST Percentage</Label>
-                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="gstPercentage" />
+                                                        <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="gstPercentage" />
                                                     </div>
                                                 </Col>}
                                                 <Col xxl={12} md={12} className='border-dashed border-primary rounded-2 p-3'>

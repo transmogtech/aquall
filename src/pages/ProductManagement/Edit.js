@@ -389,7 +389,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                         <Col xxl={3} md={6}>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Price</Label>
-                                                                <Input type="number" className="form-control" onChange={e => onChange(e)} name="price" defaultValue={product.price} />
+                                                                <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="price" defaultValue={product.price} />
                                                                 {errors && errors.price ? (
                                                                     <div class="text-danger">
                                                                         {errors.price}
@@ -400,7 +400,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                         <Col xxl={3} md={6}>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Volume</Label>
-                                                                <Input type="number" className="form-control" onChange={e => onChange(e)} name="volume" defaultValue={product.volume} />
+                                                                <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="volume" defaultValue={product.volume} />
                                                                 {errors && errors.volume ? (
                                                                     <div class="text-danger">
                                                                         {errors.volume}
@@ -411,7 +411,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                         <Col xxl={3} md={6}>
                                                             <div>
                                                                 {showHideFields == '664645fb3f25f68d99341a74' ? <Label htmlFor="basiInput" className="form-label">Bonus</Label> : <Label htmlFor="basiInput" className="form-label">Discount %</Label>}
-                                                                <Input type="number" className="form-control" onChange={e => onChange(e)} name="discount" defaultValue={product.discount} />
+                                                                <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="discount" defaultValue={product.discount} />
                                                             </div>
                                                         </Col>
                                                         {
@@ -459,7 +459,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                         {gstFields === true && <Col xxl={9} md={9} id='gstDiv'>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">GST Percentage</Label>
-                                                                <Input type="number" className="form-control" onChange={e => onChange(e)} name="gstPercentage" defaultValue={product.gstPercentage} />
+                                                                <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="gstPercentage" defaultValue={product.gstPercentage} />
                                                             </div>
                                                         </Col>}
                                                         <Col xxl={12} md={12} className='border-dashed border-primary rounded-2 p-3'>

@@ -223,6 +223,7 @@ const EditJob = ({ updateJob, getJob }) => {
                                                                     id="Vacancy -Input"
                                                                     placeholder="No. of vacancy "
                                                                     required
+                                                                    min="1"
                                                                     name="vacancy_count"
                                                                     defaultValue={job.vacancy_count}
 
@@ -344,6 +345,7 @@ const EditJob = ({ updateJob, getJob }) => {
                                                                     className="form-control"
                                                                     id="start-salary-Input"
                                                                     name="start_salary"
+                                                                    min="1"
                                                                     placeholder="Enter start salary"
                                                                     required
                                                                     defaultValue={job.start_salary}
@@ -368,7 +370,7 @@ const EditJob = ({ updateJob, getJob }) => {
                                                                     placeholder="Enter end salary"
                                                                     name="close_salary"
                                                                     defaultValue={job.close_salary}
-
+                                                                    min="1"
                                                                     required
                                                                     onChange={e => onChange(e)}
                                                                 />

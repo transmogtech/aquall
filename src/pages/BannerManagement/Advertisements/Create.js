@@ -122,7 +122,7 @@ const CreateAdvertisement = ({ createAdvertisement }) => {
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Priority</Label>
-                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" placeholder="Priority" />
+                                                        <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" min="1" placeholder="Priority" />
                                                         {error && error.priority ? (
                                                             <div class="text-danger">
                                                                 {error.priority}
