@@ -51,7 +51,7 @@ const CreateArea = ({ createArea, getStates, getDistricts, state: { states } }) 
 
 
         districtsData.forEach(district => {
-            if (district.stateId._id === selectedState.value) {
+            if (district.stateId && district.stateId._id === selectedState.value) {
                 Districts.push({ value: district._id, label: district.title });
             }
         });

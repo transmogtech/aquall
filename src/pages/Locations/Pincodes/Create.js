@@ -72,7 +72,7 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
 
 
         districtsData.forEach(district => {
-            if (district.stateId._id === selectedState.value) {
+            if (district.stateId && district.stateId._id === selectedState.value) {
                 Districts.push({ value: district._id, label: district.title });
             }
         });
@@ -89,7 +89,7 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
 
 
         areaData.forEach(area => {
-            if (area.districtId._id === selectedDistrict.value) {
+            if (area.districtId && area.districtId._id === selectedDistrict.value) {
                 Areas.push({ value: area._id, label: area.title });
             }
         });
