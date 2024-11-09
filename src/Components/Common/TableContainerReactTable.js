@@ -97,6 +97,7 @@ const TableContainer = ({
     // Return if the item should be filtered in/out
     return itemRank.passed
   }
+
   const table = useReactTable({
     columns,
     data,
@@ -109,11 +110,11 @@ const TableContainer = ({
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: 'fuzzy',
+    globalFilterFn: 'includesString',
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel()
+    getSortedRowModel: getSortedRowModel(),
   });
 
   const {
@@ -121,12 +122,12 @@ const TableContainer = ({
     getRowModel,
     getCanPreviousPage,
     getCanNextPage,
-    getPageOptions,
     setPageIndex,
     nextPage,
     previousPage,
     setPageSize,
-    getState
+    getState,
+    getPageCount
   } = table;
 
   useEffect(() => {
@@ -211,23 +212,45 @@ const TableContainer = ({
 
       <Row className="align-items-center mt-2 g-3 text-center text-sm-start">
         <div className="col-sm">
-          <div className="text-muted">Showing<span className="fw-semibold ms-1">{getState().pagination.pageSize}</span> of <span className="fw-semibold">{data.length}</span> Results
+          <div className="text-muted">
+            <span className="fw-semibold ms-1">  Page {parseInt(getState().pagination.pageIndex + 1)}</span> of <span className="fw-semibold">{getPageCount().toLocaleString()}</span>
+
+            <span className="flex items-center gap-1">
+              {" "} | Go to page:
+              <input
+                type="number"
+                min="1"
+                max={getPageCount()}
+                defaultValue={getState().pagination.pageIndex + 1}
+                onChange={e => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0
+                  setPageIndex(page)
+                }}
+                className="border p-1 rounded w-16 text-center"
+              />
+            </span>
           </div>
         </div>
         <div className="col-sm-auto">
           <ul className="pagination pagination-separated pagination-md justify-content-center align-item-center mb-0 flex-wrap">
             <li className={!getCanPreviousPage() ? "page-item disabled" : "page-item"}>
+              <Link to="#" className="page-link" onClick={() => setPageIndex(0)}> {'<<'} </Link>
+            </li>
+            <li className={!getCanPreviousPage() ? "page-item disabled" : "page-item"}>
               <Link to="#" className="page-link" onClick={previousPage}>Previous</Link>
             </li>
-            {getPageOptions().map((item, key) => (
+            {/* {getPageOptions().map((item, key) => (
               <React.Fragment key={key}>
                 <li className="page-item">
                   <Link to="#" className={getState().pagination.pageIndex === item ? "page-link active" : "page-link"} onClick={() => setPageIndex(item)}>{item + 1}</Link>
                 </li>
               </React.Fragment>
-            ))}
+            ))} */}
             <li className={!getCanNextPage() ? "page-item disabled" : "page-item"}>
               <Link to="#" className="page-link" onClick={nextPage}>Next</Link>
+            </li>
+            <li className={!getCanNextPage() ? "page-item disabled" : "page-item"}>
+              <Link to="#" className="page-link" onClick={() => setPageIndex(getPageCount() - 1)}> {'>>'} </Link>
             </li>
           </ul>
         </div>

@@ -151,3 +151,20 @@ export const updateNews = (id, formData) => async dispatch => {
     });
   }
 }
+
+
+
+export const filterNews = (searchTerm) => async dispatch => {
+
+  try {
+    dispatch({
+      type: SEARCH_NEWS,
+      payload: searchTerm
+    });
+
+  } catch (err) {
+    dispatch({
+      type: NEWS_ERROR
+    });
+  }
+}

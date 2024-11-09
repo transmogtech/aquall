@@ -88,7 +88,7 @@
     "sanitize.css": "^13.0.0",
     "save": "^2.9.0",
     "simplebar-react": "^3.2.4",
-    "styled-components": "^6.1.12",
+    "styled-components": "^6.1.13",
     "swiper": "^11.0.5",
     "uuid": "^9.0.1",
     "uuidv4": "^6.2.13",

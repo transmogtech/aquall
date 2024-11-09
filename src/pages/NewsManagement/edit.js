@@ -35,9 +35,9 @@ const EditNews = ({ updateNews, getNews, getLanguages, language: { languages } }
         const fetchtData = async () => {
             const response = await getNews(id);
             setNews(response);
-            setLanguage(response.language.title);
+            setLanguage(response.language?.title);
             setUrl(response.url);
-            setFormData({ title: response.title, description: response.description, language: response.language._id, url: response.url, imageUrl: response.imageUrl, metaTitle: response.metaTitle, metaDescription: response.metaDescription, metaKeywords: response.metaKeywords });
+            setFormData({ title: response.title, description: response.description, language: response.language?._id, url: response.url, imageUrl: response.imageUrl, metaTitle: response.metaTitle, metaDescription: response.metaDescription, metaKeywords: response.metaKeywords });
             setLoading(false);
 
         }
