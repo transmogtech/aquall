@@ -82,7 +82,8 @@ const TableContainer = ({
 }) => {
   const [columnFilters, setColumnFilters] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
-
+  const [start, setStart] = useState(1);
+  const [end, setEnd] = useState(10);
 
   // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -122,6 +123,7 @@ const TableContainer = ({
     getRowModel,
     getCanPreviousPage,
     getCanNextPage,
+
     setPageIndex,
     nextPage,
     previousPage,
@@ -133,6 +135,22 @@ const TableContainer = ({
   useEffect(() => {
     (customPageSize) && setPageSize((customPageSize));
   }, [customPageSize, setPageSize]);
+
+  const onPageChangeFun = (currentPage) => {
+    // nextPage();
+    setPageIndex(currentPage);
+    const newStart = currentPage * getState().pagination.pageSize + 1;
+    const newEnd = newStart + getState().pagination.pageSize - 1;
+    setStart(newStart);
+
+    if (newEnd > data.length) {
+      setEnd(data.length);
+
+    } else {
+      setEnd(newEnd);
+
+    }
+  }
 
   return (
     <Fragment>
@@ -212,7 +230,7 @@ const TableContainer = ({
 
       <Row className="align-items-center mt-2 g-3 text-center text-sm-start">
         <div className="col-sm">
-          <div className="text-muted">
+          {/* <div className="text-muted">
             <span className="fw-semibold ms-1">  Page {parseInt(getState().pagination.pageIndex + 1)}</span> of <span className="fw-semibold">{getPageCount().toLocaleString()}</span>
 
             <span className="flex items-center gap-1">
@@ -229,15 +247,32 @@ const TableContainer = ({
                 className="border p-1 rounded w-16 text-center"
               />
             </span>
+          </div> */}
+
+          <div className="text-muted"> <span>Showing<span className="fw-semibold ms-1">{start}</span> to <span className="fw-semibold ms-1">{end}</span> of <span className="fw-semibold">{data.length}</span> Results </span>
+            <span className="flex items-center gap-1">
+              {" "} | Go to page:
+              <input
+                type="number"
+                min="1"
+                max={getPageCount()}
+                defaultValue={getState().pagination.pageIndex + 1}
+                onChange={e => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0
+                  onPageChangeFun(page)
+                }}
+                className="border p-1 rounded w-16 text-center"
+              />
+            </span>
           </div>
         </div>
         <div className="col-sm-auto">
           <ul className="pagination pagination-separated pagination-md justify-content-center align-item-center mb-0 flex-wrap">
             <li className={!getCanPreviousPage() ? "page-item disabled" : "page-item"}>
-              <Link to="#" className="page-link" onClick={() => setPageIndex(0)}> {'<<'} </Link>
+              <Link to="#" className="page-link" onClick={() => onPageChangeFun(0)}> {'<<'} </Link>
             </li>
             <li className={!getCanPreviousPage() ? "page-item disabled" : "page-item"}>
-              <Link to="#" className="page-link" onClick={previousPage}>Previous</Link>
+              <Link to="#" className="page-link" onClick={() => onPageChangeFun(parseInt(getState().pagination.pageIndex - 1))}>Previous</Link>
             </li>
             {/* {getPageOptions().map((item, key) => (
               <React.Fragment key={key}>
@@ -247,10 +282,10 @@ const TableContainer = ({
               </React.Fragment>
             ))} */}
             <li className={!getCanNextPage() ? "page-item disabled" : "page-item"}>
-              <Link to="#" className="page-link" onClick={nextPage}>Next</Link>
+              <Link to="#" className="page-link" onClick={() => onPageChangeFun(parseInt(getState().pagination.pageIndex + 1))}>Next</Link>
             </li>
             <li className={!getCanNextPage() ? "page-item disabled" : "page-item"}>
-              <Link to="#" className="page-link" onClick={() => setPageIndex(getPageCount() - 1)}> {'>>'} </Link>
+              <Link to="#" className="page-link" onClick={() => onPageChangeFun(getPageCount() - 1)}> {'>>'} </Link>
             </li>
           </ul>
         </div>
