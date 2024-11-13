@@ -83,7 +83,7 @@ const TableContainer = ({
   const [columnFilters, setColumnFilters] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
   const [start, setStart] = useState(1);
-  const [end, setEnd] = useState(10);
+  const [end, setEnd] = useState(data.length <= 10 ? data.length : 10);
 
   // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -125,8 +125,6 @@ const TableContainer = ({
     getCanNextPage,
 
     setPageIndex,
-    nextPage,
-    previousPage,
     setPageSize,
     getState,
     getPageCount
