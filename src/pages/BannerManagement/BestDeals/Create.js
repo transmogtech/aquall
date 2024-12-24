@@ -44,7 +44,17 @@ const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProduc
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setFormData({ ...formData, image: e.target.files[0] });
+            let file_size = e.target.files[0].size;
+
+            if (file_size > 10e6) {
+                setErrors({ ...errors, image: 'Image file size should not exceed 10MB' });
+                return;
+            }else{
+                setFormData({ ...formData, image: e.target.files[0] });
+            }
+
+            // console.log(e.target.files);
+            
         }
     };
 
@@ -181,7 +191,7 @@ const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProduc
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                        <Input type="file" className="form-control" id="title" placeholder="URL Slug" onChange={handleFileChange} />
+                                                        <Input type="file" className="form-control" id="title" placeholder="URL Slug" onChange={handleFileChange} accept="image/jpeg, image/png" />
                                                         {errors && errors.image ? (
                                                             <div className="text-danger">
                                                                 {errors.image}

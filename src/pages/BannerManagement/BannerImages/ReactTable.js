@@ -25,7 +25,7 @@ const DataTable = ({ changeStatusBannerImage, deleteBannerImage, getBannerImages
   }, []);
 
 
-  bannerimages.forEach(row => searchTable.push({ id: row._id, priority: row.priority, image: row.image, action: [row._id, row.status], status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  bannerimages.forEach(row => searchTable.push({ id: row._id, priority: row.priority, category: row.categoryId?.title, image: row.image, action: [row._id, row.status], status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
   function tog_grid(data) {
     setStatusModal(true);
@@ -82,7 +82,11 @@ const DataTable = ({ changeStatusBannerImage, deleteBannerImage, getBannerImages
         accessorKey: "created",
         enableColumnFilter: false,
       },
-
+      {
+        header: "Category",
+        accessorKey: "category",
+        enableColumnFilter: false,
+      },
       {
         header: "Image",
         accessorKey: "image",

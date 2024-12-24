@@ -49,8 +49,19 @@ const EditNews = ({ updateNews, getNews, getLanguages, language: { languages } }
     const navigate = useNavigate();
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        // if (e.target.files) {
+        //     setFormData({ ...formData, imageUrl: e.target.files[0] });
+        // }
+
         if (e.target.files) {
-            setFormData({ ...formData, imageUrl: e.target.files[0] });
+            let file_size = e.target.files[0].size;
+
+            if (file_size > 10e6) {
+                setErrors({ ...errors, imageUrl: 'Image file size should not exceed 10MB' });
+                return;
+            }else{
+                setFormData({ ...formData, imageUrl: e.target.files[0] });
+            }         
         }
     };
 
@@ -188,7 +199,7 @@ const EditNews = ({ updateNews, getNews, getLanguages, language: { languages } }
                                                                             <span class="close" onClick={() => deleteImage()}>&times;</span>
                                                                             <img src={`${process.env.REACT_APP_API_URL}/${news.imageUrl}`} width="50" />
                                                                         </div>
-                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} id="inputGroupFile02" />}
+                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} id="inputGroupFile02" accept="image/jpeg, image/png" />}
 
                                                                 </div>
                                                             </Col>

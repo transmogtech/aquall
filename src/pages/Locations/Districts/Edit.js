@@ -30,6 +30,14 @@ const EditDistrict = ({ updateDistrict, getStates, getDistrict, state: { states 
             const response = await getDistrict(id);
             setDistrict(response);
             setSelectedState(response.stateId.title);
+            setFormData({
+                stateId: response.stateId._id,
+                title: response.title,
+                url: response.url,
+                metaTitle: response.metaTitle,
+                metaKeywords: response.metaKeywords,
+                metaDescription: response.metaDescription,
+            });
         }
         fetchtData();
         setLoading(false);

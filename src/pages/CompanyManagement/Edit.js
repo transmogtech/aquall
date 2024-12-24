@@ -55,8 +55,19 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
         setCompany({ ...company, logo: null });
     }
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        // if (e.target.files) {
+        //     setFormData({ ...formData, logo: e.target.files[0] });
+        // }
+
         if (e.target.files) {
-            setFormData({ ...formData, logo: e.target.files[0] });
+            let file_size = e.target.files[0].size;
+
+            if (file_size > 10e6) {
+                alert('Image file size should not exceed 10MB');
+                return;
+            }else{
+                setFormData({ ...formData, logo: e.target.files[0] });
+            }         
         }
     };
 
@@ -110,7 +121,7 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
                                                                             <span className="close" onClick={() => deleteImage()}>&times;</span>
                                                                             <img src={`${process.env.REACT_APP_API_URL}/${company.logo}`} width="100%" />
                                                                         </div>
-                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" accept="image/jpeg, image/png" />
                                                                 }
                                                             </div>
                                                         </Col>

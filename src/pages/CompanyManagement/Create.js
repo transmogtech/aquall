@@ -42,8 +42,19 @@ const CreateCompany = ({ getCategories, createCompany, category: { categories } 
     };
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        // if (e.target.files) {
+        //     setFormData({ ...formData, logo: e.target.files[0] });
+        // }
+
         if (e.target.files) {
-            setFormData({ ...formData, logo: e.target.files[0] });
+            let file_size = e.target.files[0].size;
+
+            if (file_size > 10e6) {
+                alert('Image file size should not exceed 10MB');
+                return;
+            }else{
+                setFormData({ ...formData, logo: e.target.files[0] });
+            }         
         }
     };
 
@@ -90,7 +101,7 @@ const CreateCompany = ({ getCategories, createCompany, category: { categories } 
                                                 <Col xxl={4} md={4}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Company Logo</Label>
-                                                        <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                        <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" accept="image/jpeg, image/png" />
                                                     </div>
                                                 </Col>
 

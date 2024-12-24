@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import withRouter from "../../Components/Common/withRouter";
 import { Collapse } from 'reactstrap';
 
@@ -13,7 +13,8 @@ import { createSelector } from 'reselect';
 
 const VerticalLayout = (props) => {
     const navData = navdata().props.children;
-
+    let location = useLocation();
+    console.log(location);
     /*
  layout settings
  */
@@ -147,7 +148,7 @@ const VerticalLayout = (props) => {
 
     return (
         <React.Fragment>
-            
+
             {/* menu Items */}
             {(navData || []).map((item, key) => {
                 return (

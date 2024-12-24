@@ -54,8 +54,19 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
 
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        // if (e.target.files) {
+        //     setFormData({ ...formData, image: e.target.files[0] });
+        // }
+
         if (e.target.files) {
-            setFormData({ ...formData, image: e.target.files[0] });
+            let file_size = e.target.files[0].size;
+
+            if (file_size > 10e6) {
+                setErrors({ ...errors, image: 'Image file size should not exceed 10MB' });
+                return;
+            }else{
+                setFormData({ ...formData, image: e.target.files[0] });
+            }         
         }
     };
 
@@ -221,7 +232,7 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
                                                                     <span className="close" onClick={() => deleteImage()}>&times;</span>
                                                                     <img src={`${process.env.REACT_APP_API_URL}/${appbannerimage.image}`} width="100%" />
                                                                 </div>
-                                                            ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />}
+                                                            ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" accept="image/jpeg, image/png" />}
                                                             {errors && errors.image ? (
                                                                 <div className="text-danger">
                                                                     {errors.image}

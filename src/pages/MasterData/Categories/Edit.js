@@ -18,12 +18,14 @@ const EditCategory = ({ updateCategory, getCategory }) => {
 
     const [category, setCategory] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [formData, setFormData] = useState();
 
 
     useEffect(() => {
         const fetchtData = async () => {
             const response = await getCategory(id);
             setCategory(response);
+            setFormData({ title: response.title, order: response.order, url: response.url, metaTitle: response.metaTitle, metaKeywords: response.metaKeywords, metaDescription: response.metaDescription });
         }
         fetchtData();
         setLoading(false);
@@ -32,7 +34,6 @@ const EditCategory = ({ updateCategory, getCategory }) => {
 
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,10 +46,24 @@ const EditCategory = ({ updateCategory, getCategory }) => {
 
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        // if (e.target.files) {
+        //     // console.log(e.target.files);
+        //     setFormData({ ...formData, image: e.target.files[0] });
+        // }
+
         if (e.target.files) {
-            // console.log(e.target.files);
-            setFormData({ ...formData, image: e.target.files[0] });
+            let file_size = e.target.files[0].size;
+
+            if (file_size > 10e6) {
+                alert('Image file size should not exceed 10MB' );
+                return;
+            }else{
+                setFormData({ ...formData, image: e.target.files[0] });
+            }
+
+            
         }
+
     };
 
 
@@ -100,7 +115,7 @@ const EditCategory = ({ updateCategory, getCategory }) => {
                                                                             <span class="close" onClick={() => deleteImage()}>&times;</span>
                                                                             <img src={`${process.env.REACT_APP_API_URL}/${category.image}`} width="50" />
                                                                         </div>
-                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" />}
+                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" accept="image/jpeg, image/png" />}
                                                                 </div>
                                                             </Col>
                                                             <Col xxl={3} md={6}>

@@ -88,7 +88,7 @@ const CreateUser = ({ createUser, getStates, getDistricts, getAreas, getPincodes
 
 
         areaData.forEach(area => {
-            if (area.districtId._id === selectedDistrict.value) {
+            if (area.districtId?._id === selectedDistrict.value) {
                 Areas.push({ value: area._id, label: area.title });
             }
         });
@@ -103,7 +103,7 @@ const CreateUser = ({ createUser, getStates, getDistricts, getAreas, getPincodes
         setSelectedArea(selectedArea.label);
 
         pincodeData.forEach(pincode => {
-            if (pincode.areaId._id === selectedArea.value) {
+            if (pincode.areaId?._id === selectedArea.value) {
                 Pincodes.push({ value: pincode._id, label: pincode.title });
             }
         });
