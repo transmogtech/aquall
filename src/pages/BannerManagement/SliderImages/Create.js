@@ -74,7 +74,7 @@ const CreateSliderImage = ({ createSliderImage }) => {
                                                         <Label htmlFor="title" className="form-label">URL</Label>
                                                         <Input type="text" className="form-control" onChange={e => { onChange(e); }} name="url" id="url" placeholder="URL" />
                                                         {error && error.url ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {error.url}
                                                             </div>
                                                         ) : null}
@@ -86,7 +86,7 @@ const CreateSliderImage = ({ createSliderImage }) => {
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
                                                         <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
                                                         {error && error.image ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {error.image}
                                                             </div>
                                                         ) : null}

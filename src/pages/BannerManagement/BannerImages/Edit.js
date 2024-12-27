@@ -94,7 +94,7 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
                                                                     <Label htmlFor="title" className="form-label">URL</Label>
                                                                     <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" defaultValue={bannerimage.url} placeholder="URL" />
                                                                     {error && error.url ? (
-                                                                        <div class="text-danger">
+                                                                        <div className="text-danger">
                                                                             {error.url}
                                                                         </div>
                                                                     ) : null}
@@ -115,7 +115,7 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
 
                                                                     }
                                                                     {error && error.image ? (
-                                                                        <div class="text-danger">
+                                                                        <div className="text-danger">
                                                                             {error.image}
                                                                         </div>
                                                                     ) : null}
@@ -127,7 +127,7 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
                                                                     <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                                     <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" defaultValue={bannerimage.priority} placeholder="Priority" />
                                                                     {error && error.priority ? (
-                                                                        <div class="text-danger">
+                                                                        <div className="text-danger">
                                                                             {error.priority}
                                                                         </div>
                                                                     ) : null}

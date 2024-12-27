@@ -133,7 +133,7 @@ const EditPeddlerType = ({ getHPSizes, getCompanies, updatePeddlerType, getPeddl
                                                                 <Label htmlFor="basiInput" className="form-label">HP Size</Label>
                                                                 <Select value={{ label: selectedHpSize }} onChange={handleSelectedHpSize} options={HpSizes} />
                                                                 {errors && errors.hpsizeId ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.hpsizeId}
                                                                     </div>
                                                                 ) : null}
@@ -144,7 +144,7 @@ const EditPeddlerType = ({ getHPSizes, getCompanies, updatePeddlerType, getPeddl
                                                                 <Label htmlFor="basiInput" className="form-label">Company</Label>
                                                                 <Select value={{ label: selectedCompany }} onChange={handleSelectedCompany} options={Companies} />
                                                                 {errors && errors.companyId ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.companyId}
                                                                     </div>
                                                                 ) : null}
@@ -155,7 +155,7 @@ const EditPeddlerType = ({ getHPSizes, getCompanies, updatePeddlerType, getPeddl
                                                                 <Label htmlFor="basiInput" className="form-label">Name</Label>
                                                                 <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={peddlertype.name} />
                                                                 {errors && errors.name ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.name}
                                                                     </div>
                                                                 ) : null}

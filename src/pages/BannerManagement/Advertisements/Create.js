@@ -100,7 +100,7 @@ const CreateAdvertisement = ({ createAdvertisement }) => {
                                                             onChange={e => onChange(e)}
                                                         />
                                                         {error && error.url ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {error.url}
                                                             </div>
                                                         ) : null}
@@ -112,7 +112,7 @@ const CreateAdvertisement = ({ createAdvertisement }) => {
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
                                                         <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
                                                         {error && error.image ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {error.image}
                                                             </div>
                                                         ) : null}
@@ -124,7 +124,7 @@ const CreateAdvertisement = ({ createAdvertisement }) => {
                                                         <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                         <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" min="1" placeholder="Priority" />
                                                         {error && error.priority ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {error.priority}
                                                             </div>
                                                         ) : null}

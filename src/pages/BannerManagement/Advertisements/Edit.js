@@ -115,7 +115,7 @@ const EditAdvertisement = ({ updateAdvertisement, getAdvertisement }) => {
                                                                     <Label htmlFor="title" className="form-label">URL</Label>
                                                                     <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" defaultValue={advertisement.url} placeholder="URL" />
                                                                     {error && error.url ? (
-                                                                        <div class="text-danger">
+                                                                        <div className="text-danger">
                                                                             {error.url}
                                                                         </div>
                                                                     ) : null}
@@ -133,7 +133,7 @@ const EditAdvertisement = ({ updateAdvertisement, getAdvertisement }) => {
                                                                         ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
                                                                     }
                                                                     {error && error.image ? (
-                                                                        <div class="text-danger">
+                                                                        <div className="text-danger">
                                                                             {error.image}
                                                                         </div>
                                                                     ) : null}
@@ -145,7 +145,7 @@ const EditAdvertisement = ({ updateAdvertisement, getAdvertisement }) => {
                                                                     <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                                     <Input type="number" className="form-control" min="1" onChange={e => onChange(e)} name="priority" id="priority" defaultValue={advertisement.priority} placeholder="Priority" />
                                                                     {error && error.priority ? (
-                                                                        <div class="text-danger">
+                                                                        <div className="text-danger">
                                                                             {error.priority}
                                                                         </div>
                                                                     ) : null}

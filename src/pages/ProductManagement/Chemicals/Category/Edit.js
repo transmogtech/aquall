@@ -91,7 +91,7 @@ const EditChemicalCategory = ({ updateChemicalCategory, getChemicalCategory }) =
                                                                 <Label htmlFor="basiInput" className="form-label">Name</Label>
                                                                 <Input type="text" onChange={e => onChange(e)} className="form-control" name="title" id="title" placeholder="Name" defaultValue={chemicalcategory.title} />
                                                                 {errors && errors.title ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.title}
                                                                     </div>
                                                                 ) : null}
@@ -103,7 +103,7 @@ const EditChemicalCategory = ({ updateChemicalCategory, getChemicalCategory }) =
                                                                 <Label htmlFor="basiInput" className="form-label">Sequance</Label>
                                                                 <Input type="number" min="1" onChange={e => onChange(e)} className="form-control" name="sequance" id="sequance" placeholder="Sequance" defaultValue={chemicalcategory.sequance} />
                                                                 {errors && errors.sequance ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.sequance}
                                                                     </div>
                                                                 ) : null}

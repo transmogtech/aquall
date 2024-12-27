@@ -112,7 +112,7 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
                                                                 <Label htmlFor="title" className="form-label">URL</Label>
                                                                 <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" defaultValue={appclassifiedimage.url} placeholder="URL" />
                                                                 {error && error.url ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {error.url}
                                                                     </div>
                                                                 ) : null}
@@ -131,7 +131,7 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
                                                                     ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
                                                                 }
                                                                 {error && error.image ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {error.image}
                                                                     </div>
                                                                 ) : null}
@@ -143,7 +143,7 @@ const EditAppClassifiedImage = ({ updateAppClassifiedImage, getAppClassifiedImag
                                                                 <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                                 <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" defaultValue={appclassifiedimage.priority} placeholder="Priority" />
                                                                 {error && error.priority ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {error.priority}
                                                                     </div>
                                                                 ) : null}

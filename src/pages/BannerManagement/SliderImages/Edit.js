@@ -90,7 +90,7 @@ const EditSliderImage = ({ updateSliderImage, getSliderImage }) => {
                                                                     <Label htmlFor="title" className="form-label">URL</Label>
                                                                     <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" defaultValue={sliderimage.url} placeholder="URL" />
                                                                     {error && error.url ? (
-                                                                        <div class="text-danger">
+                                                                        <div className="text-danger">
                                                                             {error.url}
                                                                         </div>
                                                                     ) : null}
@@ -109,7 +109,7 @@ const EditSliderImage = ({ updateSliderImage, getSliderImage }) => {
                                                                         </div>
                                                                     ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />}
                                                                     {error && error.image ? (
-                                                                        <div class="text-danger">
+                                                                        <div className="text-danger">
                                                                             {error.image}
                                                                         </div>
                                                                     ) : null}

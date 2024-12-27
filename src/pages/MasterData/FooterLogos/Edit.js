@@ -113,8 +113,8 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
                                                                     <Label htmlFor="basiInput" className="form-label">Logo</Label>
 
                                                                     {footerlogo.logo ? (
-                                                                        <div class="img-wrap">
-                                                                            <span class="close" onClick={() => deleteImage()}>&times;</span>
+                                                                        <div className="img-wrap">
+                                                                            <span className="close" onClick={() => deleteImage()}>&times;</span>
                                                                             <img src={`${process.env.REACT_APP_API_URL}/${footerlogo.logo}`} width="50" />
                                                                         </div>
                                                                     ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />}

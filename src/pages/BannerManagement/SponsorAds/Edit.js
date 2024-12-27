@@ -120,7 +120,7 @@ const EditSponsorAd = ({ updateSponsoredAd, getSponsoredAd }) => {
                                                                 <Label htmlFor="basiInput" className="form-label">Sponsor Name</Label>
                                                                 <Input type="text" className="form-control" name="name" placeholder="Sponsor Name" onChange={e => onChange(e)} defaultValue={sponsoredad.name} />
                                                                 {errors && errors.name ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.name}
                                                                     </div>
                                                                 ) : null}
@@ -132,7 +132,7 @@ const EditSponsorAd = ({ updateSponsoredAd, getSponsoredAd }) => {
                                                                 <Label htmlFor="basiInput" className="form-label">Discount %</Label>
                                                                 <Input type="number" min="1" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} defaultValue={sponsoredad.discount} />
                                                                 {errors && errors.discount ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.discount}
                                                                     </div>
                                                                 ) : null}
@@ -150,7 +150,7 @@ const EditSponsorAd = ({ updateSponsoredAd, getSponsoredAd }) => {
                                                                     ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
                                                                 }
                                                                 {errors && errors.image ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.image}
                                                                     </div>
                                                                 ) : null}
@@ -161,7 +161,7 @@ const EditSponsorAd = ({ updateSponsoredAd, getSponsoredAd }) => {
                                                                 <Label htmlFor="basiInput" className="form-label">URL</Label>
                                                                 <Input type="text" className="form-control" name="url" placeholder="URL" onChange={e => onChange(e)} defaultValue={sponsoredad.url} />
                                                                 {errors && errors.url ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.url}
                                                                     </div>
                                                                 ) : null}
@@ -172,7 +172,7 @@ const EditSponsorAd = ({ updateSponsoredAd, getSponsoredAd }) => {
                                                                 <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                                 <Input type="number" min="1" className="form-control" name="priority" placeholder="Priority" onChange={e => onChange(e)} defaultValue={sponsoredad.priority} />
                                                                 {errors && errors.priority ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.priority}
                                                                     </div>
                                                                 ) : null}

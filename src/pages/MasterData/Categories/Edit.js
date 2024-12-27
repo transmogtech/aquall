@@ -96,8 +96,8 @@ const EditCategory = ({ updateCategory, getCategory }) => {
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Image</Label>
                                                                     {category.image ? (
-                                                                        <div class="img-wrap">
-                                                                            <span class="close" onClick={() => deleteImage()}>&times;</span>
+                                                                        <div className="img-wrap">
+                                                                            <span className="close" onClick={() => deleteImage()}>&times;</span>
                                                                             <img src={`${process.env.REACT_APP_API_URL}/${category.image}`} width="50" />
                                                                         </div>
                                                                     ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" />}

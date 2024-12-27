@@ -176,7 +176,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                             }
                                                         </select>
                                                         {errors && errors.categoryId ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.categoryId}
                                                             </div>
                                                         ) : null}
@@ -201,7 +201,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                             }
                                                         </select>
                                                         {errors && errors.companyId ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.companyId}
                                                             </div>
                                                         ) : null}
@@ -344,7 +344,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                         <Label htmlFor="basiInput" className="form-label">Product Name</Label>
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="name" placeholder="Product Name" />
                                                         {errors && errors.name ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.name}
                                                             </div>
                                                         ) : null}
@@ -356,7 +356,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
                                                         <Input type="file" className="form-control" onChange={handleFileChange} id="title" placeholder="URL Slug" />
                                                         {errors && errors.imageUrl ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.imageUrl}
                                                             </div>
                                                         ) : null}
@@ -367,7 +367,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                         <Label htmlFor="basiInput" className="form-label">Price</Label>
                                                         <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="price" />
                                                         {errors && errors.price ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.price}
                                                             </div>
                                                         ) : null}
@@ -378,7 +378,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                         <Label htmlFor="basiInput" className="form-label">Volume</Label>
                                                         <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="volume" />
                                                         {errors && errors.volume ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.volume}
                                                             </div>
                                                         ) : null}
@@ -415,7 +415,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                         <Label htmlFor="basiInput" className="form-label">Description</Label>
                                                         <textarea name='description' onChange={e => onChange(e)} className='form-control'></textarea>
                                                         {errors && errors.description ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.description}
                                                             </div>
                                                         ) : null}

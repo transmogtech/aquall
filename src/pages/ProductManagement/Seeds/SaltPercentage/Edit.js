@@ -156,7 +156,7 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
                                                                 <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
                                                                 <Select value={{ label: selectedCultureType }} onChange={handleSelectedCultureType} options={CultureTypes} />
                                                                 {errors && errors.culturetypeId ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.culturetypeId}
                                                                     </div>
                                                                 ) : null}
@@ -168,7 +168,7 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
                                                                 <Label htmlFor="basiInput" className="form-label">Company</Label>
                                                                 <Select value={{ label: selectedCompany }} onChange={handleSelectedCompany} options={Companies} />
                                                                 {errors && errors.companyId ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.companyId}
                                                                     </div>
                                                                 ) : null}
@@ -180,7 +180,7 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
                                                                 <Label htmlFor="basiInput" className="form-label">Pl Stage</Label>
                                                                 <Select value={{ label: selectedPlStage }} onChange={handleSelectedPlStage} options={PlStages} />
                                                                 {errors && errors.plstageId ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.plstageId}
                                                                     </div>
                                                                 ) : null}
@@ -192,7 +192,7 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
                                                                 <Label htmlFor="basiInput" className="form-label">Name</Label>
                                                                 <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={saltpercentage.name} />
                                                                 {errors && errors.name ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.name}
                                                                     </div>
                                                                 ) : null}

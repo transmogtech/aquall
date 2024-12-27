@@ -117,7 +117,7 @@ const CreatePeddlerType = ({ getHPSizes, getCompanies, createPeddlerType, compan
                                                         <Label htmlFor="basiInput" className="form-label">HP Size</Label>
                                                         <Select onChange={handleSelectedHpSize} options={HpSizes} />
                                                         {errors && errors.hpsizeId ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.hpsizeId}
                                                             </div>
                                                         ) : null}
@@ -128,7 +128,7 @@ const CreatePeddlerType = ({ getHPSizes, getCompanies, createPeddlerType, compan
                                                         <Label htmlFor="basiInput" className="form-label">Company</Label>
                                                         <Select onChange={handleSelectedCompany} options={Companies} />
                                                         {errors && errors.companyId ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.companyId}
                                                             </div>
                                                         ) : null}
@@ -139,7 +139,7 @@ const CreatePeddlerType = ({ getHPSizes, getCompanies, createPeddlerType, compan
                                                         <Label htmlFor="basiInput" className="form-label">Name</Label>
                                                         <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" />
                                                         {errors && errors.name ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.name}
                                                             </div>
                                                         ) : null}

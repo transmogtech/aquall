@@ -38,9 +38,9 @@ const EditArea = ({ updateArea, getStates, getDistricts, getArea, state: { state
         const fetchtData = async () => {
             const response = await getArea(id);
             setArea(response);
-            setSelectedState(response.stateId.title);
-            setSelectedDistrict(response.districtId.title);
-            getDistricts({ stateId: response.stateId._id });
+            setSelectedState(response.stateId?.title);
+            setSelectedDistrict(response.districtId?.title);
+            getDistricts({ stateId: response.stateId?._id });
         }
         fetchtData();
         setLoading(false);

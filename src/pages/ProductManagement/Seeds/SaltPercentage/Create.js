@@ -138,7 +138,7 @@ const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, crea
                                                         <Label htmlFor="basiInput" className="form-label">Culture Type</Label>
                                                         <Select onChange={handleSelectedCultureType} options={CultureTypes} />
                                                         {errors && errors.culturetypeId ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.culturetypeId}
                                                             </div>
                                                         ) : null}
@@ -150,7 +150,7 @@ const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, crea
                                                         <Label htmlFor="basiInput" className="form-label">Company</Label>
                                                         <Select onChange={handleSelectedCompany} options={Companies} />
                                                         {errors && errors.companyId ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.companyId}
                                                             </div>
                                                         ) : null}
@@ -162,7 +162,7 @@ const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, crea
                                                         <Label htmlFor="basiInput" className="form-label">Pl Stage</Label>
                                                         <Select onChange={handleSelectedPlStage} options={PlStages} />
                                                         {errors && errors.plstageId ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.plstageId}
                                                             </div>
                                                         ) : null}
@@ -174,7 +174,7 @@ const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, crea
                                                         <Label htmlFor="basiInput" className="form-label">Name</Label>
                                                         <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" />
                                                         {errors && errors.name ? (
-                                                            <div class="text-danger">
+                                                            <div className="text-danger">
                                                                 {errors.name}
                                                             </div>
                                                         ) : null}

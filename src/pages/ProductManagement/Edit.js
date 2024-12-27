@@ -192,7 +192,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                     }
                                                                 </select>
                                                                 {errors && errors.categoryId ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.categoryId}
                                                                     </div>
                                                                 ) : null}
@@ -217,7 +217,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                     }
                                                                 </select>
                                                                 {errors && errors.companyId ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.companyId}
                                                                     </div>
                                                                 ) : null}
@@ -360,7 +360,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                 <Label htmlFor="basiInput" className="form-label">Product Name</Label>
                                                                 <Input type="text" className="form-control" onChange={e => onChange(e)} name="name" placeholder="Product Name" defaultValue={product.name} />
                                                                 {errors && errors.name ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.name}
                                                                     </div>
                                                                 ) : null}
@@ -380,7 +380,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
 
                                                                 }
                                                                 {errors && errors.imageUrl ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.imageUrl}
                                                                     </div>
                                                                 ) : null}
@@ -391,7 +391,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                 <Label htmlFor="basiInput" className="form-label">Price</Label>
                                                                 <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="price" defaultValue={product.price} />
                                                                 {errors && errors.price ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.price}
                                                                     </div>
                                                                 ) : null}
@@ -402,7 +402,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                 <Label htmlFor="basiInput" className="form-label">Volume</Label>
                                                                 <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="volume" defaultValue={product.volume} />
                                                                 {errors && errors.volume ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.volume}
                                                                     </div>
                                                                 ) : null}
@@ -439,7 +439,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                                 <Label htmlFor="basiInput" className="form-label">Description</Label>
                                                                 <textarea name='description' onChange={e => onChange(e)} defaultValue={product.description} className='form-control'></textarea>
                                                                 {errors && errors.description ? (
-                                                                    <div class="text-danger">
+                                                                    <div className="text-danger">
                                                                         {errors.description}
                                                                     </div>
                                                                 ) : null}
