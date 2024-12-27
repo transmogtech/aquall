@@ -41,15 +41,25 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
         const fetchtData = async () => {
             const response = await getPincode(id);
             setPincode(response);
-            setSelectedState(response.stateId.title);
-            setSelectedDistrict(response.districtId.title);
-            setSelectedArea(response.areaId.title);
+            setSelectedState(response.stateId?.title);
+            setSelectedDistrict(response.districtId?.title);
+            setSelectedArea(response.areaId?.title);
             getDistricts({ stateId: response.stateId });
             getAreas({ districtId: response.districtId });
             categories.forEach((category, index) => {
                 Cateogry.push({ _id: category._id, title: category.title, charge: response.delivery[index].charge, days: response.delivery[index].days });
             });
             setDelivery(Cateogry);
+            setFormData({
+                stateId: response.stateId?._id,
+                districtId: response.districtId?._id,
+                areaId: response.areaId?._id,
+                title: response.title,
+                url: response.url,
+                metaTitle: response.metaTitle,
+                metaKeywords: response.metaKeywords,
+                metaDescription: response.metaDescription,
+            });
             setLoading(false);
         }
 

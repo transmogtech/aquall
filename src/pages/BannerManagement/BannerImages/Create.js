@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UiContent from "../../../Components/Common/UiContent";
 
 //import Components
@@ -9,30 +9,60 @@ import { createBannerImage } from '../../../actions/bannerImage';
 import { useNavigate, Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { getCategories } from '../../../actions/category';
+import Select from "react-select";
 
-const CreateBannerImage = ({ createBannerImage }) => {
+const CreateBannerImage = ({ createBannerImage, getCategories, category: { categories } }) => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ url: '', image: '', priority: '' });
     const [error, setError] = useState({});
+    const [selectedCategory, setSelectedCategory] = useState(false);
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+    useEffect(() => {
+        getCategories();
+    }, []);
 
+    const Categories = [];
+    categories.forEach(row => Categories.push({ value: row._id, label: row.title }));
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        // if (e.target.files) {
+        //     // console.log(e.target.files);
+        //     setFormData({ ...formData, image: e.target.files[0] });
+        // }
+
         if (e.target.files) {
-            // console.log(e.target.files);
-            setFormData({ ...formData, image: e.target.files[0] });
+            let file_size = e.target.files[0].size;
+
+            if (file_size > 10e6) {
+                setError({ ...error, image: 'Image file size should not exceed 10MB' });
+                return;
+            }else{
+                setFormData({ ...formData, image: e.target.files[0] });
+            }         
         }
     };
 
+    async function handleSelectCategory(selectedCategory) {
+        setFormData({ ...formData, categoryId: selectedCategory.value });
+        setSelectedCategory(selectedCategory.label);
+
+    }
 
     const handleSubmit = () => {
 
         if (!formData.url) {
             setError({ ...error, url: 'Please enter a url' });
             return false;
+        }
+
+        if (!formData.categoryId) {
+            setError({ ...error, categoryId: 'Please select category' });
+            return false;
+
         }
 
         if (!formData.image) {
@@ -69,7 +99,17 @@ const CreateBannerImage = ({ createBannerImage }) => {
                                     <CardBody className="card-body">
                                         <div className="live-preview">
                                             <Row className="gy-4">
-
+                                            <Col xxl={4} md={6}>
+                                                    <div>
+                                                        <Label htmlFor="basiInput" className="form-label">Category</Label>
+                                                        <Select value={{ label: selectedCategory }} onChange={handleSelectCategory} options={Categories} />
+                                                        {error && error.categoryId ? (
+                                                            <div className="text-danger">
+                                                                {error.categoryId}
+                                                            </div>
+                                                        ) : null}
+                                                    </div>
+                                                </Col>
 
                                                 <Col xxl={3} md={6}>
                                                     <div>
@@ -86,7 +126,7 @@ const CreateBannerImage = ({ createBannerImage }) => {
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                        <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                        <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" accept="image/jpeg, image/png" />
                                                         {error && error.image ? (
                                                             <div className="text-danger">
                                                                 {error.image}
@@ -140,6 +180,14 @@ const CreateBannerImage = ({ createBannerImage }) => {
 
 CreateBannerImage.propTypes = {
     createBannerImage: PropTypes.func.isRequired,
+    getCategories: PropTypes.func.isRequired,
+
 }
 
-export default connect(null, { createBannerImage })(CreateBannerImage);
+
+const mapStateToProps = state => ({
+    category: state.category,
+});
+
+
+export default connect(mapStateToProps, { createBannerImage, getCategories })(CreateBannerImage);

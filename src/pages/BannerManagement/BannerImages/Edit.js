@@ -10,15 +10,20 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loader from '../../../Components/Common/Loader';
+import { getCategories } from '../../../actions/category';
+import Select from "react-select";
 
-const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
+const EditBannerImage = ({ updateBannerImage, getBannerImage, getCategories, category: { categories } }) => {
     const { id } = useParams();
     const [bannerimage, setBannerImage] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({});
     const [formData, setFormData] = useState({ url: '', image: '', priority: '' });
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     useEffect(() => {
+        getCategories();
+
         const fetchtData = async () => {
             const response = await getBannerImage(id);
             setBannerImage(response);
@@ -36,8 +41,19 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
 
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        // if (e.target.files) {
+        //     setFormData({ ...formData, image: e.target.files[0] });
+        // }
+
         if (e.target.files) {
-            setFormData({ ...formData, image: e.target.files[0] });
+            let file_size = e.target.files[0].size;
+
+            if (file_size > 10e6) {
+                setError({ ...error, image: 'Image file size should not exceed 10MB' });
+                return;
+            }else{
+                setFormData({ ...formData, image: e.target.files[0] });
+            }         
         }
     };
 
@@ -46,7 +62,18 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
         setFormData({ ...formData, image: null });
     }
 
+    const handleSelectCategory = async (e) => {
+        setFormData({ ...formData, categoryId: e.target.value });
+        // console.log(companyArr);
+    };
+
     const handleSubmit = () => {
+        if (!formData.categoryId) {
+            setError({ ...error, categoryId: 'Please select category' });
+            return false;
+        }
+
+
         if (!formData.url) {
             setError({ ...error, url: 'Please enter a url' });
             return false;
@@ -88,7 +115,30 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
                                                 <CardBody className="card-body">
                                                     <div className="live-preview">
                                                         <Row className="gy-4">
-
+                                                        <Col xxl={3} md={6}>
+                                                        <div>
+                                                            <Label htmlFor="basiInput" className="form-label">Category</Label>
+                                                            <select
+                                                                className="form-select"
+                                                                defaultValue={selectedCategory}
+                                                                name="categoryId"
+                                                                onChange={e => handleSelectCategory(e)}>
+                                                                <option value="">Select Category</option>
+                                                                {
+                                                                    categories.map((item, index) => {
+                                                                        return (
+                                                                            <option key={index} value={item._id} >{item.title}</option>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </select>
+                                                            {error && error.categoryId ? (
+                                                                <div className="text-danger">
+                                                                    {error.categoryId}
+                                                                </div>
+                                                            ) : null}
+                                                        </div>
+                                                    </Col>
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="title" className="form-label">URL</Label>
@@ -111,7 +161,7 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
                                                                                 <img src={`${process.env.REACT_APP_API_URL}/${bannerimage.image}`} width="100%" />
 
                                                                             </div>
-                                                                        ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                                        ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" accept="image/jpeg, image/png" />
 
                                                                     }
                                                                     {error && error.image ? (
@@ -168,7 +218,13 @@ const EditBannerImage = ({ updateBannerImage, getBannerImage }) => {
 EditBannerImage.propTypes = {
     updateBannerImage: PropTypes.func.isRequired,
     getBannerImage: PropTypes.func.isRequired,
+    getCategories: PropTypes.func.isRequired,
+
 }
+const mapStateToProps = state => ({
+    category: state.category,
+
+});
 
 
-export default connect(null, { updateBannerImage, getBannerImage })(EditBannerImage);
+export default connect(mapStateToProps, { updateBannerImage, getBannerImage, getCategories })(EditBannerImage);

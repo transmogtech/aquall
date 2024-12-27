@@ -38,9 +38,18 @@ const EditArea = ({ updateArea, getStates, getDistricts, getArea, state: { state
         const fetchtData = async () => {
             const response = await getArea(id);
             setArea(response);
-            setSelectedState(response.stateId?.title);
+            setSelectedState(response.stateId.title);
             setSelectedDistrict(response.districtId?.title);
-            getDistricts({ stateId: response.stateId?._id });
+            getDistricts({ stateId: response.stateId._id });
+            setFormData({
+                stateId: response.stateId._id,
+                districtId: response.districtId._id,
+                title: response.title,
+                url: response.url,
+                metaTitle: response.metaTitle,
+                metaKeywords: response.metaKeywords,
+                metaDescription: response.metaDescription,
+            });
         }
         fetchtData();
         setLoading(false);

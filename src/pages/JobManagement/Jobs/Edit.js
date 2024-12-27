@@ -14,18 +14,35 @@ const EditJob = ({ updateJob, getJob }) => {
     const { id } = useParams();
     const [job, setJob] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [formData, setFormData] = useState();
 
     useEffect(() => {
         const fetchtData = async () => {
             const response = await getJob(id);
             setJob(response);
+
+            setFormData({
+                title: response.title,
+                position: response.position,
+                category: response.category,
+                type: response.type,
+                description: response.description,
+                vacancy_count: response.vacancy_count,
+                experience: response.experience,
+                from_date: response.from_date,
+                to_date: response.to_date,
+                start_salary: response.start_salary,
+                close_salary: response.close_salary,
+                stateId: response.stateId,
+                city: response.city,
+                tags: response.tags
+            });
         }
         fetchtData();
         setLoading(false);
     }, []);
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });

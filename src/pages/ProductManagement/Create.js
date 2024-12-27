@@ -66,10 +66,22 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
 
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        // if (e.target.files) {
+        //     setImage(e.target.files[0]);
+        //     // console.log(e.target.files);
+        //     setFormData({ ...formData, imageUrl: e.target.files[0] });
+        // }
+
         if (e.target.files) {
-            setImage(e.target.files[0]);
-            // console.log(e.target.files);
-            setFormData({ ...formData, imageUrl: e.target.files[0] });
+            let file_size = e.target.files[0].size;
+
+            if (file_size > 10e6) {
+                setErrors({ ...errors, imageUrl: 'Image file size should not exceed 10MB' });
+                return;
+            }else{
+                setImage(e.target.files[0]);
+                setFormData({ ...formData, imageUrl: e.target.files[0] });
+            }         
         }
     };
 
@@ -354,7 +366,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                        <Input type="file" className="form-control" onChange={handleFileChange} id="title" placeholder="URL Slug" />
+                                                        <Input type="file" className="form-control" onChange={handleFileChange} id="title" placeholder="URL Slug" accept="image/jpeg, image/png" />
                                                         {errors && errors.imageUrl ? (
                                                             <div className="text-danger">
                                                                 {errors.imageUrl}
@@ -375,8 +387,8 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Volume</Label>
-                                                        <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="volume" />
+                                                        <Label htmlFor="basiInput" className="form-label">Quantity</Label>
+                                                        <Input type="text" min="1" className="form-control" onChange={e => onChange(e)} name="volume" />
                                                         {errors && errors.volume ? (
                                                             <div className="text-danger">
                                                                 {errors.volume}

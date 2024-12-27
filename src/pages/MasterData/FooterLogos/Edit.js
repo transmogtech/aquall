@@ -53,9 +53,20 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
 
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        // if (e.target.files) {
+        //     // console.log(e.target.files);
+        //     setFormData({ ...formData, logo: e.target.files[0] });
+        // }
+
         if (e.target.files) {
-            // console.log(e.target.files);
-            setFormData({ ...formData, logo: e.target.files[0] });
+            let file_size = e.target.files[0].size;
+
+            if (file_size > 10e6) {
+                alert('Image file size should not exceed 10MB' );
+                return;
+            }else{
+                setFormData({ ...formData, logo: e.target.files[0] });
+            }         
         }
     };
 
@@ -117,7 +128,7 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
                                                                             <span className="close" onClick={() => deleteImage()}>&times;</span>
                                                                             <img src={`${process.env.REACT_APP_API_URL}/${footerlogo.logo}`} width="50" />
                                                                         </div>
-                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />}
+                                                                    ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" accept="image/jpeg, image/png" />}
                                                                 </div>
                                                             </Col>
 

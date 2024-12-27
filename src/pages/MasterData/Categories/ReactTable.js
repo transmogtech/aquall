@@ -24,7 +24,7 @@ const DataTable = ({ getCategories, deleteCategory, changeStatusCategory, catego
   }, []);
 
 
-  categories.forEach(row => searchTable.push({ id: row._id, title: row.title, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  categories.forEach(row => searchTable.push({ id: row._id, title: row.title, order: row.order, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
   function tog_grid(data) {
@@ -79,6 +79,11 @@ const DataTable = ({ getCategories, deleteCategory, changeStatusCategory, catego
       {
         header: "Title",
         accessorKey: "title",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Priority",
+        accessorKey: "order",
         enableColumnFilter: false,
       },
       {

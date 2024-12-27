@@ -32,10 +32,21 @@ const CreateNews = ({ createNews, getLanguages, language: { languages } }) => {
     const navigate = useNavigate();
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        // if (e.target.files) {
+        //     // setImage(e.target.files[0]);
+        //     // console.log(e.target.files);
+        //     setFormData({ ...formData, imageUrl: e.target.files[0] });
+        // }
+
         if (e.target.files) {
-            // setImage(e.target.files[0]);
-            // console.log(e.target.files);
-            setFormData({ ...formData, imageUrl: e.target.files[0] });
+            let file_size = e.target.files[0].size;
+
+            if (file_size > 10e6) {
+                setErrors({ ...errors, imageUrl: 'Image file size should not exceed 10MB' });
+                return;
+            }else{
+                setFormData({ ...formData, imageUrl: e.target.files[0] });
+            }         
         }
     };
 
@@ -162,7 +173,7 @@ const CreateNews = ({ createNews, getLanguages, language: { languages } }) => {
                                                 <Col lg={6} >
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
-                                                        <Input type="file" name='image' onChange={handleFileChange} className="form-control" id="inputGroupFile02" />
+                                                        <Input type="file" name='image' onChange={handleFileChange} className="form-control" id="inputGroupFile02" accept="image/jpeg, image/png" />
 
                                                     </div>
                                                 </Col>

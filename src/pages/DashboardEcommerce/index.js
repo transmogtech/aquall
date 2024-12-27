@@ -25,22 +25,15 @@ const DashboardEcommerce = () => {
           <Row>
             <Col>
               <div className="h-100">
-                <Section rightClickBtn={toggleRightColumn} />
                 <Row>
                   <Widget />
                 </Row>
-                <Row>
-                  <Col xl={8}>
-                    <Revenue />
-                  </Col>
-                  <SalesByLocations />
-                </Row>
+              
                 <Row>
                   <BestSellingProducts />
                   <TopSellers />
                 </Row>
                 <Row>
-                  <StoreVisits />
                   <RecentOrders />
                 </Row>
               </div>

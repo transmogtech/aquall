@@ -29,10 +29,24 @@ const CreateFooterLogo = ({ createFooterLogo, getCompanies, company: { companies
 
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            // console.log(e.target.files);
-            setFormData({ ...formData, logo: e.target.files[0] });
-        }
+        // if (e.target.files) {
+        //     // console.log(e.target.files);
+        //     setFormData({ ...formData, logo: e.target.files[0] });
+        // }
+
+        
+if (e.target.files) {
+    let file_size = e.target.files[0].size;
+
+    if (file_size > 10e6) {
+        alert('Image file size should not exceed 10MB' );
+        return;
+    }else{
+        setFormData({ ...formData, logo: e.target.files[0] });
+    }
+
+    
+}
     };
 
 
@@ -79,7 +93,7 @@ const CreateFooterLogo = ({ createFooterLogo, getCompanies, company: { companies
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Logo</Label>
-                                                        <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" />
+                                                        <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" accept="image/jpeg, image/png" />
                                                     </div>
                                                 </Col>
 
