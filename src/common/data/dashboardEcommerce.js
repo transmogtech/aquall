@@ -69,23 +69,7 @@ const ecomWidgets = [
         suffix: "",
         separator: ",",
     },
-    {
-        id: 4,
-        cardColor: "danger",
-        label: "Jobs",
-        badgeClass: "danger",
-        percentage: "+0.00",
-        counter: "165.89",
-        linkText: "View all jobs",
-        link: "/jobs",
-
-        bgcolor: "danger",
-        icon: "las la-address-card",
-        decimals: 0,
-        prefix: "",
-        suffix: "",
-        separator: ",",
-    },
+  
 ];
 
 const bestSellingProducts = [
