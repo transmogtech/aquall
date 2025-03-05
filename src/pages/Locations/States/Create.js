@@ -13,13 +13,35 @@ import { connect } from 'react-redux';
 
 const CreateState = ({ createState }) => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({title: '', url: "", metaTitle: "", metaDescription: "", metaKeywords: ""});
+    const [errors, setErrors] = useState({});
+
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter a title' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter a url' });
+            return false;
+        }
+
+        return true;
+    }
 
     const onChange = (e) => {
+        
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
         createState(formData);
 
         navigate('/states');
@@ -47,6 +69,11 @@ const CreateState = ({ createState }) => {
                                                     <div>
                                                         <Label htmlFor="title" className="form-label">Name</Label>
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="title" id="title" placeholder="Title" />
+                                                        {errors && errors.title ? (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 
@@ -54,6 +81,11 @@ const CreateState = ({ createState }) => {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" placeholder="URL Slug" />
+                                                        {errors && errors.url ? (
+                                                            <div className="text-danger">
+                                                                {errors.url}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
 

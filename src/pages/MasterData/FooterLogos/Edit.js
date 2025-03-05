@@ -22,6 +22,7 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
     const [loading, setLoading] = useState(true);
     const [selectedCompany, setSelectedCompany] = useState(null);
     const [formData, setFormData] = useState();
+    const [errors, setErrors] = useState({});
 
 
     useEffect(() => {
@@ -29,7 +30,7 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
         const fetchtData = async () => {
             const response = await getFooterLogo(id);
             setFooterlogo(response);
-            setFormData({ ...formData, company: response.company?._id, priority: response.priority });
+            setFormData({ ...formData, company: response.company?._id, priority: response.priority, logo: response.logo });
             setSelectedCompany(response.company?.name);
         }
         fetchtData();
@@ -85,7 +86,34 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
         Company.push({ value: company._id, label: company.name });
     });
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.company) {
+            setErrors({ ...errors, company: 'Please select a company' });
+            return false;
+        }
+
+        if (!formData.logo) {
+            setErrors({ ...errors, logo: 'Please select a footer logo' });
+            return false;
+        }
+
+        if (!formData.priority) {
+            setErrors({ ...errors, priority: 'Please enter a order' });
+            return false;
+        }
+
+        return true;
+    }
+
     const handleSubmit = () => {
+
+        if (!validateForm()) {
+            return false;
+        }
+
         updateFooterLogo(id, formData);
 
         navigate('/footer-logos');
@@ -116,6 +144,8 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
                                                                 <div>
                                                                     <Label htmlFor="title" className="form-label">Company</Label>
                                                                     <Select value={{ label: selectedCompany }} onChange={handleSelectCompany} options={Company} />
+                                                                    {errors && errors.company &&  <div className="text-danger">{errors.company}</div>}
+
                                                                 </div>
                                                             </Col>
 
@@ -129,6 +159,8 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
                                                                             <img src={`${process.env.REACT_APP_API_URL}/${footerlogo.logo}`} width="50" />
                                                                         </div>
                                                                     ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" accept="image/jpeg, image/png" />}
+                                                                                                                            {errors && errors.logo &&  <div className="text-danger">{errors.logo}</div>}
+
                                                                 </div>
                                                             </Col>
 
@@ -136,6 +168,8 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                                     <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" min="1" id="priority" placeholder="Priority" defaultValue={footerlogo.priority} />
+                                                                    {errors && errors.priority && <div className="text-danger">{errors.priority}</div>}
+
                                                                 </div>
                                                             </Col>
                                                             <Col xxl={12} md={12} className='border-dashed border-primary rounded-2 p-3'>

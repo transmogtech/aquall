@@ -30,6 +30,7 @@ export const createUser = (formData) => async dispatch => {
 
   } catch (error) {
     console.log(error);
+    dispatch(setAlert(error, 'error'));
   }
 }
 

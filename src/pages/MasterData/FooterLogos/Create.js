@@ -14,8 +14,9 @@ import Select from "react-select";
 
 const CreateFooterLogo = ({ createFooterLogo, getCompanies, company: { companies } }) => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState([]);
+    const [formData, setFormData] = useState({company: "", logo: "", priority: ""});
     const [selectedCompany, setSelectedCompany] = useState(null);
+    const [errors, setErrors] = useState({});
 
     React.useEffect(() => {
         getCompanies();
@@ -57,7 +58,32 @@ if (e.target.files) {
         setSelectedCompany(selectedCompany.label);
     }
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.company) {
+            setErrors({ ...errors, company: 'Please select a company' });
+            return false;
+        }
+
+        if (!formData.logo) {
+            setErrors({ ...errors, logo: 'Please select a footer logo' });
+            return false;
+        }
+
+        if (!formData.priority) {
+            setErrors({ ...errors, priority: 'Please enter a order' });
+            return false;
+        }
+
+        return true;
+    }
+
     const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
         createFooterLogo(formData);
 
         navigate('/footer-logos');
@@ -87,6 +113,7 @@ if (e.target.files) {
                                                     <div>
                                                         <Label htmlFor="title" className="form-label">Company</Label>
                                                         <Select value={{ label: selectedCompany }} onChange={handleSelectCompany} options={company} />
+                                                        {errors && errors.company &&  <div className="text-danger">{errors.company}</div>}
                                                     </div>
                                                 </Col>
 
@@ -94,6 +121,7 @@ if (e.target.files) {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Logo</Label>
                                                         <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" accept="image/jpeg, image/png" />
+                                                        {errors && errors.logo &&  <div className="text-danger">{errors.logo}</div>}
                                                     </div>
                                                 </Col>
 
@@ -101,6 +129,11 @@ if (e.target.files) {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Priority</Label>
                                                         <Input type="number" className="form-control" onChange={e => onChange(e)} name="priority" id="priority" min="1" placeholder="Priority" />
+                                                        {errors && errors.priority && (
+                                                            <div className="text-danger">
+                                                                {errors.priority}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
                                                 <Col xxl={12} md={12} className='border-dashed border-primary rounded-2 p-3'>

@@ -13,15 +13,15 @@ import { getProducts } from '../../../actions/product';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const CreateNotification = ({ createNotification, getCategories, getCompanies, getProducts, category: { categories }, company: { companies }, product: { products } }) => {
+const CreateNotification = ({ createNotification }) => {
 
 
 
-    useEffect(() => {
-        getCategories();
-        // getCompanies();
-        // getProducts();
-    }, []); // eslint-disable-line
+    // useEffect(() => {
+    //     getCategories();
+    //     // getCompanies();
+    //     // getProducts();
+    // }, []); // eslint-disable-line
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
 
@@ -29,17 +29,17 @@ const CreateNotification = ({ createNotification, getCategories, getCompanies, g
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const onCategoryChange = async (e) => {
-        const companyArr = await getCompanies({ categoryId: e.target.value });
-        setFormData({ ...formData, categoryId: e.target.value });
-        // console.log(companyArr);
-    };
+    // const onCategoryChange = async (e) => {
+    //     const companyArr = await getCompanies({ categoryId: e.target.value });
+    //     setFormData({ ...formData, categoryId: e.target.value });
+    //     // console.log(companyArr);
+    // };
 
-    const onCompanyChange = async (e) => {
-        const productArr = await getProducts({ companyId: e.target.value });
-        setFormData({ ...formData, companyId: e.target.value });
-        // console.log(companyArr);
-    };
+    // const onCompanyChange = async (e) => {
+    //     const productArr = await getProducts({ companyId: e.target.value });
+    //     setFormData({ ...formData, companyId: e.target.value });
+    //     // console.log(companyArr);
+    // };
 
     const handleSubmit = () => {
         createNotification(formData);
@@ -67,7 +67,7 @@ const CreateNotification = ({ createNotification, getCategories, getCompanies, g
                                             <Row className="gy-4">
 
 
-                                                <Col xxl={3} md={6}>
+                                                {/* <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Category</Label>
                                                         <select
@@ -127,7 +127,7 @@ const CreateNotification = ({ createNotification, getCategories, getCompanies, g
                                                             }
                                                         </select>
                                                     </div>
-                                                </Col>
+                                                </Col> */}
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Title</Label>
@@ -175,21 +175,21 @@ const CreateNotification = ({ createNotification, getCategories, getCompanies, g
 
 CreateNotification.propTypes = {
     createNotification: PropTypes.func.isRequired,
-    getProducts: PropTypes.func.isRequired,
-    getCategories: PropTypes.func.isRequired,
-    getCompanies: PropTypes.func.isRequired,
-    product: PropTypes.object.isRequired,
-    category: PropTypes.object.isRequired,
-    company: PropTypes.object.isRequired,
+    // getProducts: PropTypes.func.isRequired,
+    // getCategories: PropTypes.func.isRequired,
+    // getCompanies: PropTypes.func.isRequired,
+    // product: PropTypes.object.isRequired,
+    // category: PropTypes.object.isRequired,
+    // company: PropTypes.object.isRequired,
 
 }
 
 const mapStateToProps = state => ({
-    product: state.product,
-    category: state.category,
-    company: state.company,
+    // product: state.product,
+    // category: state.category,
+    // company: state.company,
 });
 
 
 
-export default connect(mapStateToProps, { createNotification, getProducts, getCategories, getCompanies })(CreateNotification);
+export default connect(mapStateToProps, { createNotification })(CreateNotification);

@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
 import Loader from '../../../Components/Common/Loader';
 
-const EditNotification = ({ updateNotification, getCategories, getCompanies, getProducts, getNotification, category: { categories }, company: { companies }, product: { products } }) => {
+const EditNotification = ({ updateNotification, getNotification }) => {
 
     const { id } = useParams();
     const [notification, setNotification] = useState([]);
@@ -24,17 +24,16 @@ const EditNotification = ({ updateNotification, getCategories, getCompanies, get
     const [productId, setProductId] = useState(false);
 
     useEffect(() => {
-        getCategories();
         // getCompanies();
         // getProducts();
         const fetchtData = async () => {
             const response = await getNotification(id);
             setNotification(response);
-            const companyArr = await getCompanies({ categoryId: response.categoryId._id });
-            const productArr = await getProducts({ companyId: response.companyId._id });
-            setCategoryId(response.categoryId._id);
-            setCompanyId(response.companyId._id);
-            setProductId(response.productId._id);
+            // const companyArr = await getCompanies({ categoryId: response.categoryId._id });
+            // const productArr = await getProducts({ companyId: response.companyId._id });
+            // setCategoryId(response.categoryId._id);
+            // setCompanyId(response.companyId._id);
+            // setProductId(response.productId._id);
             setLoading(false);
 
         }
@@ -52,17 +51,17 @@ const EditNotification = ({ updateNotification, getCategories, getCompanies, get
     };
 
 
-    const onCategoryChange = async (e) => {
-        const companyArr = await getCompanies({ categoryId: e.target.value });
-        setFormData({ ...formData, categoryId: e.target.value });
-        // console.log(companyArr);
-    };
+    // const onCategoryChange = async (e) => {
+    //     const companyArr = await getCompanies({ categoryId: e.target.value });
+    //     setFormData({ ...formData, categoryId: e.target.value });
+    //     // console.log(companyArr);
+    // };
 
-    const onCompanyChange = async (e) => {
-        const productArr = await getProducts({ companyId: e.target.value });
-        setFormData({ ...formData, companyId: e.target.value });
-        // console.log(companyArr);
-    };
+    // const onCompanyChange = async (e) => {
+    //     const productArr = await getProducts({ companyId: e.target.value });
+    //     setFormData({ ...formData, companyId: e.target.value });
+    //     // console.log(companyArr);
+    // };
 
 
     const handleSubmit = () => {
@@ -94,7 +93,7 @@ const EditNotification = ({ updateNotification, getCategories, getCompanies, get
                                                         <Row className="gy-4">
 
 
-                                                            <Col xxl={3} md={6}>
+                                                            {/* <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Category</Label>
                                                                     <select
@@ -155,7 +154,7 @@ const EditNotification = ({ updateNotification, getCategories, getCompanies, get
                                                                         }
                                                                     </select>
                                                                 </div>
-                                                            </Col>
+                                                            </Col> */}
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Title</Label>
@@ -203,22 +202,22 @@ const EditNotification = ({ updateNotification, getCategories, getCompanies, get
 
 EditNotification.propTypes = {
     updateNotification: PropTypes.func.isRequired,
-    getProducts: PropTypes.func.isRequired,
-    getCategories: PropTypes.func.isRequired,
-    getCompanies: PropTypes.func.isRequired,
+    // getProducts: PropTypes.func.isRequired,
+    // getCategories: PropTypes.func.isRequired,
+    // getCompanies: PropTypes.func.isRequired,
     getNotification: PropTypes.func.isRequired,
-    product: PropTypes.object.isRequired,
-    category: PropTypes.object.isRequired,
-    company: PropTypes.object.isRequired,
+    // product: PropTypes.object.isRequired,
+    // category: PropTypes.object.isRequired,
+    // company: PropTypes.object.isRequired,
 
 }
 
 const mapStateToProps = state => ({
-    product: state.product,
-    category: state.category,
-    company: state.company,
+    // product: state.product,
+    // category: state.category,
+    // company: state.company,
 });
 
 
 
-export default connect(mapStateToProps, { updateNotification, getProducts, getCategories, getCompanies, getNotification })(EditNotification);
+export default connect(mapStateToProps, { updateNotification, getNotification})(EditNotification);

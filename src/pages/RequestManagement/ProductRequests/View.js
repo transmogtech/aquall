@@ -22,7 +22,7 @@ const ViewModal = ({ show, id, onCloseClick }) => {
               <p>{productrequest.productId.name}</p>
               <hr />
 
-              <h5 className="fs-16">Volume</h5>
+              {/* <h5 className="fs-16">Volume</h5>
               <p>{productrequest.volume}</p>
               <hr />
 
@@ -32,18 +32,24 @@ const ViewModal = ({ show, id, onCloseClick }) => {
 
               <h5 className="fs-16">Discount</h5>
               <p>{productrequest.discount}%</p>
-              <hr />
+              <hr /> */}
 
               <h5 className="fs-16">User Name</h5>
-              <p>{productrequest.userId.name}</p>
+              <p>{productrequest.name}</p>
               <hr />
 
               <h5 className="fs-16">Email</h5>
-              <p>{productrequest.userId.email}</p>
+              <p>{productrequest.email}</p>
               <hr />
 
               <h5 className="fs-16">Mobile</h5>
-              <p>{productrequest.userId.mobile}</p>
+              <p>{productrequest.mobile}</p>
+              <hr />
+              <h5 className="fs-16">Area</h5>
+              <p>{productrequest.area}</p>
+              <hr />
+              <h5 className="fs-16">Message</h5>
+              <p>{productrequest.comment}</p>
               <hr />
             </Col>
           </div>

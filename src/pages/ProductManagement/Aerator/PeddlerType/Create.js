@@ -19,7 +19,7 @@ const CreatePeddlerType = ({ getHPSizes, getCompanies, createPeddlerType, compan
 
     useEffect(() => {
         getHPSizes();
-        getCompanies();
+        getCompanies({categoryId: "6646461c3f25f68d99341a7a"});
     }, []);
 
 
@@ -136,8 +136,8 @@ const CreatePeddlerType = ({ getHPSizes, getCompanies, createPeddlerType, compan
                                                 </Col>
                                                 <Col xxl={4} md={4}>
                                                     <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" />
+                                                        <Label htmlFor="basiInput" className="form-label">Peddler type</Label>
+                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Peddler type" />
                                                         {errors && errors.name ? (
                                                             <div className="text-danger">
                                                                 {errors.name}

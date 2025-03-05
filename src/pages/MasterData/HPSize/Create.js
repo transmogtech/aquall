@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {  Button, Col, Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
 import PropTypes from "prop-types";
 
-const CreateModal = ({ show, onCloseClick, onChange, handleSubmit }) => {
+const CreateModal = ({ show, onCloseClick, onChange, error, handleSubmit }) => {
  
 
 
@@ -19,6 +19,7 @@ const CreateModal = ({ show, onCloseClick, onChange, handleSubmit }) => {
                 <div>
                   <label htmlFor="firstName" className="form-label">Name</label>
                   <Input type="text" className="form-control" onChange={onChange} name="title" />
+                  {error && <p className="text-danger">{error}</p>}
                 </div>
               </Col>
 

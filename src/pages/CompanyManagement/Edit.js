@@ -19,6 +19,8 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
     const [company, setCompany] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState();
 
     useEffect(() => {
         getCategories();
@@ -26,6 +28,7 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
             const response = await getCompany(id);
             setCompany(response);
             setSelectedCategory(response.categoryId.title);
+            setFormData({name: response.name, logo: response.logo, categoryId: response.categoryId});
             setLoading(false);
 
         }
@@ -34,7 +37,6 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
 
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
 
     function handleSelectCategory(selectedCategory) {
 
@@ -71,7 +73,33 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
         }
     };
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.name) {
+            setErrors({ ...errors, name: 'Please enter company name' });
+            return false;
+        }
+
+        if (!formData.categoryId) {
+            setErrors({ ...errors, categoryId: 'Please select a category' });
+            return false;
+        }
+
+        if (!formData.logo) {
+            setErrors({ ...errors, logo: 'Please select a logo' });
+            return false;
+        }
+
+        return true;
+    }
+
+
     const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
 
         updateCompany(id, formData);
 
@@ -102,6 +130,11 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Company Name</Label>
                                                                 <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" defaultValue={company.name} />
+                                                                {errors && errors.name && (
+                                                            <div className="text-danger">
+                                                                {errors.name}
+                                                            </div>
+                                                        ) }
                                                             </div>
                                                         </Col>
 
@@ -109,6 +142,11 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Category</Label>
                                                                 <Select value={{ label: selectedCategory }} onChange={handleSelectCategory} options={Categories} />
+                                                                {errors && errors.categoryId && (
+                                                            <div className="text-danger">
+                                                                {errors.categoryId}
+                                                            </div>
+                                                        ) }
                                                             </div>
                                                         </Col>
 
@@ -123,6 +161,12 @@ const EditCompany = ({ getCategories, updateCompany, getCompany, category: { cat
                                                                         </div>
                                                                     ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" accept="image/jpeg, image/png" />
                                                                 }
+
+{errors && errors.logo && (
+                                                            <div className="text-danger">
+                                                                {errors.logo}
+                                                            </div>
+                                                        ) }
                                                             </div>
                                                         </Col>
 

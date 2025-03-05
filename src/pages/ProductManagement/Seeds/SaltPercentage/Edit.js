@@ -29,7 +29,7 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
 
     useEffect(() => {
         getCultureTypes();
-        getCompanies();
+        getCompanies({categoryId: "664645fb3f25f68d99341a74"});
         getPlStages();
         getSaltPercentage(id);
         const fetchtData = async () => {
@@ -189,8 +189,8 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
 
                                                         <Col xxl={3} md={3}>
                                                             <div>
-                                                                <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                                <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={saltpercentage.name} />
+                                                                <Label htmlFor="basiInput" className="form-label">Salt percentage</Label>
+                                                                <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Salt percentage" defaultValue={saltpercentage.name} />
                                                                 {errors && errors.name ? (
                                                                     <div className="text-danger">
                                                                         {errors.name}

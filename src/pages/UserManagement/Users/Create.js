@@ -33,7 +33,7 @@ const CreateUser = ({ createUser, getStates, getDistricts, getAreas, getPincodes
 
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({name: "", mobile: "", password: "", userroleId: "", confirm_password: ""  });
     const [selectedState, setSelectedState] = useState(null);
     const [options, setOptions] = useState([]);
     const [areas, setAreas] = useState([]);
@@ -56,6 +56,7 @@ const CreateUser = ({ createUser, getStates, getDistricts, getAreas, getPincodes
     const states = useSelector(state => state.state.states);
     const pincodeData = useSelector(state => state.pincode.pincodes);
     const userroles = useSelector(state => state.userRole.userroles);
+    const [errors, setErrors] = useState({});
 
 
     const onChange = (e) => {
@@ -131,8 +132,64 @@ const CreateUser = ({ createUser, getStates, getDistricts, getAreas, getPincodes
     states.forEach(row => States.push({ value: row._id, label: row.title }));
     userroles.forEach(row => UserRoles.push({ value: row._id, label: row.title }));
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.userroleId) {
+            setErrors({ ...errors, userroleId: 'Please select a user role' });
+            return false;
+        }
+        
+        if (!formData.name) {
+            setErrors({ ...errors, name: 'Please enter a name' });
+            return false;
+        }
+
+        if (!formData.mobile) {
+            setErrors({ ...errors, mobile: 'Please enter mobile number' });
+            return false;
+        }
+
+        if (!formData.password) {
+            setErrors({ ...errors, password: 'Please enter a password' });
+            return false;
+        }
+
+      
+        if (formData.password.length < 8) {
+            setErrors({...errors, password: 'Password should be at least 8 characters long' });
+            return false;
+        }
+       if (!/^[a-zA-Z0-9]+$/.test(formData.password)) {
+            setErrors({...errors, password: 'Password should only contain alphanumeric characters' });
+            return false;
+        }
+
+        if (!formData.confirm_password) {
+            setErrors({ ...errors, confirm_password: 'Please enter a password' });
+            return false;
+        }
+
+        if (formData.password!== formData.confirm_password) {
+            setErrors({...errors, confirm_password: 'Passwords do not match' });
+            return false;
+        }
+
+        if (formData.mobile.length < 10 || formData.mobile.length > 15) {
+            setErrors({...errors, mobile: 'Mobile number should be between 10 and 15 digits' });
+            return false;
+        }
+
+      
+        return true;
+    }
 
     const handleSubmit = () => {
+
+        if (!validateForm()) {
+            return false;
+        }
 
         setFormData({ ...formData, status: 'active' });
         createUser(formData);
@@ -161,6 +218,7 @@ const CreateUser = ({ createUser, getStates, getDistricts, getAreas, getPincodes
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">User Role</Label>
                                                         <Select value={{ label: selectedUserRole }} onChange={handleSelectUserRole} options={UserRoles} placeholder="User Role" />
+                                                        { errors && errors.userroleId && <div className='text-danger'>{errors.userroleId}</div>}
 
                                                     </div>
                                                 </Col>
@@ -169,6 +227,7 @@ const CreateUser = ({ createUser, getStates, getDistricts, getAreas, getPincodes
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Name</Label>
                                                         <Input type="text" className="form-control" name="name" onChange={e => onChange(e)} placeholder="Name" />
+                                                        { errors && errors.name && <div className='text-danger'>{errors.name}</div>}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={4} md={6}>
@@ -181,18 +240,21 @@ const CreateUser = ({ createUser, getStates, getDistricts, getAreas, getPincodes
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Mobile Number</Label>
                                                         <Input type="number" className="form-control" name="mobile" onChange={e => onChange(e)} placeholder="Mobile Number" />
+                                                        { errors && errors.mobile && <div className='text-danger'>{errors.mobile}</div>}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Password</Label>
                                                         <Input type="password" className="form-control" name="password" onChange={e => onChange(e)} placeholder="Password" />
+                                                        { errors && errors.password && <div className='text-danger'>{errors.password}</div>}
                                                     </div>
                                                 </Col>
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Confirm Password</Label>
                                                         <Input type="password" className="form-control" name="confirm_password" onChange={e => onChange(e)} placeholder="Confirm Password" />
+                                                        { errors && errors.confirm_password && <div className='text-danger'>{errors.confirm_password}</div>}
                                                     </div>
                                                 </Col>
 

@@ -21,6 +21,7 @@ const EditArea = ({ updateArea, getStates, getDistricts, getArea, state: { state
     let { id } = useParams();
     const [area, setArea] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [errors, setErrors] = useState({});
 
 
     const navigate = useNavigate();
@@ -62,7 +63,41 @@ const EditArea = ({ updateArea, getStates, getDistricts, getArea, state: { state
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+
+    
+    
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.stateId) {
+            setErrors({ ...errors, stateId: 'Please select a state' });
+            return false;
+        }
+
+        if (!formData.districtId) {
+            setErrors({ ...errors, districtId: 'Please select a district' });
+            return false;
+        }
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter a title' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter a url' });
+            return false;
+        }
+
+        return true;
+    }
+
+
     const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
         updateArea(id, formData);
 
         navigate('/areas');
@@ -115,6 +150,11 @@ const EditArea = ({ updateArea, getStates, getDistricts, getArea, state: { state
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">State</Label>
                                                                     <Select value={{ label: selectedState }} onChange={handleSelectState} options={States} />
+                                                                    {errors && errors.stateId && (
+                                                            <div className="text-danger">
+                                                                {errors.stateId}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
 
@@ -123,6 +163,11 @@ const EditArea = ({ updateArea, getStates, getDistricts, getArea, state: { state
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">District</Label>
                                                                     <Select value={{ label: selectedDistrict }} onChange={handleSelectDistrict} options={options} />
+                                                                    {errors && errors.districtId && (
+                                                            <div className="text-danger">
+                                                                {errors.districtId}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
 
@@ -130,6 +175,11 @@ const EditArea = ({ updateArea, getStates, getDistricts, getArea, state: { state
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Area name</Label>
                                                                     <Input type="text" onChange={e => onChange(e)} className="form-control" name="title" id="title" placeholder="Title" defaultValue={area.title} />
+                                                                    {errors && errors.title && (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
 
@@ -137,6 +187,11 @@ const EditArea = ({ updateArea, getStates, getDistricts, getArea, state: { state
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
                                                                     <Input type="text" onChange={e => onChange(e)} className="form-control" name="url" id="url" placeholder="URL Slug" defaultValue={area.url} />
+                                                                    {errors && errors.url && (
+                                                            <div className="text-danger">
+                                                                {errors.url}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
 

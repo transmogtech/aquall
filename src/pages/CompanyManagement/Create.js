@@ -24,7 +24,8 @@ const CreateCompany = ({ getCategories, createCompany, category: { categories } 
 
     const [selectedCategory, setSelectedCategory] = useState(false);
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({categoryId: "", name: "", logo: ""});
+    const [errors, setErrors] = useState({});
 
     function handleSelectCategory(selectedCategory) {
 
@@ -58,8 +59,33 @@ const CreateCompany = ({ getCategories, createCompany, category: { categories } 
         }
     };
 
-    const handleSubmit = () => {
+    const validateForm = () => {
 
+        setErrors({});
+
+        if (!formData.name) {
+            setErrors({ ...errors, name: 'Please enter company name' });
+            return false;
+        }
+
+        if (!formData.categoryId) {
+            setErrors({ ...errors, categoryId: 'Please select a category' });
+            return false;
+        }
+
+        if (!formData.logo) {
+            setErrors({ ...errors, logo: 'Please select a logo' });
+            return false;
+        }
+
+        return true;
+    }
+
+
+    const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
 
         createCompany(formData);
 
@@ -88,12 +114,22 @@ const CreateCompany = ({ getCategories, createCompany, category: { categories } 
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Company Name</Label>
                                                         <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" />
+                                                        {errors && errors.name && (
+                                                            <div className="text-danger">
+                                                                {errors.name}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
                                                 <Col xxl={4} md={4}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Category</Label>
                                                         <Select value={{ label: selectedCategory }} onChange={handleSelectCategory} options={Categories} />
+                                                        {errors && errors.categoryId && (
+                                                            <div className="text-danger">
+                                                                {errors.categoryId}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
 
@@ -102,6 +138,11 @@ const CreateCompany = ({ getCategories, createCompany, category: { categories } 
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Company Logo</Label>
                                                         <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" placeholder="Logo" accept="image/jpeg, image/png" />
+                                                        {errors && errors.logo && (
+                                                            <div className="text-danger">
+                                                                {errors.logo}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
 

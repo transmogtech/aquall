@@ -29,7 +29,8 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
       );
     // Inside your component
     const sidebarVisibilitytype = useSelector(selectDashboardData);
-
+console.log(sidebarVisibilitytype);
+console.log(document.documentElement.getAttribute('data-layout'));
     const [search, setSearch] = useState(false);
     const toogleSearch = () => {
         setSearch(!search);
@@ -48,7 +49,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
         }
 
         //For collapse vertical and semibox menu
-        if (sidebarVisibilitytype === "show" && (document.documentElement.getAttribute('data-layout') === "vertical" || document.documentElement.getAttribute('data-layout') === "semibox")) {
+        if (sidebarVisibilitytype === "show") {
             if (windowSize < 1025 && windowSize > 767) {
                 document.body.classList.remove('vertical-sidebar-enable');
                 (document.documentElement.getAttribute('data-sidebar-size') === 'sm') ? document.documentElement.setAttribute('data-sidebar-size', '') : document.documentElement.setAttribute('data-sidebar-size', 'sm');

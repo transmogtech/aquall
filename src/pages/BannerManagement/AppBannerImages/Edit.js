@@ -243,7 +243,7 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Discount %</Label>
-                                                            <Input type="number" min="1" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} defaultValue={appbannerimage.discount} />
+                                                            <Input type="number" min="0" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} defaultValue={appbannerimage.discount} />
 
                                                         </div>
                                                     </Col>

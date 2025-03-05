@@ -19,6 +19,7 @@ const EditModal = ({ show, onCloseClick, onChange, handleSubmit, defaultValue })
                 <div>
                   <label htmlFor="firstName" className="form-label">Name</label>
                   <Input type="text" className="form-control" defaultValue={defaultValue} onChange={onChange} name="title" />
+
                 </div>
               </Col>
 

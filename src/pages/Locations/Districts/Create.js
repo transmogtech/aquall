@@ -15,13 +15,36 @@ import { getStates } from '../../../actions/state';
 const CreateDistrict = ({ createDistrict, getStates, state: { states } }) => {
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({stateId: "", title: '', url: "", metaTitle: "", metaDescription: "", metaKeywords: ""});
     const [selectedState, setSelectedState] = useState(null);
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         getStates();
     }, [getStates]);
 
+
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.stateId) {
+            setErrors({ ...errors, stateId: 'Please select a state' });
+            return false;
+        }
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter a title' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter a url' });
+            return false;
+        }
+
+        return true;
+    }
 
 
     const onChange = (e) => {
@@ -29,6 +52,10 @@ const CreateDistrict = ({ createDistrict, getStates, state: { states } }) => {
     };
 
     const handleSubmit = () => {
+
+                if (!validateForm()) {
+                    return false;
+                }
         createDistrict(formData);
 
         navigate('/districts');
@@ -37,16 +64,10 @@ const CreateDistrict = ({ createDistrict, getStates, state: { states } }) => {
     function handleSelectState(selectedState) {
 
         setFormData({ ...formData, stateId: selectedState.value });
-        console.log(selectedState.value);
+        // console.log(selectedState.value);
 
         setSelectedState(selectedState.label);
     }
-
-    // const states  = [
-    //     { value: '01', label: 'Andhrapradesh' },
-    //     { value: '02', label: 'Telangana' },
-    //     { value: '03', label: 'Tamilnadu' }
-    //   ];
 
     const States = [];
 
@@ -63,8 +84,11 @@ const CreateDistrict = ({ createDistrict, getStates, state: { states } }) => {
                 <Container fluid>
                     <BreadCrumb title="Create District" pageTitle="District Management" />
                     <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+
                         <Row>
                             <Col lg={12}>
+                            {errors && errors.length > 0 && errors.map((error) =>  <div className="text-danger">{error}</div>)}
+
                                 <Card>
                                     <PreviewCardHeader title="Create District" />
 
@@ -76,12 +100,22 @@ const CreateDistrict = ({ createDistrict, getStates, state: { states } }) => {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">State</Label>
                                                         <Select placeholder="Select State" value={{ label: selectedState }} onChange={handleSelectState} options={States} name='stateId' id='stateId' />
+                                                        {errors && errors.stateId && (
+                                                            <div className="text-danger">
+                                                                {errors.stateId}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="title" className="form-label">District</Label>
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="title" id="title" placeholder="Title" />
+                                                        {errors && errors.title && (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
 
@@ -89,6 +123,11 @@ const CreateDistrict = ({ createDistrict, getStates, state: { states } }) => {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" placeholder="URL Slug" />
+                                                        {errors && errors.url && (
+                                                            <div className="text-danger">
+                                                                {errors.url}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
                                             </Row>

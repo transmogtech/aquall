@@ -247,7 +247,7 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getProducts
                                                     <Col xxl={4} md={6}>
                                                         <div>
                                                             <Label htmlFor="basiInput" className="form-label">Discount %</Label>
-                                                            <Input type="number" min="1" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} defaultValue={bestdeal.discount} />
+                                                            <Input type="number" min="0" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} defaultValue={bestdeal.discount} />
                                                             {errors && errors.discount ? (
                                                                 <div className="text-danger">
                                                                     {errors.discount}

@@ -27,7 +27,7 @@ const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage,
 
     useEffect(() => {
         getCultureTypes();
-        getCompanies();
+        getCompanies({categoryId: "664645fb3f25f68d99341a74"});
         getPlStage(id);
         const fetchtData = async () => {
             const response = await getPlStage(id);
@@ -151,8 +151,8 @@ const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage,
                                                         </Col>
                                                         <Col xxl={4} md={4}>
                                                             <div>
-                                                                <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                                <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={plstage.name} />
+                                                                <Label htmlFor="basiInput" className="form-label">Pl stage</Label>
+                                                                <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Pl stage" defaultValue={plstage.name} />
                                                                 {errors && errors.name ? (
                                                                     <div className="text-danger">
                                                                         {errors.name}

@@ -16,26 +16,51 @@ const EditState = ({ updateState, getState }) => {
     let { id } = useParams();
     const [state, setState] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [formData, setFormData] = useState();
+    const [errors, setErrors] = useState({});
 
 
     useEffect(() => {
         const fetchtData = async () => {
             const response = await getState(id);
             setState(response);
+            setFormData({title: response.title, url: response.url, metaTitle: response.metaTitle, metaDescription: response.metaDescription, metaKeywords: response.metaKeywords})
         }
         fetchtData();
         setLoading(false);
 
     }, []); // eslint-disable-line
 
+
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter a title' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter a url' });
+            return false;
+        }
+
+        return true;
+    }
+
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = () => {
+
+        if (!validateForm()) {
+            return false;
+        }
+
         updateState(id, formData);
 
         navigate('/states');
@@ -68,6 +93,11 @@ const EditState = ({ updateState, getState }) => {
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Title</Label>
                                                                     <Input type="text" onChange={e => onChange(e)} className="form-control" name="title" id="title" placeholder="Title" defaultValue={state.title} />
+                                                                    {errors && errors.title ? (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) : null}
                                                                 </div>
                                                             </Col>
 
@@ -75,6 +105,11 @@ const EditState = ({ updateState, getState }) => {
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
                                                                     <Input type="text" onChange={e => onChange(e)} className="form-control" name="url" id="url" placeholder="URL Slug" defaultValue={state.url} />
+                                                                    {errors && errors.url ? (
+                                                            <div className="text-danger">
+                                                                {errors.url}
+                                                            </div>
+                                                        ) : null}
                                                                 </div>
                                                             </Col>
 

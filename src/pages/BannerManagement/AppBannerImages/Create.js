@@ -62,7 +62,7 @@ const CreateAppBannerImage = ({ createAppBannerImage, getCategories, getCompanie
     async function handleSelectCategory(selectedCategory) {
         setFormData({ ...formData, categoryId: selectedCategory.value });
         setSelectedCategory(selectedCategory.label);
-        await getCompanies({ categoryId: selectedCategory.value });
+        await getCompanies({ categoryId: selectedCategory.value, status: "active" });
 
     }
 
@@ -201,7 +201,7 @@ const CreateAppBannerImage = ({ createAppBannerImage, getCategories, getCompanie
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Discount %</Label>
-                                                        <Input type="number" min="1" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} />
+                                                        <Input type="number" min="0" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} />
                                                     </div>
                                                 </Col>
                                                 <Col xxl={4} md={6}>

@@ -202,7 +202,7 @@ const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProduc
                                                 <Col xxl={4} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Discount %</Label>
-                                                        <Input type="number" min="1" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} />
+                                                        <Input type="number" min="0" className="form-control" name="discount" placeholder="Discount" onChange={e => onChange(e)} />
                                                         {errors && errors.discount ? (
                                                             <div className="text-danger">
                                                                 {errors.discount}

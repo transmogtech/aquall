@@ -19,13 +19,14 @@ const EditCategory = ({ updateCategory, getCategory }) => {
     const [category, setCategory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState();
+    const [errors, setErrors] = useState({});
 
 
     useEffect(() => {
         const fetchtData = async () => {
             const response = await getCategory(id);
             setCategory(response);
-            setFormData({ title: response.title, order: response.order, url: response.url, metaTitle: response.metaTitle, metaKeywords: response.metaKeywords, metaDescription: response.metaDescription });
+            setFormData({ title: response.title, image: response.image, order: response.order, url: response.url, metaTitle: response.metaTitle, metaKeywords: response.metaKeywords, metaDescription: response.metaDescription });
         }
         fetchtData();
         setLoading(false);
@@ -66,8 +67,39 @@ const EditCategory = ({ updateCategory, getCategory }) => {
 
     };
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter category title' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter url' });
+            return false;
+        }
+
+        if (!formData.image) {
+            setErrors({ ...errors, image: 'Please select a category image' });
+            return false;
+        }
+
+        if (!formData.order) {
+            setErrors({ ...errors, order: 'Please enter a order' });
+            return false;
+        }
+
+        return true;
+    }
 
     const handleSubmit = () => {
+
+        if (!validateForm()) {
+            return false;
+        }
+
         updateCategory(id, formData);
 
         navigate('/categories');
@@ -98,6 +130,12 @@ const EditCategory = ({ updateCategory, getCategory }) => {
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Title</Label>
                                                                     <Input type="text" onChange={e => onChange(e)} className="form-control" name="title" id="title" placeholder="Title" defaultValue={category.title} />
+
+                                                                    {errors && errors.title && (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
 
@@ -105,6 +143,11 @@ const EditCategory = ({ updateCategory, getCategory }) => {
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
                                                                     <Input type="text" onChange={e => onChange(e)} className="form-control" name="url" id="url" placeholder="URL Slug" defaultValue={category.url} />
+                                                                    {errors && errors.url && (
+                                                                <div className="text-danger">
+                                                                    {errors.url}
+                                                                </div>
+                                                            ) }
                                                                 </div>
                                                             </Col>
                                                             <Col xxl={3} md={6}>
@@ -116,12 +159,22 @@ const EditCategory = ({ updateCategory, getCategory }) => {
                                                                             <img src={`${process.env.REACT_APP_API_URL}/${category.image}`} width="50" />
                                                                         </div>
                                                                     ) : <Input type="file" className="form-control" onChange={handleFileChange} name="logo" id="logo" accept="image/jpeg, image/png" />}
+                                                                     {errors && errors.image && (
+                                                            <div className="text-danger">
+                                                                {errors.image}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Order</Label>
                                                                     <Input type="number" className="form-control" onChange={e => onChange(e)} name="order" id="order" placeholder="Order" min="1" defaultValue={category.order} />
+                                                                    {errors && errors.order && (
+                                                            <div className="text-danger">
+                                                                {errors.order}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
                                                         </Row>

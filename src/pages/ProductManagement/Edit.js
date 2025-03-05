@@ -32,7 +32,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
     useEffect(() => {
         getPlStages();
         getSaltPercentages();
-        getCompanies();
+       
         getCategories();
         getCultureTypes();
         getFeedTypes();
@@ -41,9 +41,10 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
         const fetchtData = async () => {
             const response = await getProduct(id);
             setProduct(response);
-            setFormData({ name: response.name, price: response.price, description: response.description, imageUrl: response.imageUrl, volume: response.volume, categoryId: response.categoryId._id, companyId: response.companyId._id });
+            setFormData({ name: response.name, price: response.price, description: response.description, imageUrl: response.imageUrl, volume: response.volume, categoryId: response.categoryId._id, companyId: response.companyId?._id });
             setShowHideFields(response.categoryId._id);
-            setGSTFields(response.gstPercentage ? true : false);
+            getCompanies({categoryId: response.categoryId._id});
+            setGSTFields(response.gstPercentage > 0 ? true : false);
             setLoading(false);
 
         }
@@ -103,8 +104,9 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
     }
     const handleSelectCategory = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-        console.log(e.target.value);
-
+        // console.log(e.target.value);
+        getCompanies({categoryId: e.target.value});
+        companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
         setShowHideFields(e.target.value);
     };
 
@@ -401,7 +403,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                         <Col xxl={3} md={6}>
                                                             <div>
                                                                 <Label htmlFor="basiInput" className="form-label">Price</Label>
-                                                                <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="price" defaultValue={product.price} />
+                                                                <Input type="number" min="0" step=".01" className="form-control" onChange={e => onChange(e)} name="price" defaultValue={product.price} />
                                                                 {errors && errors.price ? (
                                                                     <div className="text-danger">
                                                                         {errors.price}
@@ -423,7 +425,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
                                                         <Col xxl={3} md={6}>
                                                             <div>
                                                                 {showHideFields == '664645fb3f25f68d99341a74' ? <Label htmlFor="basiInput" className="form-label">Bonus</Label> : <Label htmlFor="basiInput" className="form-label">Discount %</Label>}
-                                                                <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="discount" defaultValue={product.discount} />
+                                                                <Input type="number" min="0" className="form-control" onChange={e => onChange(e)} name="discount" defaultValue={product.discount} />
                                                             </div>
                                                         </Col>
                                                         {

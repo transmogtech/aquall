@@ -23,6 +23,7 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
     const [user, setUser] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [errors, setErrors] = useState({});
 
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
@@ -56,15 +57,16 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
         const userData = async () => {
             const response = await getUser(id);
             console.log(response);
+            setFormData({name: response.name, mobile: response.mobile, userroleId: response.userroleId._id });
             setUser(response);
             setSelectedState(response.stateId.title);
-            setSelectedDistrict(response.districtId.title);
-            setSelectedArea(response.areaId.title);
+            setSelectedDistrict(response.districtId?.title);
+            setSelectedArea(response.areaId?.title);
             setSelectedPincode(response.pincodeId?.title);
             setSelectedUserRole(response.userroleId.title);
-            getDistricts({ stateId: response.stateId._id });
-            getAreas({ districtId: response.districtId._id });
-            getPincodes({ areaId: response.areaId._id });
+            getDistricts({ stateId: response.stateId?._id });
+            getAreas({ districtId: response.districtId?._id });
+            getPincodes({ areaId: response.areaId?._id });
             setLoading(false);
 
         }
@@ -161,9 +163,30 @@ const EditUser = ({ updateUser, getStates, getDistricts, getAreas, getPincodes, 
     areas.forEach(area => { Areas.push({ value: area._id, label: area.title }); });
     pincodes.forEach(area => { Pincodes.push({ value: area._id, label: area.title }); });
 
+
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.userroleId) {
+            setErrors({ ...errors, userroleId: 'Please select a user role' });
+            return false;
+        }
+        
+        if (!formData.name) {
+            setErrors({ ...errors, name: 'Please enter a name' });
+            return false;
+        }
+
+        return true;
+    }
+
+
     const handleSubmit = () => {
 
-
+        if (!validateForm()) {
+            return false;
+        }
         updateUser(id, formData);
 
         navigate('/users');

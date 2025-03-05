@@ -19,7 +19,7 @@ const CreateFeedType = ({ getCultureTypes, getCompanies, createFeedType, company
 
     useEffect(() => {
         getCultureTypes();
-        getCompanies();
+        getCompanies({categoryId: "664645eb3f25f68d99341a71"});
     }, []);
 
 
@@ -137,8 +137,8 @@ const CreateFeedType = ({ getCultureTypes, getCompanies, createFeedType, company
                                                 </Col>
                                                 <Col xxl={4} md={4}>
                                                     <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" />
+                                                        <Label htmlFor="basiInput" className="form-label">Feed Type</Label>
+                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Feed Type" />
                                                         {errors && errors.name ? (
                                                             <div className="text-danger">
                                                                 {errors.name}

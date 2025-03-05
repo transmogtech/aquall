@@ -88,8 +88,9 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
 
     const handleSelectCategory = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-        console.log(e.target.value);
-
+        // console.log(e.target.value);
+        getCompanies({categoryId: e.target.value});
+        companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
         setShowHideFields(e.target.value);
     };
 
@@ -377,7 +378,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Price</Label>
-                                                        <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="price" />
+                                                        <Input type="number" min="0" step=".01" className="form-control" onChange={e => onChange(e)} name="price" />
                                                         {errors && errors.price ? (
                                                             <div className="text-danger">
                                                                 {errors.price}
@@ -399,7 +400,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         {showHideFields == '664645fb3f25f68d99341a74' ? <Label htmlFor="basiInput" className="form-label">Bonus</Label> : <Label htmlFor="basiInput" className="form-label">Discount %</Label>}
-                                                        <Input type="number" min="1" className="form-control" onChange={e => onChange(e)} name="discount" />
+                                                        <Input type="number" min="0" className="form-control" onChange={e => onChange(e)} name="discount" />
                                                     </div>
                                                 </Col>
                                                 {

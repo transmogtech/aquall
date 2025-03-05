@@ -27,7 +27,7 @@ const EditFeedType = ({ getCultureTypes, getCompanies, updateFeedType, getFeedTy
 
     useEffect(() => {
         getCultureTypes();
-        getCompanies();
+        getCompanies({categoryId: "664645eb3f25f68d99341a71"});
         const fetchtData = async () => {
             const response = await getFeedType(id);
             setFeedType(response);
@@ -152,8 +152,8 @@ const EditFeedType = ({ getCultureTypes, getCompanies, updateFeedType, getFeedTy
                                                         </Col>
                                                         <Col xxl={4} md={4}>
                                                             <div>
-                                                                <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                                <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={feedtype.name} />
+                                                                <Label htmlFor="basiInput" className="form-label">Feed Type</Label>
+                                                                <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Feed Type" defaultValue={feedtype.name} />
                                                                 {errors && errors.name ? (
                                                                     <div className="text-danger">
                                                                         {errors.name}

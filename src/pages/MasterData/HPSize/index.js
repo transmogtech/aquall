@@ -12,6 +12,7 @@ const HpSize = ({ createHPSize }) => {
 
   const [createHpSize, setCreateHpSize] = useState(false);
   const [title, setTitle] = useState(null);
+  const [error, setError] = useState('');
 
   function toggle_create() {
     setCreateHpSize(!createHpSize);
@@ -22,7 +23,23 @@ const HpSize = ({ createHPSize }) => {
     setTitle(e.target.value);
   };
 
+  const validateForm = () => {
+
+    setError('');
+
+    if (!title) {
+        setError( 'Please enter a title' );
+        return false;
+    }
+
+    return true;
+}
   const handleSubmit = () => {
+
+    if (!validateForm()) {
+      setCreateHpSize(true);
+      return false;
+  }
     createHPSize(title);
     setCreateHpSize(false);
   }
@@ -56,6 +73,7 @@ const HpSize = ({ createHPSize }) => {
             show={createHpSize}
             onCloseClick={() => setCreateHpSize(false)}
             onChange={onChange}
+            error={error}
             handleSubmit={handleSubmit}
           />
 

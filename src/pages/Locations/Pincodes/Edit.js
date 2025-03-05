@@ -25,6 +25,7 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
     const [selectedArea, setSelectedArea] = useState(null);
     const [pincode, setPincode] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [errors, setErrors] = useState({});
 
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
@@ -55,10 +56,7 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
                 districtId: response.districtId?._id,
                 areaId: response.areaId?._id,
                 title: response.title,
-                url: response.url,
-                metaTitle: response.metaTitle,
-                metaKeywords: response.metaKeywords,
-                metaDescription: response.metaDescription,
+               delivery: Cateogry
             });
             setLoading(false);
         }
@@ -116,9 +114,40 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
 
     };
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.stateId) {
+            setErrors({ ...errors, stateId: 'Please select a state' });
+            return false;
+        }
+
+        if (!formData.districtId) {
+            setErrors({ ...errors, districtId: 'Please select a district' });
+            return false;
+        }
+
+        if (!formData.areaId) {
+            setErrors({ ...errors, areaId: 'Please select a area' });
+            return false;
+        }
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter a title' });
+            return false;
+        }
+
+       
+
+        return true;
+    }
+
     const handleSubmit = () => {
 
-
+        if (!validateForm()) {
+            return false;
+        }
         updatePincode(id, formData);
 
         navigate('/pincodes');
@@ -150,6 +179,11 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">State</Label>
                                                                     <Select value={{ label: selectedState }} onChange={handleSelectState} options={States} />
+                                                                    {errors && errors.stateId && (
+                                                            <div className="text-danger">
+                                                                {errors.stateId}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
 
@@ -158,6 +192,11 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">District</Label>
                                                                     <Select value={{ label: selectedDistrict }} onChange={handleSelectDistrict} options={Districts} />
+                                                                    {errors && errors.districtId && (
+                                                            <div className="text-danger">
+                                                                {errors.districtId}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
 
@@ -165,12 +204,22 @@ const EditPincode = ({ updatePincode, getStates, getDistricts, getAreas, getPinc
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Area</Label>
                                                                     <Select value={{ label: selectedArea }} onChange={handleSelectArea} options={Areas} />
+                                                                    {errors && errors.areaId && (
+                                                            <div className="text-danger">
+                                                                {errors.areaId}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Pincode</Label>
-                                                                    <Input type="text" className="form-control" name="title" onChange={e => onChange(e)} placeholder="Name" defaultValue={pincode.title} />
+                                                                    <Input type="text" className="form-control" name="title" onChange={e => onChange(e)} placeholder="Pincode" defaultValue={pincode.title} />
+                                                                    {errors && errors.title && (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
 

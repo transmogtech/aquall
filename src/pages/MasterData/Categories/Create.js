@@ -13,8 +13,9 @@ import { slugify } from "../../../helpers/common_functions";
 
 const CreateCategory = ({ createCategory }) => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({title: "", url: "", image: "", order: ""});
     const [url, setUrl] = useState(null);
+    const [errors, setErrors] = useState({});
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -50,8 +51,40 @@ if (e.target.files) {
 }
     };
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter category title' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter url' });
+            return false;
+        }
+
+        if (!formData.image) {
+            setErrors({ ...errors, image: 'Please select a category image' });
+            return false;
+        }
+
+        if (!formData.order) {
+            setErrors({ ...errors, order: 'Please enter a order' });
+            return false;
+        }
+
+        return true;
+    }
+
 
     const handleSubmit = () => {
+
+        if (!validateForm()) {
+            return false;
+        }
+
         createCategory(formData);
 
         navigate('/categories');
@@ -79,6 +112,11 @@ if (e.target.files) {
                                                     <div>
                                                         <Label htmlFor="title" className="form-label">Name</Label>
                                                         <Input type="text" className="form-control" onChange={e => onTitleChange(e)} name="title" id="title" placeholder="Title" />
+                                                        {errors && errors.title && (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
 
@@ -86,18 +124,33 @@ if (e.target.files) {
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" defaultValue={url} placeholder="URL Slug" />
+                                                        {errors && errors.url && (
+                                                            <div className="text-danger">
+                                                                {errors.url}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Image</Label>
                                                         <Input type="file" className="form-control" onChange={handleFileChange} name="image" id="image" accept="image/jpeg, image/png" />
+                                                        {errors && errors.image && (
+                                                            <div className="text-danger">
+                                                                {errors.image}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">Order</Label>
                                                         <Input type="number" className="form-control" onChange={e => onChange(e)} name="order" min="1" id="order" placeholder="Order" />
+                                                        {errors && errors.order && (
+                                                            <div className="text-danger">
+                                                                {errors.order}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
                                             </Row>

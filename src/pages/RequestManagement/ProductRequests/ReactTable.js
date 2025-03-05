@@ -27,7 +27,7 @@ const DataTable = ({ getProductRequests, changeStatusProductRequest, deleteProdu
   // console.log(companies);
   productrequests.forEach(row => {
     if (row === undefined) { return }
-    searchTable.push({ id: row._id, email: row.email, action: [row._id, row.status], status: row.status, name: row.productId.name, volume: row.volume, discount: row.discount, price: row.price, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') })
+    searchTable.push({ id: row._id, email: row.email, action: [row._id, row.status], status: row.status, name: row.productId.name, username: row.name, mobile: row.mobile, email: row.email, area: row.area, volume: row.volume, discount: row.discount, price: row.price, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') })
   });
 
 
@@ -98,25 +98,29 @@ const DataTable = ({ getProductRequests, changeStatusProductRequest, deleteProdu
       },
 
       {
-        header: "Name",
+        header: "Produt Name",
         accessorKey: "name",
         enableColumnFilter: false,
 
       },
       {
-        header: "Volume",
-        accessorKey: "volume",
+        header: "User Name",
+        accessorKey: "username",
         enableColumnFilter: false,
       },
       {
-        header: "Price",
-        accessorKey: "price",
+        header: "Mobile Number",
+        accessorKey: "mobile",
         enableColumnFilter: false,
       },
-
       {
-        header: "Discount",
-        accessorKey: "discount",
+        header: "Email Address",
+        accessorKey: "email",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Area",
+        accessorKey: "area",
         enableColumnFilter: false,
       },
       {
@@ -129,7 +133,7 @@ const DataTable = ({ getProductRequests, changeStatusProductRequest, deleteProdu
             <div>
               {/* <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp; */}
               <Link onClick={() => viewRequest(cell.getValue()[0])} to='#!' className="btn btn-sm btn-warning"><i className='las la-eye'></i></Link>&nbsp;&nbsp;
-              {/* <Link onClick={() => tog_center(cell.getValue()[0])} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link> */}
+              <Link onClick={() => tog_center(cell.getValue()[0])} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link> 
             </div>
           );
         },

@@ -53,7 +53,7 @@ const EditNews = ({ updateNews, getNews, getLanguages, language: { languages } }
         //     setFormData({ ...formData, imageUrl: e.target.files[0] });
         // }
 
-        if (e.target.files) {
+        if (e.target.files && e.target.files.length > 0) {
             let file_size = e.target.files[0].size;
 
             if (file_size > 10e6) {

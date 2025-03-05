@@ -20,7 +20,7 @@ const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, crea
 
     useEffect(() => {
         getCultureTypes();
-        getCompanies();
+        getCompanies({categoryId: "664645fb3f25f68d99341a74"});
         getPlStages();
     }, []);
 
@@ -171,8 +171,8 @@ const CreateSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, crea
 
                                                 <Col xxl={6} md={6}>
                                                     <div>
-                                                        <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" />
+                                                        <Label htmlFor="basiInput" className="form-label">Salt percentage </Label>
+                                                        <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Salt percentage" />
                                                         {errors && errors.name ? (
                                                             <div className="text-danger">
                                                                 {errors.name}

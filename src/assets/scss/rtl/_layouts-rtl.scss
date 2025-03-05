@@ -547,6 +547,10 @@
 
 @media (max-width:767.98px) {
 
+    .navbar-menu {
+        margin-right: -100%;
+    }
+
     [data-layout=vertical] {
         .app-menu {
             margin-right: -100%;
@@ -599,6 +603,8 @@
             margin-right: 0;
         }
     }
+
+ 
 }
 
 @media (max-width:1023.99px) {

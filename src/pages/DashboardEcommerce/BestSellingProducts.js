@@ -10,7 +10,7 @@ const BestSellingProducts = ({getProducts, product: {products}}) => {
 
     useEffect(() => {
         getProducts();
-    });
+    }, []);
 
     return (
         <React.Fragment>

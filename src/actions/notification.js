@@ -148,3 +148,32 @@ export const updateNotification = (id, formData) => async dispatch => {
     });
   }
 }
+
+
+export const sendNotification = (formData) => async dispatch => {
+
+
+  try {
+    if (localStorage.getItem('token')) {
+      setAuthorization(localStorage.getItem('token'));
+    }
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const response = await axios.post('/notifications/send', formData, config);
+
+    // dispatch({
+    //   type: CREATE_NOTIFICATION,
+    //   payload: response.notification
+    // });
+
+    dispatch(setAlert('Notification sent successfully', 'success'));
+
+  } catch (error) {
+    console.log(error);
+  }
+}

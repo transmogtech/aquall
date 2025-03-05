@@ -8,10 +8,10 @@ import ChangeStatus from '../../../Components/Common/ChangeStatus';
 import moment from 'moment/moment';
 
 import DeleteModal from "../../../Components/Common/DeleteModal";
-import { changeStatusNotification, deleteNotification, getNotifications } from '../../../actions/notification';
+import { changeStatusNotification, deleteNotification, getNotifications, sendNotification } from '../../../actions/notification';
 import { Capitalize } from '../../../helpers/common_functions';
 
-const DataTable = ({ changeStatusNotification, deleteNotification, getNotifications, notification: { notifications, loading } }) => {
+const DataTable = ({ changeStatusNotification, deleteNotification, getNotifications, sendNotification, notification: { notifications, loading } }) => {
 
   const [id, setId] = useState(null);
   const searchTable = [];
@@ -24,7 +24,7 @@ const DataTable = ({ changeStatusNotification, deleteNotification, getNotificati
   }, []);
 
 
-  notifications.forEach(row => searchTable.push({ id: row._id, category: row.categoryId.title, company: row.companyId.name, product: row.productId.name, title: row.title, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  notifications.forEach(row => searchTable.push({ id: row._id, title: row.title, action: [row._id, row.status], status: row.status, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
   function tog_grid(data) {
@@ -61,6 +61,10 @@ const DataTable = ({ changeStatusNotification, deleteNotification, getNotificati
   ];
 
 
+  const send_notification = (notificationId) => {
+    sendNotification({ notificationId : notificationId})
+  }
+
 
   const columns = useMemo(
     () => [
@@ -75,21 +79,21 @@ const DataTable = ({ changeStatusNotification, deleteNotification, getNotificati
         enableColumnFilter: false,
       },
 
-      {
-        header: "Category",
-        accessorKey: "category",
-        enableColumnFilter: false,
-      },
-      {
-        header: "Company",
-        accessorKey: "company",
-        enableColumnFilter: false,
-      },
-      {
-        header: "Product",
-        accessorKey: "product",
-        enableColumnFilter: false,
-      },
+      // {
+      //   header: "Category",
+      //   accessorKey: "category",
+      //   enableColumnFilter: false,
+      // },
+      // {
+      //   header: "Company",
+      //   accessorKey: "company",
+      //   enableColumnFilter: false,
+      // },
+      // {
+      //   header: "Product",
+      //   accessorKey: "product",
+      //   enableColumnFilter: false,
+      // },
       {
         header: "Title",
         accessorKey: "title",
@@ -110,7 +114,8 @@ const DataTable = ({ changeStatusNotification, deleteNotification, getNotificati
             <div>
               <Link onClick={() => tog_grid(cell.getValue())} to='#' className="btn btn-sm btn-info"><i className='las la-exchange-alt'></i></Link>&nbsp;&nbsp;
               <Link to={`/edit/notification/${cell.getValue()[0]}`} className="btn btn-sm btn-warning"><i className='las la-pen'></i></Link>&nbsp;&nbsp;
-              <Link onClick={() => tog_center(cell.getValue()[0])} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>
+              <Link onClick={() => tog_center(cell.getValue()[0])} to='#' className="btn btn-sm btn-danger"><i className='las la-trash-alt'></i></Link>&nbsp;&nbsp;
+              <Link onClick={() => send_notification(cell.getValue()[0])} to='#' className="btn btn-sm btn-success"><i className='las la-paper-plane'></i></Link>
             </div>
           );
         },
@@ -158,10 +163,11 @@ DataTable.propTypes = {
   getNotifications: PropTypes.func.isRequired,
   notification: PropTypes.object.isRequired,
   deleteNotification: PropTypes.func.isRequired,
+  sendNotification: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
   notification: state.notification,
 });
 
-export default connect(mapStateToProps, { getNotifications, deleteNotification, changeStatusNotification })(DataTable);
+export default connect(mapStateToProps, { getNotifications, deleteNotification, changeStatusNotification, sendNotification })(DataTable);

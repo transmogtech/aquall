@@ -27,7 +27,7 @@ const EditPeddlerType = ({ getHPSizes, getCompanies, updatePeddlerType, getPeddl
 
     useEffect(() => {
         getHPSizes();
-        getCompanies();
+        getCompanies({categoryId: "6646461c3f25f68d99341a7a"});
         const fetchtData = async () => {
             const response = await getPeddlerType(id);
             setPeddlerType(response);
@@ -152,8 +152,8 @@ const EditPeddlerType = ({ getHPSizes, getCompanies, updatePeddlerType, getPeddl
                                                         </Col>
                                                         <Col xxl={4} md={4}>
                                                             <div>
-                                                                <Label htmlFor="basiInput" className="form-label">Name</Label>
-                                                                <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Name" defaultValue={peddlertype.name} />
+                                                                <Label htmlFor="basiInput" className="form-label">Peddler type</Label>
+                                                                <Input type="text" onChange={e => onChange(e)} className="form-control" name="name" id="name" placeholder="Peddler type" defaultValue={peddlertype.name} />
                                                                 {errors && errors.name ? (
                                                                     <div className="text-danger">
                                                                         {errors.name}

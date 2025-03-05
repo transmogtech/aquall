@@ -20,23 +20,49 @@ const EditYoutubeVideo = ({ updateYoutubeVideo, getYoutubeVideo }) => {
     const [formData, setFormData] = useState();
     const [youtubevideo, setYoutubevideo] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
 
         const fetchtData = async () => {
             const response = await getYoutubeVideo(id);
+            console.log(response);
             setYoutubevideo(response);
+            setFormData({title: response?.title , url: response?.url});
         }
         fetchtData();
         setLoading(false);
     }, []); // eslint-disable-line
 
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter title' });
+            return false;
+        }
+
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter url' });
+            return false;
+        }
+
+
+        return true;
+    }
+
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = () => {
+        if (!validateForm()) {
+            return false;
+        }
+
         updateYoutubeVideo(id, formData);
 
         navigate('/youtube-videos');
@@ -65,14 +91,24 @@ const EditYoutubeVideo = ({ updateYoutubeVideo, getYoutubeVideo }) => {
                                                             <Col xxl={6} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Title</Label>
-                                                                    <Input type="text" onChange={e => onChange(e)} className="form-control" name="title" placeholder="Name" defaultValue={youtubevideo.title} />
+                                                                    <Input type="text" onChange={e => onChange(e)} className="form-control" name="title" placeholder="Title" defaultValue={youtubevideo?.    title} />
+                                                                    {errors && errors.title ? (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) : null}
                                                                 </div>
                                                             </Col>
 
                                                             <Col xxl={6} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Youtube URL</Label>
-                                                                    <Input type="text" onChange={e => onChange(e)} className="form-control" name="url" defaultValue={youtubevideo.url} />
+                                                                    <Input type="text" onChange={e => onChange(e)} className="form-control" name="url" defaultValue={youtubevideo?.url} />
+                                                                    {errors && errors.url ? (
+                                                            <div className="text-danger">
+                                                                {errors.url}
+                                                            </div>
+                                                        ) : null}
                                                                 </div>
                                                             </Col>
 

@@ -17,11 +17,12 @@ const CreateArea = ({ createArea, getStates, getDistricts, state: { states } }) 
 
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({stateId: "",districtId: "", title: '', url: "", metaTitle: "", metaDescription: "", metaKeywords: ""});
     const [selectedState, setSelectedState] = useState(null);
     const [options, setOptions] = useState([]);
     const [selectedDistrict, setSelectedDistrict] = useState(['']);
     const Districts = [];
+    const [errors, setErrors] = useState({});
 
 
     useEffect(() => {
@@ -36,7 +37,41 @@ const CreateArea = ({ createArea, getStates, getDistricts, state: { states } }) 
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.stateId) {
+            setErrors({ ...errors, stateId: 'Please select a state' });
+            return false;
+        }
+
+        if (!formData.districtId) {
+            setErrors({ ...errors, districtId: 'Please select a district' });
+            return false;
+        }
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter a title' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter a url' });
+            return false;
+        }
+
+        return true;
+    }
+
+
     const handleSubmit = () => {
+
+        
+        if (!validateForm()) {
+            return false;
+        }
         createArea(formData);
 
         navigate('/areas');
@@ -92,6 +127,7 @@ const CreateArea = ({ createArea, getStates, getDistricts, state: { states } }) 
                 <Container fluid>
                     <BreadCrumb title="Create Area" pageTitle="Area Management" />
                     <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+
                         <Row>
                             <Col lg={12}>
                                 <Card>
@@ -105,13 +141,22 @@ const CreateArea = ({ createArea, getStates, getDistricts, state: { states } }) 
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">State</Label>
                                                         <Select onChange={handleSelectState} options={States} name='stateId' id='stateId' />
+                                                        {errors && errors.stateId && (
+                                                            <div className="text-danger">
+                                                                {errors.stateId}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
                                                 <Col xxl={3} md={6}>
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">District</Label>
                                                         <Select onChange={handleSelectDistrict} options={options} />
-
+                                                        {errors && errors.districtId && (
+                                                            <div className="text-danger">
+                                                                {errors.districtId}
+                                                            </div>
+                                                        ) }
 
                                                     </div>
                                                 </Col>
@@ -119,6 +164,11 @@ const CreateArea = ({ createArea, getStates, getDistricts, state: { states } }) 
                                                     <div>
                                                         <Label htmlFor="title" className="form-label">Area name</Label>
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="title" id="title" placeholder="Title" />
+                                                        {errors && errors.title && (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
 
@@ -126,6 +176,11 @@ const CreateArea = ({ createArea, getStates, getDistricts, state: { states } }) 
                                                     <div>
                                                         <Label htmlFor="basiInput" className="form-label">URL Slug</Label>
                                                         <Input type="text" className="form-control" onChange={e => onChange(e)} name="url" id="url" placeholder="URL Slug" />
+                                                        {errors && errors.url && (
+                                                            <div className="text-danger">
+                                                                {errors.url}
+                                                            </div>
+                                                        ) }
                                                     </div>
                                                 </Col>
                                             </Row>

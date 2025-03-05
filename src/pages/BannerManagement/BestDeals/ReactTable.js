@@ -25,7 +25,7 @@ const DataTable = ({ changeStatusBestDeal, deleteBestDeal, getBestDeals, bestDea
   }, []);
 
 
-  bestdeals.forEach(row => searchTable.push({ id: row._id, category: row.categoryId.title, company: row.companyId.name, discount: row.discount, priority: row.priority, image: row.image, action: [row._id, row.status], status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
+  bestdeals.forEach(row => searchTable.push({ id: row._id, category: row.categoryId.title, company: row.companyId?.name, discount: row.discount, priority: row.priority, image: row.image, action: [row._id, row.status], status: row.status, url: row.url, created: moment(row.created).format('MMMM Do YYYY, HH:mm:ss') }));
 
 
   function tog_grid(data) {

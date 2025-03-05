@@ -32,7 +32,7 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
             const response = await getAppSliderImage(id);
             setAppSliderImage(response);
             setSelectedProduct(response.products);
-            setSelectedCompany(response.companyId._id);
+            setSelectedCompany(response.companyId?._id);
             setSelectedCategory(response.categoryId);
             await getCompanies({ categoryId: response.categoryId });
             await getProducts({ companyId: response.companyId });
@@ -205,7 +205,7 @@ const EditAppSliderImage = ({ updateAppSliderImage, getCategories, getCompanies,
                                                             <Label htmlFor="basiInput" className="form-label">Company</Label>
                                                             <select
                                                                 className="form-select"
-                                                                defaultValue={appsliderimage.companyId._id}
+                                                                defaultValue={appsliderimage.companyId?._id}
                                                                 name="companyId"
                                                                 onChange={e => handleSelectCompany(e)}>
                                                                 <option value="">Select Company</option>

@@ -19,6 +19,7 @@ import logoLight from "../../assets/images/aquall_logo.png";
 //import images
 
 const Login = ({ setAlert, login, isAuthenticated }) => {
+    const [passwordShow, setPasswordShow] = useState(false);
 
     const [formData, setFormData] = useState({
         email: "",
@@ -75,12 +76,12 @@ const Login = ({ setAlert, login, isAuthenticated }) => {
                                                 action="#">
 
                                                 <div className="mb-3">
-                                                    <Label htmlFor="email" className="form-label">Email</Label>
+                                                    <Label htmlFor="email" className="form-label">Mobile number</Label>
                                                     <Input
                                                         name="email"
                                                         className="form-control"
-                                                        placeholder="Enter email"
-                                                        type="email"
+                                                        placeholder="Enter mobile number"
+                                                        type="number"
                                                         onChange={onChange}
                                                     // onBlur={validation.handleBlur}
                                                     // value={validation.values.email || ""}
@@ -102,7 +103,7 @@ const Login = ({ setAlert, login, isAuthenticated }) => {
                                                         <Input
                                                             name="password"
                                                             // value={validation.values.password || ""}
-                                                            type="password"
+                                                            type={passwordShow ? "text" : "password"}
                                                             className="form-control pe-5"
                                                             placeholder="Enter Password"
                                                             onChange={onChange}
@@ -115,7 +116,7 @@ const Login = ({ setAlert, login, isAuthenticated }) => {
                                                         {/* {validation.touched.password && validation.errors.password ? (
                                                             <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
                                                         ) : null} */}
-                                                        <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted" type="button" id="password-addon"><i className="ri-eye-fill align-middle"></i></button>
+                                                        <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted" type="button" id="password-addon" onClick={() => setPasswordShow(!passwordShow)}><i className="ri-eye-fill align-middle"></i></button>
                                                     </div>
                                                 </div>
 

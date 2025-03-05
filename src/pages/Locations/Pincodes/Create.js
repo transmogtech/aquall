@@ -19,10 +19,10 @@ import { getAreas } from '../../../actions/area';
 import { getCategories } from '../../../actions/category';
 
 const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCategories, category: { categories } }) => {
-    const [delivery, setDelivery] = useState([]);
     const categoryData = [];
 
     const [loading, setLoading] = useState(true);
+    const [errors, setErrors] = useState({});
 
 
     useEffect(() => {
@@ -30,20 +30,22 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
         getDistricts();
         getAreas();
         getCategories();
-        categories.forEach(category => {
-            categoryData.push({ _id: category._id, title: category.title, charge: "", days: "" });
-
-        });
-        setDelivery(categoryData);
+      
         setLoading(false);
 
     }, [getCategories]);
 
+    categories.forEach(category => {
+        categoryData.push({ _id: category._id, title: category.title, charge: "", days: "" });
+
+    });
+
+    const [delivery, setDelivery] = useState(categoryData);
 
 
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState({stateId: "",districtId: "", areaId: "", title: '', delivery: delivery});
     const [selectedState, setSelectedState] = useState(null);
     const [options, setOptions] = useState([]);
     const [areas, setAreas] = useState([]);
@@ -62,6 +64,36 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.stateId) {
+            setErrors({ ...errors, stateId: 'Please select a state' });
+            return false;
+        }
+
+        if (!formData.districtId) {
+            setErrors({ ...errors, districtId: 'Please select a district' });
+            return false;
+        }
+
+        if (!formData.areaId) {
+            setErrors({ ...errors, areaId: 'Please select a area' });
+            return false;
+        }
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter a title' });
+            return false;
+        }
+
+       
+
+        return true;
+    }
 
 
     function handleSelectState(selectedState) {
@@ -131,7 +163,9 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
 
     const handleSubmit = () => {
 
-
+        if (!validateForm()) {
+            return false;
+        }
         createPincode(formData);
 
         navigate('/pincodes');
@@ -163,6 +197,11 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">State</Label>
                                                                     <Select value={{ label: selectedState }} onChange={handleSelectState} options={States} />
+                                                                    {errors && errors.stateId && (
+                                                            <div className="text-danger">
+                                                                {errors.stateId}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
 
@@ -171,6 +210,11 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">District</Label>
                                                                     <Select value={{ label: selectedDistrict }} onChange={handleSelectDistrict} options={options} />
+                                                                    {errors && errors.districtId && (
+                                                            <div className="text-danger">
+                                                                {errors.districtId}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
 
@@ -178,12 +222,22 @@ const CreatePincode = ({ createPincode, getStates, getDistricts, getAreas, getCa
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Area</Label>
                                                                     <Select value={{ label: selectedArea }} onChange={handleSelectArea} options={areas} />
+                                                                    {errors && errors.areaId && (
+                                                            <div className="text-danger">
+                                                                {errors.areaId}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
                                                             <Col xxl={3} md={6}>
                                                                 <div>
                                                                     <Label htmlFor="basiInput" className="form-label">Pincode</Label>
-                                                                    <Input type="text" className="form-control" name="title" onChange={e => onChange(e)} placeholder="Name" />
+                                                                    <Input type="text" className="form-control" name="title" onChange={e => onChange(e)} placeholder="Pincode" />
+                                                                    {errors && errors.title && (
+                                                            <div className="text-danger">
+                                                                {errors.title}
+                                                            </div>
+                                                        ) }
                                                                 </div>
                                                             </Col>
                                                         </Row>

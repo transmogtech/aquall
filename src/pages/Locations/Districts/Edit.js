@@ -23,6 +23,7 @@ const EditDistrict = ({ updateDistrict, getStates, getDistrict, state: { states 
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [formData, setFormData] = useState();
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         getStates();
@@ -44,6 +45,27 @@ const EditDistrict = ({ updateDistrict, getStates, getDistrict, state: { states 
     }, [getStates]); // eslint-disable-line
 
 
+    const validateForm = () => {
+
+        setErrors({});
+
+        if (!formData.stateId) {
+            setErrors({ ...errors, stateId: 'Please select a state' });
+            return false;
+        }
+
+        if (!formData.title) {
+            setErrors({ ...errors, title: 'Please enter a title' });
+            return false;
+        }
+
+        if (!formData.url) {
+            setErrors({ ...errors, url: 'Please enter a url' });
+            return false;
+        }
+
+        return true;
+    }   
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -60,6 +82,10 @@ const EditDistrict = ({ updateDistrict, getStates, getDistrict, state: { states 
 
 
     const handleSubmit = () => {
+
+        if (!validateForm()) {
+            return false;
+        }
         updateDistrict(id, formData);
 
         navigate('/districts');
@@ -78,6 +104,7 @@ const EditDistrict = ({ updateDistrict, getStates, getDistrict, state: { states 
                             <Container fluid>
                                 <BreadCrumb title="Edit District" pageTitle="District Management" />
                                 <Form onSubmit={(e) => { e.preventDefault(); handleSubmit(); return false; }} action="#">
+                                    {errors && errors.length > 0 && errors.map((error) =>  <div className="text-danger">{error}</div>)}
                                     <Row>
                                         <Col lg={12}>
                                             <Card>

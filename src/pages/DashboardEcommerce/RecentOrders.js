@@ -40,7 +40,7 @@ const RecentOrders = ({getOrders, order: { orders}}) => {
                                         <td> {moment(item.created).format('MMMM Do YYYY')}</td>
 
                                         <td>
-                                            <Link to="/apps-ecommerce-order-details" className="fw-medium link-primary">#{item.orderId}</Link>
+                                           {item.orderId}
                                         </td>
                                         <td>{item.userId?.name}</td>
                                         <td>
