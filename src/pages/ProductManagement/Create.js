@@ -23,7 +23,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
     useEffect(() => {
         getPlStages();
         getSaltPercentages();
-        getCompanies();
+        getCompanies({status: "active"});
         getCategories();
         getCultureTypes();
         getFeedTypes();
@@ -89,7 +89,7 @@ const CreateProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCateg
     const handleSelectCategory = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         // console.log(e.target.value);
-        getCompanies({categoryId: e.target.value});
+        getCompanies({categoryId: e.target.value, status: "active"});
         companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
         setShowHideFields(e.target.value);
     };

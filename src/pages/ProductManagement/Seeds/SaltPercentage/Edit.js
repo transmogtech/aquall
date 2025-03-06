@@ -29,7 +29,7 @@ const EditSaltPercentage = ({ getCultureTypes, getCompanies, getPlStages, getSal
 
     useEffect(() => {
         getCultureTypes();
-        getCompanies({categoryId: "664645fb3f25f68d99341a74"});
+        getCompanies({categoryId: "664645fb3f25f68d99341a74", status: "active"});
         getPlStages();
         getSaltPercentage(id);
         const fetchtData = async () => {

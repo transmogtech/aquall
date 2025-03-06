@@ -18,7 +18,7 @@ const CreateAppSliderImage = ({ createAppSliderImage, getCategories, getCompanie
 
     useEffect(() => {
         getCategories();
-        getCompanies();
+        getCompanies({ status: "active"});
         getProducts();
     }, []);
 
@@ -59,7 +59,7 @@ const CreateAppSliderImage = ({ createAppSliderImage, getCategories, getCompanie
 
     async function handleSelectCategory(selectedCategory) {
         setFormData({ ...formData, categoryId: selectedCategory.value });
-        await getCompanies({ categoryId: selectedCategory.value });
+        await getCompanies({ categoryId: selectedCategory.value, status: "active" });
 
         setSelectedCategory(selectedCategory.label);
     }

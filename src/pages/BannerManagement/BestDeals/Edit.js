@@ -34,7 +34,7 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getProducts
             setSelectedProduct(response.products);
             setSelectedCompany(response.companyId);
             setSelectedCategory(response.categoryId);
-            await getCompanies({ categoryId: response.categoryId });
+            await getCompanies({ categoryId: response.categoryId, status: "active" });
             await getProducts({ companyId: response.companyId });
             setFormData({ categoryId: response.categoryId, companyId: response.companyId, url: response.url, image: response.image, discount: response.discount, priority: response.priority, products: response.products });
             setLoading(false);
@@ -73,7 +73,7 @@ const EditBestDeal = ({ updateBestDeal, getCategories, getCompanies, getProducts
 
 
     const handleSelectCategory = async (e) => {
-        const companyArr = await getCompanies({ categoryId: e.target.value });
+        const companyArr = await getCompanies({ categoryId: e.target.value, status: "active" });
         setFormData({ ...formData, categoryId: e.target.value });
         // console.log(companyArr);
     };

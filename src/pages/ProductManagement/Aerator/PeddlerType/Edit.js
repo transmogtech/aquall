@@ -27,7 +27,7 @@ const EditPeddlerType = ({ getHPSizes, getCompanies, updatePeddlerType, getPeddl
 
     useEffect(() => {
         getHPSizes();
-        getCompanies({categoryId: "6646461c3f25f68d99341a7a"});
+        getCompanies({categoryId: "6646461c3f25f68d99341a7a", status: "active"});
         const fetchtData = async () => {
             const response = await getPeddlerType(id);
             setPeddlerType(response);

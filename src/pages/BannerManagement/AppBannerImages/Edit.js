@@ -33,7 +33,7 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
             const response = await getAppBannerImage(id);
             setAppBannerImage(response);
             setSelectedProduct(response.products);
-            await getCompanies({ categoryId: response.categoryId });
+            await getCompanies({ categoryId: response.categoryId, status: "active" });
             await getProducts({ companyId: response.companyId });
 
             setSelectedCompany(response.companyId);
@@ -71,7 +71,7 @@ const EditAppBannerImage = ({ updateAppBannerImage, getAppBannerImage, getCatego
     };
 
     const handleSelectCategory = async (e) => {
-        const companyArr = await getCompanies({ categoryId: e.target.value });
+        const companyArr = await getCompanies({ categoryId: e.target.value, status: "active" });
         setFormData({ ...formData, categoryId: e.target.value });
         // console.log(companyArr);
     };

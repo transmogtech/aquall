@@ -18,7 +18,7 @@ const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProduc
 
     useEffect(() => {
         getCategories();
-        getCompanies();
+        getCompanies({ status: "active"});
         getProducts();
 
     }, []);
@@ -60,7 +60,7 @@ const CreateBestDeal = ({ createBestDeal, getCategories, getCompanies, getProduc
 
     async function handleSelectCategory(selectedCategory) {
         setFormData({ ...formData, categoryId: selectedCategory.value });
-        await getCompanies({ categoryId: selectedCategory.value });
+        await getCompanies({ categoryId: selectedCategory.value, status: "active" });
 
         setSelectedCategory(selectedCategory.label);
     }

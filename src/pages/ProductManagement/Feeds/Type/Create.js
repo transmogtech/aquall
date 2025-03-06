@@ -19,7 +19,7 @@ const CreateFeedType = ({ getCultureTypes, getCompanies, createFeedType, company
 
     useEffect(() => {
         getCultureTypes();
-        getCompanies({categoryId: "664645eb3f25f68d99341a71"});
+        getCompanies({categoryId: "664645eb3f25f68d99341a71", status: "active"});
     }, []);
 
 

@@ -27,7 +27,7 @@ const EditPlStage = ({ getCultureTypes, getCompanies, updatePlStage, getPlStage,
 
     useEffect(() => {
         getCultureTypes();
-        getCompanies({categoryId: "664645fb3f25f68d99341a74"});
+        getCompanies({categoryId: "664645fb3f25f68d99341a74", status: "active"});
         getPlStage(id);
         const fetchtData = async () => {
             const response = await getPlStage(id);

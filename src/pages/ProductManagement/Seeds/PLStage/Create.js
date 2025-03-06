@@ -19,7 +19,7 @@ const CreatePlStage = ({ getCultureTypes, getCompanies, createPlStage, company: 
 
     useEffect(() => {
         getCultureTypes();
-        getCompanies({categoryId: "664645fb3f25f68d99341a74"});
+        getCompanies({categoryId: "664645fb3f25f68d99341a74", status: "active"});
     }, []);
 
 

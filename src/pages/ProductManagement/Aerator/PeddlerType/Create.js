@@ -19,7 +19,7 @@ const CreatePeddlerType = ({ getHPSizes, getCompanies, createPeddlerType, compan
 
     useEffect(() => {
         getHPSizes();
-        getCompanies({categoryId: "6646461c3f25f68d99341a7a"});
+        getCompanies({categoryId: "6646461c3f25f68d99341a7a", status: "active"});
     }, []);
 
 

@@ -43,7 +43,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
             setProduct(response);
             setFormData({ name: response.name, price: response.price, description: response.description, imageUrl: response.imageUrl, volume: response.volume, categoryId: response.categoryId._id, companyId: response.companyId?._id });
             setShowHideFields(response.categoryId._id);
-            getCompanies({categoryId: response.categoryId._id});
+            getCompanies({categoryId: response.categoryId._id, status: "active"});
             setGSTFields(response.gstPercentage > 0 ? true : false);
             setLoading(false);
 
@@ -105,7 +105,7 @@ const EditProduct = ({ getPlStages, getSaltPercentages, getCompanies, getCategor
     const handleSelectCategory = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         // console.log(e.target.value);
-        getCompanies({categoryId: e.target.value});
+        getCompanies({categoryId: e.target.value, status: "active"});
         companies.forEach(row => Companies.push({ value: row._id, label: row.name }));
         setShowHideFields(e.target.value);
     };

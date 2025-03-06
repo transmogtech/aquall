@@ -27,7 +27,7 @@ const EditFeedType = ({ getCultureTypes, getCompanies, updateFeedType, getFeedTy
 
     useEffect(() => {
         getCultureTypes();
-        getCompanies({categoryId: "664645eb3f25f68d99341a71"});
+        getCompanies({categoryId: "664645eb3f25f68d99341a71", status: "active"});
         const fetchtData = async () => {
             const response = await getFeedType(id);
             setFeedType(response);

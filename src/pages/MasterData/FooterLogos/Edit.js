@@ -26,7 +26,7 @@ const EditFooterLogo = ({ updateFooterLogo, getFooterLogo, getCompanies, company
 
 
     useEffect(() => {
-        getCompanies();
+        getCompanies({ status: "active"});
         const fetchtData = async () => {
             const response = await getFooterLogo(id);
             setFooterlogo(response);

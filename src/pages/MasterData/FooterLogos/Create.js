@@ -19,7 +19,7 @@ const CreateFooterLogo = ({ createFooterLogo, getCompanies, company: { companies
     const [errors, setErrors] = useState({});
 
     React.useEffect(() => {
-        getCompanies();
+        getCompanies({status: "active"});
     }, [getCompanies]);
 
     const company = companies.map(company => ({ value: company._id, label: company.name }));
